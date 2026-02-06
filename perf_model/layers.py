@@ -249,7 +249,7 @@ def prefill_model(cfg: Config) -> PhaseProfile:
     phase.total_time_s += emb.time_s
 
     # All layers
-    for i in range(cfg.model.num_layers):
+    for i in range(cfg.model.num_hidden_layers):
         lp = prefill_layer(i, cfg)
         phase.layer_profiles.append(lp)
         phase.total_time_s += lp.total.time_s
@@ -281,7 +281,7 @@ def decode_step(S_total: int, cfg: Config) -> PhaseProfile:
     phase.total_time_s += emb.time_s
 
     # All layers
-    for i in range(cfg.model.num_layers):
+    for i in range(cfg.model.num_hidden_layers):
         lp = decode_layer(i, S_total, cfg)
         phase.layer_profiles.append(lp)
         phase.total_time_s += lp.total.time_s

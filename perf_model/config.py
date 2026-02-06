@@ -1,13 +1,13 @@
 """Config dataclasses and JSON loader."""
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields as dataclass_fields
 from typing import List
 
 
 @dataclass
 class HardwareConfig:
-    bf16_tflops: float = 376
+    cube_tflops: float = 376
     vec_tflops: float = 24
     hbm_capacity_gb: float = 64
     hbm_bandwidth_gbps: float = 1800
@@ -19,32 +19,27 @@ class HardwareConfig:
 class NetworkConfig:
     tp_bandwidth_gbps: float = 392
     ep_bandwidth_gbps: float = 392
-    latency_us: float = 5
+    latency_us: float = 10
     bandwidth_utilization: float = 0.8
 
 
 @dataclass
 class ModelConfig:
     hidden_size: int = 4096
-    num_layers: int = 43
+    num_hidden_layers: int = 43
     vocab_size: int = 129280
-    num_q_heads: int = 64
-    num_kv_heads: int = 1
-    q_content_dim: int = 512
+    num_attention_heads: int = 64
+    head_dim: int = 512
     rope_head_dim: int = 64
     q_lora_rank: int = 1024
-    k_dim: int = 576          # q_content_dim + rope_head_dim
-    v_dim: int = 512
-    o_num_groups: int = 8
+    o_groups: int = 8
     o_lora_rank: int = 1024
     index_n_heads: int = 64
     index_head_dim: int = 128
     index_topk: int = 512
-    swa_window: int = 128
+    window_size: int = 128
     compress_ratios: List[int] = field(default_factory=list)
-    compress_c_k: int = 576
-    compress_c_v: int = 512
-    mhc_mult: int = 4
+    hc_mult: int = 4
     n_routed_experts: int = 256
     num_experts_per_tok: int = 6
     n_shared_experts: int = 1
@@ -52,8 +47,28 @@ class ModelConfig:
     n_hash_layers: int = 3
 
     @property
+    def num_kv_heads(self) -> int:
+        return 1  # MQA
+
+    @property
+    def k_dim(self) -> int:
+        return self.head_dim + self.rope_head_dim  # 512 + 64 = 576
+
+    @property
+    def v_dim(self) -> int:
+        return self.head_dim  # 512
+
+    @property
+    def compress_c_k(self) -> int:
+        return self.head_dim + self.rope_head_dim  # = k_dim = 576
+
+    @property
+    def compress_c_v(self) -> int:
+        return self.head_dim  # = v_dim = 512
+
+    @property
     def o_mid_dim(self) -> int:
-        return self.o_num_groups * self.o_lora_rank  # 8 * 1024 = 8192
+        return self.o_groups * self.o_lora_rank  # 8 * 1024 = 8192
 
 
 @dataclass
@@ -84,7 +99,9 @@ class Config:
         with open(network_path) as f:
             net = NetworkConfig(**json.load(f))
         with open(model_path) as f:
-            model = ModelConfig(**json.load(f))
+            data = json.load(f)
+            known = {f.name for f in dataclass_fields(ModelConfig)}
+            model = ModelConfig(**{k: v for k, v in data.items() if k in known})
         with open(runtime_path) as f:
             rt = RuntimeConfig(**json.load(f))
         return cls(hw=hw, net=net, model=model, rt=rt)

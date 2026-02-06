@@ -1,5 +1,5 @@
 {
-    "bf16_tflops": 376,
+    "cube_tflops": 376,
     "vec_tflops": 24,
     "hbm_capacity_gb": 64,
     "hbm_bandwidth_gbps": 1800,

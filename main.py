@@ -39,9 +39,9 @@ def main():
     cfg = Config.from_json(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 
     # Validate compress_ratios length
-    if len(cfg.model.compress_ratios) != cfg.model.num_layers:
+    if len(cfg.model.compress_ratios) != cfg.model.num_hidden_layers:
         print(f"ERROR: compress_ratios length ({len(cfg.model.compress_ratios)}) "
-              f"!= num_layers ({cfg.model.num_layers})")
+              f"!= num_hidden_layers ({cfg.model.num_hidden_layers})")
         sys.exit(1)
 
     # Validate DP

@@ -29,7 +29,7 @@ def roofline_time(name: str, flops: float, vec_ops: float, mem_bytes: float,
     bottleneck = argmax(cube_time, vec_time, mem_time).
     total time = max(cube, vec, mem) + comm.
     """
-    cube_time = flops / (hw.bf16_tflops * 1e12 * hw.flops_utilization) if flops > 0 else 0.0
+    cube_time = flops / (hw.cube_tflops * 1e12 * hw.flops_utilization) if flops > 0 else 0.0
     vec_time = vec_ops / (hw.vec_tflops * 1e12 * hw.flops_utilization) if vec_ops > 0 else 0.0
     mem_time = mem_bytes / (hw.hbm_bandwidth_gbps * 1e9 * hw.hbm_bw_utilization) if mem_bytes > 0 else 0.0
 

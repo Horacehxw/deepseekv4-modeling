@@ -22,8 +22,8 @@ def op_q_proj_dq(T: int, cfg: Config) -> OpProfile:
 def op_q_proj_uq(T: int, cfg: Config) -> OpProfile:
     """W_uq: [q_lora_rank, Nq/TP * (Dqc + Dr)]."""
     qlr = cfg.model.q_lora_rank
-    Nq = cfg.model.num_q_heads
-    Dqc = cfg.model.q_content_dim
+    Nq = cfg.model.num_attention_heads
+    Dqc = cfg.model.head_dim
     Dr = cfg.model.rope_head_dim
     TP = cfg.rt.tp
     out_dim = (Nq // TP) * (Dqc + Dr)
@@ -59,13 +59,13 @@ def op_v_proj(T: int, cfg: Config) -> OpProfile:
 def op_wo_a(T: int, cfg: Config) -> OpProfile:
     """wo_a: block-diag, Ng/TP blocks of [Nq/Ng * Dqc, o_lora_rank].
     Total FLOPs = T * Nq/TP * Dqc * o_lora_rank * 2."""
-    Nq = cfg.model.num_q_heads
-    Dqc = cfg.model.q_content_dim
+    Nq = cfg.model.num_attention_heads
+    Dqc = cfg.model.head_dim
     olr = cfg.model.o_lora_rank
     TP = cfg.rt.tp
     flops = T * (Nq // TP) * Dqc * olr * 2
     # Weight: Ng/TP blocks, each [Nq/Ng * Dqc, o_lora_rank]
-    Ng = cfg.model.o_num_groups
+    Ng = cfg.model.o_groups
     weight_elems = (Ng // TP) * (Nq // Ng) * Dqc * olr
     weight_bytes = bytes2(weight_elems)
     act_in = bytes2(T * (Nq // TP) * Dqc)
@@ -197,10 +197,10 @@ def op_attention_prefill_full(B: int, S: int, cfg: Config) -> OpProfile:
     """Prefill attention for ratio=1 layers (full MQA, flash attention memory model).
     QK^T + softmax + Score*V."""
     TP = cfg.rt.tp
-    Nq = cfg.model.num_q_heads // TP
+    Nq = cfg.model.num_attention_heads // TP
     kd = cfg.model.k_dim
     vd = cfg.model.v_dim
-    Dqc = cfg.model.q_content_dim
+    Dqc = cfg.model.head_dim
     Dr = cfg.model.rope_head_dim
 
     # QK^T: B * Nq * S * S * k_dim * 2
@@ -228,14 +228,14 @@ def op_attention_prefill_compressed(B: int, S: int, ratio: int, cfg: Config,
     If use_index=True (C4A), attends to topK selected entries.
     If use_index=False (C128A), attends to all S//ratio compressed entries."""
     TP = cfg.rt.tp
-    Nq = cfg.model.num_q_heads // TP
+    Nq = cfg.model.num_attention_heads // TP
     c_k = cfg.model.compress_c_k
     c_v = cfg.model.compress_c_v
     kd = cfg.model.k_dim
     vd = cfg.model.v_dim
-    Dqc = cfg.model.q_content_dim
+    Dqc = cfg.model.head_dim
     Dr = cfg.model.rope_head_dim
-    W = cfg.model.swa_window
+    W = cfg.model.window_size
     S_comp = S // ratio
 
     # Number of compressed KV entries attended to per query
@@ -268,10 +268,10 @@ def op_attention_prefill_compressed(B: int, S: int, ratio: int, cfg: Config,
 def op_attention_decode_full(B: int, S_total: int, cfg: Config) -> OpProfile:
     """Decode attention for ratio=1 layers. S_query=1, S_kv=S_total."""
     TP = cfg.rt.tp
-    Nq = cfg.model.num_q_heads // TP
+    Nq = cfg.model.num_attention_heads // TP
     kd = cfg.model.k_dim
     vd = cfg.model.v_dim
-    Dqc = cfg.model.q_content_dim
+    Dqc = cfg.model.head_dim
     Dr = cfg.model.rope_head_dim
 
     flops_qk = B * Nq * 1 * S_total * kd * 2
@@ -295,14 +295,14 @@ def op_attention_decode_compressed(B: int, S_total: int, ratio: int, cfg: Config
     If use_index=True (C4A), attends to topK selected entries.
     If use_index=False (C128A), attends to all S_total//ratio compressed entries."""
     TP = cfg.rt.tp
-    Nq = cfg.model.num_q_heads // TP
+    Nq = cfg.model.num_attention_heads // TP
     c_k = cfg.model.compress_c_k
     c_v = cfg.model.compress_c_v
     kd = cfg.model.k_dim
     vd = cfg.model.v_dim
-    Dqc = cfg.model.q_content_dim
+    Dqc = cfg.model.head_dim
     Dr = cfg.model.rope_head_dim
-    W = cfg.model.swa_window
+    W = cfg.model.window_size
     S_comp = S_total // ratio
 
     # Number of compressed KV entries attended to
@@ -338,9 +338,9 @@ def op_attention_decode_compressed(B: int, S_total: int, ratio: int, cfg: Config
 def op_mhc_pre(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
     """mHC pre: linear projections before sub-layer.
     T is effective token count (B*S/TP if SP, else B*S).
-    n = mhc_mult, D = hidden_size.
+    n = hc_mult, D = hidden_size.
     FP32 throughout (×4 bytes per element)."""
-    n = cfg.model.mhc_mult
+    n = cfg.model.hc_mult
     D = cfg.model.hidden_size
     cube_flops = 2 * T * (n**2 + 2*n) * n * D + 5 * T * n + 2 * T * n**2
     vec_ops = 2 * T * n
@@ -351,9 +351,9 @@ def op_mhc_pre(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
 
 def op_mhc_sinkhorn(T: int, cfg: Config, label: str = "sinkhorn") -> OpProfile:
     """Sinkhorn normalization step.
-    T is effective token count, n = mhc_mult.
+    T is effective token count, n = hc_mult.
     FP32 throughout (×4 bytes per element)."""
-    n = cfg.model.mhc_mult
+    n = cfg.model.hc_mult
     cube_flops = 0
     vec_ops = T * n**2 + 40 * T * n * (2*n - 1)
     # FP32 memory: 82 * T * n^2 * 4
@@ -363,9 +363,9 @@ def op_mhc_sinkhorn(T: int, cfg: Config, label: str = "sinkhorn") -> OpProfile:
 
 def op_mhc_post(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile:
     """mHC post: linear projections after sub-layer.
-    T is effective token count, n = mhc_mult, D = hidden_size.
+    T is effective token count, n = hc_mult, D = hidden_size.
     FP32 throughout (×4 bytes per element)."""
-    n = cfg.model.mhc_mult
+    n = cfg.model.hc_mult
     D = cfg.model.hidden_size
     cube_flops = 2 * T * n**2 * D + 3 * T * n * D
     vec_ops = 0
