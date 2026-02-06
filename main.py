@@ -116,6 +116,17 @@ def main():
         print()
 
         # --- Build summary metrics dict ---
+        # Comm vs compute breakdown
+        def _comm_stats(pp):
+            comm = sum(op.comm_time_s for lp in pp.layer_profiles for op in lp.ops)
+            comm += sum(op.comm_time_s for op in pp.extra_ops)
+            comp = pp.total_time_s - comm
+            pct = comm / pp.total_time_s * 100 if pp.total_time_s > 0 else 0.0
+            return comp, comm, pct
+
+        pf_comp, pf_comm, pf_cpct = _comm_stats(prefill)
+        ds_comp, ds_comm, ds_cpct = _comm_stats(decode_first_step)
+
         metrics = {
             "total_gpus": total_gpus,
             "dp": DP,
@@ -128,9 +139,15 @@ def main():
             "output_len": cfg.rt.output_len,
             "prefill_time_ms": f"{prefill.total_time_s * 1000:.3f}",
             "prefill_tps": f"{prefill.total_tokens / prefill.total_time_s:.1f}" if prefill.total_time_s > 0 else "0",
+            "prefill_compute_ms": f"{pf_comp * 1000:.3f}",
+            "prefill_comm_ms": f"{pf_comm * 1000:.3f}",
+            "prefill_comm_pct": f"{pf_cpct:.2f}",
             "decode_time_ms": f"{decode_total.total_time_s * 1000:.3f}",
             "decode_first_step_ms": f"{decode_first_step.total_time_s * 1000:.3f}",
             "decode_tps": f"{decode_total.total_tokens / decode_total.total_time_s:.1f}" if decode_total.total_time_s > 0 else "0",
+            "decode_step_compute_ms": f"{ds_comp * 1000:.3f}",
+            "decode_step_comm_ms": f"{ds_comm * 1000:.3f}",
+            "decode_step_comm_pct": f"{ds_cpct:.2f}",
             "total_time_ms": f"{total_time * 1000:.3f}",
             "output_tps_per_rank": f"{per_rank_output_tokens / total_time:.1f}" if total_time > 0 else "0",
             "output_tps_total": f"{total_output_tokens / total_time:.1f}" if total_time > 0 else "0",

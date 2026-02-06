@@ -44,12 +44,58 @@ def print_op_table(ops: List[OpProfile], indent: str = "  "):
 
 def print_layer_summary(layer_profiles: List[LayerProfile], indent: str = "  "):
     """Print summary table of all layers."""
-    header = f"{indent}{'Layer':>5s} | {'Ratio':>5s} | {'Time(ms)':>10s} | {'Bound':<5s}"
+    header = (f"{indent}{'Layer':>5s} | {'Ratio':>5s} | {'Comp(ms)':>10s} | "
+              f"{'Comm(ms)':>10s} | {'Total(ms)':>10s} | {'Comm%':>6s} | {'Bound':<5s}")
     sep = indent + "-" * (len(header) - len(indent))
     print(header)
     print(sep)
     for lp in layer_profiles:
-        print(f"{indent}{lp.layer_idx:>5d} | {lp.ratio:>5d} | {fmt_ms(lp.total.time_s):>10s} | {lp.total.bottleneck:<5s}")
+        t = lp.total
+        comp = t.time_s - t.comm_time_s
+        comm_pct = t.comm_time_s / t.time_s * 100 if t.time_s > 0 else 0.0
+        print(f"{indent}{lp.layer_idx:>5d} | {lp.ratio:>5d} | {fmt_ms(comp):>10s} | "
+              f"{fmt_ms(t.comm_time_s):>10s} | {fmt_ms(t.time_s):>10s} | {comm_pct:>5.1f}% | {t.bottleneck:<5s}")
+
+
+def print_comm_analysis(phase: PhaseProfile, indent: str = "  "):
+    """Print communication vs computation breakdown for a phase."""
+    # Known comm op names
+    comm_op_names = {
+        "attn_tp_allreduce": "TP AllReduce",
+        "moe_ep_dispatch": "EP Dispatch",
+        "moe_ep_combine": "EP Combine",
+        "index_score_ar": "Index Score AR",
+    }
+
+    # Sum comm times by op name across all layers + extra ops
+    comm_by_type = {k: 0.0 for k in comm_op_names}
+    total_time = phase.total_time_s
+    total_comm = 0.0
+
+    for lp in phase.layer_profiles:
+        for op in lp.ops:
+            if op.name in comm_op_names:
+                comm_by_type[op.name] += op.comm_time_s
+                total_comm += op.comm_time_s
+    for op in phase.extra_ops:
+        if op.name in comm_op_names:
+            comm_by_type[op.name] += op.comm_time_s
+            total_comm += op.comm_time_s
+
+    total_compute = total_time - total_comm
+    comp_pct = total_compute / total_time * 100 if total_time > 0 else 0.0
+    comm_pct = total_comm / total_time * 100 if total_time > 0 else 0.0
+
+    print(f"{indent}Communication vs Computation:")
+    print(f"{indent}  Compute:           {fmt_ms(total_compute):>10s} ms  ({comp_pct:.1f}%)")
+    print(f"{indent}  Communication:     {fmt_ms(total_comm):>10s} ms  ({comm_pct:.1f}%)")
+    for op_name, label in comm_op_names.items():
+        t = comm_by_type[op_name]
+        if t > 0:
+            pct = t / total_time * 100
+            print(f"{indent}    {label + ':':.<19s}{fmt_ms(t):>10s} ms  ({pct:.1f}%)")
+    print(f"{indent}  Total:             {fmt_ms(total_time):>10s} ms")
+    print()
 
 
 def print_config_summary(cfg: Config):
@@ -169,6 +215,9 @@ def print_phase_report(phase: PhaseProfile, cfg: Config, detailed_step: Optional
         print(f"    Extra ops total: {fmt_ms(extra_time)} ms")
         print()
 
+    # Communication vs Computation
+    print_comm_analysis(detail_phase, indent="  ")
+
     # Totals
     if is_decode and detailed_step:
         step_time = detailed_step.total_time_s
@@ -273,23 +322,30 @@ def export_layer_summary_csv(filepath: str, prefill: PhaseProfile,
         writer.writerow([
             "phase", "layer_idx", "ratio", "total_time_ms",
             "cube_time_ms", "vec_time_ms", "mem_time_ms", "comm_time_ms",
+            "comp_time_ms", "comm_pct",
             "bottleneck"
         ])
         for lp in prefill.layer_profiles:
             t = lp.total
+            comp = t.time_s - t.comm_time_s
+            cpct = t.comm_time_s / t.time_s * 100 if t.time_s > 0 else 0.0
             writer.writerow([
                 "prefill", lp.layer_idx, lp.ratio,
                 f"{t.time_s * 1000:.6f}", f"{t.cube_time_s * 1000:.6f}",
                 f"{t.vec_time_s * 1000:.6f}", f"{t.mem_time_s * 1000:.6f}",
-                f"{t.comm_time_s * 1000:.6f}", t.bottleneck
+                f"{t.comm_time_s * 1000:.6f}", f"{comp * 1000:.6f}",
+                f"{cpct:.2f}", t.bottleneck
             ])
         for lp in decode_step_profile.layer_profiles:
             t = lp.total
+            comp = t.time_s - t.comm_time_s
+            cpct = t.comm_time_s / t.time_s * 100 if t.time_s > 0 else 0.0
             writer.writerow([
                 "decode", lp.layer_idx, lp.ratio,
                 f"{t.time_s * 1000:.6f}", f"{t.cube_time_s * 1000:.6f}",
                 f"{t.vec_time_s * 1000:.6f}", f"{t.mem_time_s * 1000:.6f}",
-                f"{t.comm_time_s * 1000:.6f}", t.bottleneck
+                f"{t.comm_time_s * 1000:.6f}", f"{comp * 1000:.6f}",
+                f"{cpct:.2f}", t.bottleneck
             ])
 
 

@@ -9,6 +9,8 @@ No external dependencies — Python stdlib only.
 python main.py configs/device_910C.json configs/network_910C.json configs/model_deepseekv4.json configs/runtime_deepseekv4.json
 ```
 
+Output is saved to `output/<timestamp>/` with CSV exports and console log.
+
 ## Directory Structure
 
 ```
@@ -20,8 +22,9 @@ perf_model/               # Core package
   ops.py                  # ~30 per-op cost functions (attention, MoE, index, etc.)
   layers.py               # Layer/phase aggregation (prefill_layer, decode_layer, prefill_model, decode_model)
   memory.py               # KV cache + weight memory analysis
-  report.py               # Formatting + printing functions
+  report.py               # Formatting, printing, CSV export, comm vs compute analysis
 main.py                   # CLI entry point (thin wrapper)
+output/                   # Auto-generated: timestamped runs with CSV + console output
 ```
 
 ## Architecture
@@ -36,11 +39,22 @@ Pipeline: **config** -> **roofline** -> **ops** -> **layers** -> **memory/report
 
 ## Key Conventions
 
+- DP (Data Parallel) splits global batch across ranks; per-rank batch = batch_size / dp
 - TP (Tensor Parallel) splits Q heads and output projections
 - EP (Expert Parallel) splits routed experts across ranks
 - SP (Sequence Parallel) splits sequence dimension for non-matmul ops
 - MoE `load_balance_factor` = 1.0 for first `n_hash_layers`, user-specified otherwise
 - Shared expert can overlap with routed experts (configurable)
+
+## Output
+
+Each run produces `output/<timestamp>/` containing:
+- `prefill_ops.csv`, `decode_ops.csv` — per-op breakdown
+- `layer_summary.csv` — per-layer summary with comp/comm split
+- `memory.csv` — KV cache + weight memory
+- `summary.csv` — end-to-end metrics including comm vs compute breakdown
+- `config.json` — merged config snapshot
+- `console_output.txt` — full console log
 
 ## Placeholder Locations
 
