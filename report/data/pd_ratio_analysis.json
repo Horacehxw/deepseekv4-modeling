@@ -7,8 +7,8 @@
         "dp": 2,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 404.5,
-        "tps_instance": 6471.93
+        "tps_per_gpu": 1655.66,
+        "tps_instance": 26490.48
       },
       "decode_config": {
         "tp": 4,
@@ -16,12 +16,12 @@
         "dp": 4,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 135.31,
-        "tps_instance": 2164.9
+        "tps_per_gpu": 181.08,
+        "tps_instance": 2897.27
       },
       "input_len": 8192,
       "output_len": 4096,
-      "pd_ratio_float": 0.669,
+      "pd_ratio_float": 0.219,
       "pd_ratio_ceil": 1,
       "total_gpus_min": 32,
       "label": "1P:1D"
@@ -33,8 +33,8 @@
         "dp": 2,
         "batch_size": 16,
         "gpus": 16,
-        "tps_per_gpu": 314.02,
-        "tps_instance": 5024.31
+        "tps_per_gpu": 759.71,
+        "tps_instance": 12155.38
       },
       "decode_config": {
         "tp": 4,
@@ -42,15 +42,15 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 32,
-        "tps_per_gpu": 15.69,
-        "tps_instance": 502.18
+        "tps_per_gpu": 16.67,
+        "tps_instance": 533.46
       },
       "input_len": 131072,
       "output_len": 4096,
-      "pd_ratio_float": 3.198,
-      "pd_ratio_ceil": 4,
-      "total_gpus_min": 96,
-      "label": "4P:1D"
+      "pd_ratio_float": 1.404,
+      "pd_ratio_ceil": 2,
+      "total_gpus_min": 64,
+      "label": "2P:1D"
     },
     "256K_4K": {
       "prefill_config": {
@@ -59,8 +59,8 @@
         "dp": 2,
         "batch_size": 8,
         "gpus": 16,
-        "tps_per_gpu": 253.53,
-        "tps_instance": 4056.49
+        "tps_per_gpu": 481.68,
+        "tps_instance": 7706.85
       },
       "decode_config": {
         "tp": 4,
@@ -68,15 +68,15 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 32,
-        "tps_per_gpu": 8.26,
-        "tps_instance": 264.3
+        "tps_per_gpu": 8.52,
+        "tps_instance": 272.72
       },
       "input_len": 262144,
       "output_len": 4096,
-      "pd_ratio_float": 4.17,
-      "pd_ratio_ceil": 5,
-      "total_gpus_min": 112,
-      "label": "5P:1D"
+      "pd_ratio_float": 2.265,
+      "pd_ratio_ceil": 3,
+      "total_gpus_min": 80,
+      "label": "3P:1D"
     }
   },
   "H20": {
@@ -87,8 +87,8 @@
         "dp": 1,
         "batch_size": 128,
         "gpus": 8,
-        "tps_per_gpu": 1040.16,
-        "tps_instance": 8321.28
+        "tps_per_gpu": 1848.29,
+        "tps_instance": 14786.35
       },
       "decode_config": {
         "tp": 8,
@@ -96,12 +96,12 @@
         "dp": 2,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 207.7,
-        "tps_instance": 3323.14
+        "tps_per_gpu": 251.63,
+        "tps_instance": 4026.14
       },
       "input_len": 8192,
       "output_len": 4096,
-      "pd_ratio_float": 0.799,
+      "pd_ratio_float": 0.545,
       "pd_ratio_ceil": 1,
       "total_gpus_min": 24,
       "label": "1P:1D"
@@ -113,8 +113,8 @@
         "dp": 1,
         "batch_size": 8,
         "gpus": 8,
-        "tps_per_gpu": 597.41,
-        "tps_instance": 4779.3
+        "tps_per_gpu": 797.75,
+        "tps_instance": 6381.96
       },
       "decode_config": {
         "tp": 4,
@@ -122,15 +122,15 @@
         "dp": 4,
         "batch_size": 64,
         "gpus": 16,
-        "tps_per_gpu": 45.62,
-        "tps_instance": 729.99
+        "tps_per_gpu": 47.44,
+        "tps_instance": 759.11
       },
       "input_len": 131072,
       "output_len": 4096,
-      "pd_ratio_float": 4.888,
-      "pd_ratio_ceil": 5,
-      "total_gpus_min": 56,
-      "label": "5P:1D"
+      "pd_ratio_float": 3.806,
+      "pd_ratio_ceil": 4,
+      "total_gpus_min": 48,
+      "label": "4P:1D"
     },
     "256K_4K": {
       "prefill_config": {
@@ -139,24 +139,24 @@
         "dp": 1,
         "batch_size": 4,
         "gpus": 8,
-        "tps_per_gpu": 410.87,
-        "tps_instance": 3286.94
+        "tps_per_gpu": 496.64,
+        "tps_instance": 3973.13
       },
       "decode_config": {
         "tp": 4,
-        "ep": 16,
-        "dp": 4,
-        "batch_size": 32,
-        "gpus": 16,
-        "tps_per_gpu": 24.62,
-        "tps_instance": 393.9
+        "ep": 32,
+        "dp": 8,
+        "batch_size": 128,
+        "gpus": 32,
+        "tps_per_gpu": 25.61,
+        "tps_instance": 819.61
       },
       "input_len": 262144,
       "output_len": 4096,
-      "pd_ratio_float": 7.67,
-      "pd_ratio_ceil": 8,
-      "total_gpus_min": 80,
-      "label": "8P:1D"
+      "pd_ratio_float": 13.202,
+      "pd_ratio_ceil": 14,
+      "total_gpus_min": 144,
+      "label": "14P:1D"
     }
   }
 }

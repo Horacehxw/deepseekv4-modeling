@@ -71,15 +71,20 @@ def load_base_config(hw_name):
 
 
 def make_config(base_cfg, tp, ep, dp, batch_size, seq_len, output_len,
-                sp=True, shared_expert_overlapped=True, mhc_sp=False):
-    new_rt = replace(
-        base_cfg.rt,
+                sp=True, shared_expert_overlapped=True, mhc_sp=False,
+                mhc_kernel_fused=None, mhc_fused_bf16=None):
+    kwargs = dict(
         tp=tp, ep=ep, dp=dp,
         batch_size=batch_size, seq_len=seq_len,
         output_len=output_len,
         sp=sp, shared_expert_overlapped=shared_expert_overlapped,
         mhc_sp=mhc_sp,
     )
+    if mhc_kernel_fused is not None:
+        kwargs["mhc_kernel_fused"] = mhc_kernel_fused
+    if mhc_fused_bf16 is not None:
+        kwargs["mhc_fused_bf16"] = mhc_fused_bf16
+    new_rt = replace(base_cfg.rt, **kwargs)
     return replace(base_cfg, rt=new_rt)
 
 
@@ -239,7 +244,8 @@ OP_CATEGORIES = {
     "Lightning Index": ["index_iq_proj", "index_ik_proj", "index_kv_compress",
                         "index_kv_compress_decode", "index_score", "index_score_ar"],
     "mHC": ["mhc_pre_attn", "sinkhorn_attn", "mhc_post_attn",
-            "mhc_pre_moe", "sinkhorn_moe", "mhc_post_moe"],
+            "mhc_pre_moe", "sinkhorn_moe", "mhc_post_moe",
+            "mhc_post_attn_pre_moe"],
     "MoE Gate": ["moe_gate"],
     "MoE Routed": ["routed_gate_proj", "routed_up_proj", "routed_silu_mul", "routed_down_proj"],
     "MoE Shared": ["shared_gate_proj", "shared_up_proj", "shared_silu_mul", "shared_down_proj",
@@ -345,6 +351,68 @@ def run_sp_comparison(base_cfg, seq_len, output_len, tp, ep, dp, batch_size):
 
 
 # ---------------------------------------------------------------------------
+# mHC Optimization Comparison
+# ---------------------------------------------------------------------------
+
+MHC_OPTIMIZATION_LEVELS = [
+    {"label": "unfused_fp32",   "mhc_kernel_fused": False, "mhc_sp": False, "mhc_fused_bf16": False,
+     "description": "Original baseline (unfused FP32)"},
+    {"label": "fused_fp32",     "mhc_kernel_fused": True,  "mhc_sp": False, "mhc_fused_bf16": False,
+     "description": "Kernel-fused FP32 (new default)"},
+    {"label": "fused_fp32_sp",  "mhc_kernel_fused": True,  "mhc_sp": True,  "mhc_fused_bf16": False,
+     "description": "Kernel-fused FP32 + Sequence Parallelism"},
+    {"label": "fused_bf16_sp",  "mhc_kernel_fused": True,  "mhc_sp": True,  "mhc_fused_bf16": True,
+     "description": "Kernel-fused BF16 + Sequence Parallelism"},
+]
+
+
+def run_mhc_optimization_comparison(base_cfg, seq_len, output_len, tp, ep, dp, batch_size):
+    """Benchmark 4 mHC optimization levels for prefill and decode."""
+    results = {}
+
+    for level in MHC_OPTIMIZATION_LEVELS:
+        label = level["label"]
+        cfg = make_config(base_cfg, tp=tp, ep=ep, dp=dp,
+                          batch_size=batch_size, seq_len=seq_len,
+                          output_len=output_len, sp=True,
+                          mhc_sp=level["mhc_sp"],
+                          mhc_kernel_fused=level["mhc_kernel_fused"],
+                          mhc_fused_bf16=level["mhc_fused_bf16"])
+
+        # Prefill
+        ops_p, time_p = collect_all_ops_prefill(cfg)
+        cat_p = categorize_ops(ops_p)
+
+        # Decode (at seq_len)
+        ops_d, time_d = collect_all_ops_decode(cfg)
+        cat_d = categorize_ops(ops_d)
+
+        # Per-op detail for representative layer (layer 3, C4A)
+        lp = prefill_layer(3, cfg)
+        per_op_detail = []
+        for op in lp.ops:
+            per_op_detail.append({
+                "name": op.name,
+                "time_ms": op.time_s * 1000,
+                "bottleneck": op.bottleneck,
+            })
+
+        results[label] = {
+            "description": level["description"],
+            "mhc_kernel_fused": level["mhc_kernel_fused"],
+            "mhc_sp": level["mhc_sp"],
+            "mhc_fused_bf16": level["mhc_fused_bf16"],
+            "prefill_time_ms": time_p * 1000,
+            "decode_step_ms": time_d * 1000,
+            "prefill_category_breakdown": cat_p,
+            "decode_category_breakdown": cat_d,
+            "representative_layer_ops": per_op_detail,
+        }
+
+    return results
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -356,6 +424,7 @@ def main():
     all_pd_results = {}
     all_op_analysis = {}
     all_sp_comparison = {}
+    all_mhc_comparison = {}
 
     for hw_name in ["910C", "H20"]:
         print(f"\n{'='*70}")
@@ -369,6 +438,7 @@ def main():
         hw_pd = {}
         hw_ops = {}
         hw_sp = {}
+        hw_mhc = {}
 
         for combo in COMBOS:
             combo_name = combo["name"]
@@ -525,10 +595,54 @@ def main():
                   f"SP={sp_result['SP_only']['prefill_time_ms']:.1f}ms, "
                   f"SP+mHC_SP={sp_result['SP_mHC_SP']['prefill_time_ms']:.1f}ms")
 
+        # --- mHC Optimization Comparison ---
+        print(f"\n  --- mHC Optimization Comparison ({hw_name}) ---")
+        mhc_tp, mhc_ep, mhc_dp, mhc_bs = 8, 16, 2, 16
+        for combo in COMBOS:
+            combo_name = combo["name"]
+            seq_len = combo["seq_len"]
+            output_len = combo["output_len"]
+
+            # Check memory first (use unfused FP32 — largest weight footprint is same)
+            cfg_test = make_config(base_cfg, tp=mhc_tp, ep=mhc_ep, dp=mhc_dp,
+                                   batch_size=mhc_bs, seq_len=seq_len,
+                                   output_len=output_len)
+            _, _, total_gb, fits = check_memory(cfg_test, hbm_limit)
+
+            if not fits:
+                for smaller_bs in [8, 4, 2, 1]:
+                    cfg_test = make_config(base_cfg, tp=mhc_tp, ep=mhc_ep, dp=mhc_dp,
+                                           batch_size=smaller_bs * mhc_dp, seq_len=seq_len,
+                                           output_len=output_len)
+                    _, _, total_gb, fits = check_memory(cfg_test, hbm_limit)
+                    if fits:
+                        mhc_bs_actual = smaller_bs * mhc_dp
+                        break
+                else:
+                    print(f"    {combo_name}: Cannot fit in memory for mHC comparison, skipping")
+                    hw_mhc[combo_name] = {"error": "OOM"}
+                    continue
+            else:
+                mhc_bs_actual = mhc_bs
+
+            mhc_result = run_mhc_optimization_comparison(
+                base_cfg, seq_len, output_len,
+                mhc_tp, mhc_ep, mhc_dp, mhc_bs_actual)
+            hw_mhc[combo_name] = mhc_result
+
+            uf = mhc_result["unfused_fp32"]["prefill_time_ms"]
+            ff = mhc_result["fused_fp32"]["prefill_time_ms"]
+            fs = mhc_result["fused_fp32_sp"]["prefill_time_ms"]
+            fb = mhc_result["fused_bf16_sp"]["prefill_time_ms"]
+            print(f"    {combo_name}: unfused={uf:.1f}ms, fused={ff:.1f}ms, "
+                  f"fused+SP={fs:.1f}ms, fused_bf16+SP={fb:.1f}ms "
+                  f"(speedup: {uf/fb:.2f}x)")
+
         all_search_results[hw_name] = hw_search
         all_pd_results[hw_name] = hw_pd
         all_op_analysis[hw_name] = hw_ops
         all_sp_comparison[hw_name] = hw_sp
+        all_mhc_comparison[hw_name] = hw_mhc
 
     # --- Hardware Comparison ---
     print(f"\n{'='*70}")
@@ -565,6 +679,7 @@ def main():
     save_json("pd_ratio_analysis.json", all_pd_results)
     save_json("op_analysis.json", all_op_analysis)
     save_json("sp_comparison.json", all_sp_comparison)
+    save_json("mhc_optimization_comparison.json", all_mhc_comparison)
     save_json("hardware_comparison.json", hw_comparison)
 
     # --- Summary ---

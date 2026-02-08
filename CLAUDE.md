@@ -50,6 +50,10 @@ Pipeline: **config** -> **roofline** -> **ops** -> **layers** -> **memory/report
 - SP (Sequence Parallel) splits sequence dimension for non-matmul ops; AllGather at T_sp -> T_full transitions
 - MoE `load_balance_factor` = 1.0 for first `n_hash_layers`, user-specified otherwise
 - Shared expert can overlap with routed experts (configurable)
+- `mhc_kernel_fused` (default: True): Fused mHC ops eliminate separate sinkhorn/pre/post, ~10x less HBM traffic
+- `mhc_sp` (default: False): Sequence Parallelism for mHC operations (parallelize across TP)
+- `mhc_fused_bf16` (default: False): Use BF16 precision in fused mHC ops (requires mhc_kernel_fused=True)
+- `shared_expert_overlapped` (default: True): Shared expert overlaps with MoE dispatch/combine communication
 
 ## Output
 
@@ -83,10 +87,10 @@ python param_search/analyze.py    # Analyze results and generate report
 **Search grid:** TP ∈ {1..64}, EP ∈ {1..256}, DP ∈ {1..8}, BS ∈ {1..512}, seq ∈ {1K..32K}
 
 Key results (Ascend 910C):
-- Best prefill latency: TP=8, EP=64, DP=8, BS=8 → 179.9ms (64 GPUs)
-- Best decode latency: TP=8, EP=64, DP=8, BS=8 → 14.6ms/step (64 GPUs)
-- Best prefill throughput: TP=8, EP=16, DP=2, BS=512 → 411 tps/gpu (16 GPUs)
-- Best decode throughput: TP=8, EP=16, DP=2, BS=512 → 207 tps/gpu (16 GPUs)
+- Best prefill latency: TP=8, EP=64, DP=8, BS=8 → 330ms (64 GPUs)
+- Best decode latency: TP=4, EP=32, DP=8, BS=8 → 19.3ms/step (32 GPUs)
+- Best prefill throughput: TP=8, EP=16, DP=2, BS=256 → 1,656 tps/gpu (16 GPUs)
+- Best decode throughput: TP=4, EP=16, DP=4, BS=512 → 181 tps/gpu (16 GPUs)
 
 See `param_search/report.md` for detailed analysis.
 

@@ -7,5 +7,6 @@
     "sp": true,
     "moe_load_balance_factor": 1.2,
     "output_len": 4096,
-    "shared_expert_overlapped": false
+    "shared_expert_overlapped": true,
+    "mhc_kernel_fused": true
 }

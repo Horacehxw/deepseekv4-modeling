@@ -8,6 +8,8 @@
 - **并行策略建模**：支持 TP（张量并行）、DP（数据并行）、EP（专家并行）、SP（序列并行）
 - **通信分析**：AllReduce、AllToAll 和 AllGather 通信代价估算；逐层和逐阶段的通信 vs 计算分解
 - **逐算子分析**：约 30 个独立算子代价函数，覆盖注意力投影、Lightning Index、MoE、mHC 等
+- **mHC 内核融合**（默认开启）：融合 mHC 算子将 HBM 流量减少约 10 倍，中间结果保留在寄存器/SRAM 中
+- **共享专家重叠**（默认开启）：共享专家计算与 MoE 调度/汇总通信重叠
 - **显存分析**：KV Cache 大小和每卡权重显存
 - **CSV 导出**：带时间戳的输出目录，包含逐算子、逐层、显存和汇总 CSV
 - **零依赖**：仅使用 Python 标准库
@@ -100,14 +102,14 @@ python param_search/analyze.py    # 分析结果并生成报告
 **GPU 公式：** `physical_gpus = TP * DP`，约束 `(TP*DP) % EP == 0`
 **约束条件：** GPU 数量 ∈ [8, 64]，HBM ≤ 64 GB
 
-**关键结果（昇腾 910C）：**
+**关键结果（昇腾 910C，8K/4K）：**
 
 | 场景 | 最优配置 | 关键指标 | GPU 数 |
 |:---|:---|---:|---:|
-| Prefill 延迟 | TP=8, EP=64, DP=8, BS=8 | 179.9 ms | 64 |
-| Decode 延迟 | TP=8, EP=64, DP=8, BS=8 | 14.6 ms/步 | 64 |
-| Prefill 吞吐 | TP=8, EP=16, DP=2, BS=512 | 411 tok/s/GPU | 16 |
-| Decode 吞吐 | TP=8, EP=16, DP=2, BS=512 | 207 tok/s/GPU | 16 |
+| Prefill 延迟 | TP=8, EP=64, DP=8, BS=8 | 330 ms | 64 |
+| Decode 延迟 | TP=4, EP=32, DP=8, BS=8 | 19.3 ms/步 | 32 |
+| Prefill 吞吐 | TP=8, EP=16, DP=2, BS=256 | 1,656 tok/s/GPU | 16 |
+| Decode 吞吐 | TP=4, EP=16, DP=4, BS=512 | 181 tok/s/GPU | 16 |
 
 详细分析请参见 [`param_search/report.md`](param_search/report.md)，包含逐序列长度分析、SP 影响、批大小缩放和部署建议。
 
@@ -116,7 +118,8 @@ python param_search/analyze.py    # 分析结果并生成报告
 - 所有权重和激活使用 BF16（2 字节）
 - Flash Attention 显存模型（中间结果不写回 HBM）
 - 哈希路由层的 MoE 负载均衡因子 = 1.0，其他层可配置
-- 共享专家可与路由专家完全重叠计算（可配置）
+- 共享专家可与路由专家完全重叠计算（可配置，默认开启）
+- mHC 内核融合默认开启：融合后 mHC 前/后投影的中间结果保留在寄存器/SRAM 中，不写回 HBM
 - 通信建模为叠加模式（不与计算重叠）
 - SP（序列并行）在 Prefill 阶段的每个 T_sp -> T_full 转换点插入 AllGather（注意力之前、MoE 前后、LM Head 之前）
 - 单批次 Decode 时 SP 无收益（T=1）

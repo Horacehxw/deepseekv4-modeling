@@ -8,6 +8,8 @@ A roofline-based performance model for estimating DeepSeek V4 inference latency 
 - **Parallelism**: Models TP (Tensor Parallel), DP (Data Parallel), EP (Expert Parallel), and SP (Sequence Parallel)
 - **Communication analysis**: AllReduce, AllToAll, and AllGather cost estimation; comm vs compute breakdown per layer and per phase
 - **Per-op breakdown**: ~30 individual operation cost functions covering attention projections, Lightning Index, MoE, mHC, and more
+- **mHC kernel fusion** (enabled by default): Fused mHC ops reduce HBM traffic ~10x by keeping intermediates in registers/SRAM
+- **Shared expert overlap** (enabled by default): Shared expert computation overlaps with MoE dispatch/combine communication
 - **Memory analysis**: KV cache sizing and weight memory per rank
 - **CSV export**: Timestamped output directory with per-op, per-layer, memory, and summary CSVs
 - **No dependencies**: Python standard library only
@@ -104,10 +106,10 @@ The search evaluates 4 independent scenarios:
 
 | Scenario | Best Config | Key Metric | GPUs |
 |:---|:---|---:|---:|
-| Prefill Latency | TP=8, EP=64, DP=8, BS=8 | 179.9 ms | 64 |
-| Decode Latency | TP=8, EP=64, DP=8, BS=8 | 14.6 ms/step | 64 |
-| Prefill Throughput | TP=8, EP=16, DP=2, BS=512 | 411 tok/s/GPU | 16 |
-| Decode Throughput | TP=8, EP=16, DP=2, BS=512 | 207 tok/s/GPU | 16 |
+| Prefill Latency | TP=8, EP=64, DP=8, BS=8 | 330 ms | 64 |
+| Decode Latency | TP=4, EP=32, DP=8, BS=8 | 19.3 ms/step | 32 |
+| Prefill Throughput | TP=8, EP=16, DP=2, BS=256 | 1,656 tok/s/GPU | 16 |
+| Decode Throughput | TP=4, EP=16, DP=4, BS=512 | 181 tok/s/GPU | 16 |
 
 See [`param_search/report.md`](param_search/report.md) for detailed analysis including per-sequence-length breakdowns, SP impact, batch scaling, and deployment recommendations.
 
