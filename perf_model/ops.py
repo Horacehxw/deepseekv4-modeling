@@ -398,10 +398,14 @@ def op_attention_decode_compressed(B: int, S_total: int, ratio: int, cfg: Config
 # --- mHC (Hyper Connection) ---
 
 def op_mhc_pre(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
-    """mHC pre: linear projections before sub-layer.
+    """mHC pre (UNFUSED baseline): linear projections before sub-layer.
     T is effective token count (B*S/TP if SP, else B*S).
     n = hc_mult, D = hidden_size.
-    FP32 throughout (×4 bytes per element)."""
+    FP32 throughout (×4 bytes per element).
+
+    Without kernel fusion, each intermediate step materializes its result
+    to HBM. The dominant memory term T*(n²+2n)*n*D captures these
+    unfused intermediate tensors — the main bottleneck."""
     n = cfg.model.hc_mult
     D = cfg.model.hidden_size
     cube_flops = 2 * T * (n**2 + 2*n) * n * D + 5 * T * n + 2 * T * n**2
@@ -412,9 +416,13 @@ def op_mhc_pre(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
 
 
 def op_mhc_sinkhorn(T: int, cfg: Config, label: str = "sinkhorn") -> OpProfile:
-    """Sinkhorn normalization step.
+    """Sinkhorn normalization step (UNFUSED baseline).
     T is effective token count, n = hc_mult.
-    FP32 throughout (×4 bytes per element)."""
+    FP32 throughout (×4 bytes per element).
+
+    Without fusion, each of the 20 Sinkhorn iterations reads/writes the
+    n×n matrix from/to HBM per token. With fusion, the n×n matrix lives
+    in registers (only 16 FP32 values for n=4)."""
     n = cfg.model.hc_mult
     cube_flops = 0
     vec_ops = T * n**2 + 40 * T * n * (2*n - 1)
@@ -424,7 +432,7 @@ def op_mhc_sinkhorn(T: int, cfg: Config, label: str = "sinkhorn") -> OpProfile:
 
 
 def op_mhc_post(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile:
-    """mHC post: linear projections after sub-layer.
+    """mHC post (UNFUSED baseline): linear projections after sub-layer.
     T is effective token count, n = hc_mult, D = hidden_size.
     FP32 throughout (×4 bytes per element)."""
     n = cfg.model.hc_mult
@@ -433,6 +441,233 @@ def op_mhc_post(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile:
     vec_ops = 0
     # FP32 memory
     mem_bytes = 4 * (T * n + T * D + 6 * T * n * D + T * n**2)
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+
+
+# ── Fused mHC ops (kernel fusion) ──────────────────────────────────────────
+#
+# Background (mHC paper, arXiv:2512.24880):
+#
+#   The mHC layer update is:
+#     x_{l+1} = H_res_l · x_l  +  H_post_l ⊗ F(H_pre_l · x_l, W_l)
+#
+#   where  x_l ∈ [T, n, D]   — expanded hidden state (n parallel streams)
+#          H_res ∈ [n, n]     — doubly stochastic residual mixing matrix
+#          H_pre ∈ [n]        — non-negative aggregation weights (softmax)
+#          H_post ∈ [n]       — non-negative distribution weights (softmax)
+#          F()                — sub-layer function (attention or MoE)
+#
+#   H_res is constrained to the Birkhoff polytope (doubly stochastic) via
+#   Sinkhorn-Knopp: 20 iterations of alternating row/column normalization.
+#   This ensures spectral norm ≤ 1, preventing signal amplification.
+#
+# Why fusion matters:
+#
+#   The unfused mHC ops have arithmetic intensity (AI) of only ~0.4 FLOP/byte,
+#   vs ~745 FLOP/byte for standard matmuls like Q/K/V projections. This means
+#   mHC is entirely MEM-bound: the bottleneck is HBM traffic, not compute.
+#
+#   Root cause: without fusion, intermediate tensors of shape [T, (n²+2n), n*D]
+#   are written to HBM between every elementwise step, then immediately re-read.
+#   These intermediates are ~21× larger than the actual input+output.
+#
+#   With kernel fusion, ALL intermediates stay in on-chip SRAM/registers:
+#   - H_res [n,n] = 16 FP32 values (for n=4) → fits in registers
+#   - H_pre [n] = 4 values → fits in registers
+#   - Sinkhorn iterations operate on 4×4 matrix in registers
+#   - Per-token computation: small [n,n]×[n,D] matmul in SRAM
+#
+#   Only the true inputs and outputs traverse HBM.
+#
+# Memory reduction (n=4, D=4096, T=8192, comparing one mhc_pre call):
+#
+#   Unfused FP32:  14.5 GB  (AI = 0.4 FLOP/byte)  → 10.07 ms on 910C
+#   Fused   FP32:   1.2 GB  (AI = 5.3 FLOP/byte)  →  0.84 ms (12× faster)
+#   Fused   BF16:   0.6 GB  (AI = 10.6 FLOP/byte) →  0.42 ms (24× faster)
+#
+# ────────────────────────────────────────────────────────────────────────────
+
+def op_mhc_pre_fused(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
+    """Fused mHC pre + Sinkhorn: single kernel for residual mixing + aggregation.
+
+    Fuses three previously separate ops into one kernel:
+      1. Sinkhorn normalization of H_res  (was: op_mhc_sinkhorn)
+      2. Residual mixing: H_res @ x_l     (was: part of op_mhc_pre)
+      3. Input aggregation: H_pre · x_l   (was: part of op_mhc_pre)
+
+    Kernel pseudocode (one GPU kernel launch):
+    ──────────────────────────────────────────
+      // Phase 1: Sinkhorn in registers (shared across all token tiles)
+      H = exp(H_res_logits)                         // [n, n] in registers
+      for iter in range(20):                         // 20 Sinkhorn iterations
+          H[i,j] /= sum_j(H[i,:])   for all i      // row normalize
+          H[i,j] /= sum_i(H[:,j])   for all j      // col normalize
+      h_pre = softmax(H_pre_logits)                  // [n] in registers
+
+      // Phase 2: stream through x_l in tiles
+      for tile in tiles(T):
+          x_tile = load(x_l[tile, :, :])             // [tile_sz, n, D] from HBM
+          // Residual mixing: [n,n] @ [tile_sz, n, D] → [tile_sz, n, D]
+          residual_tile = einsum('ij, tjd -> tid', H, x_tile)   // in SRAM
+          // Input aggregation: [n] · [tile_sz, n, D] → [tile_sz, D]
+          sub_input_tile = einsum('i, tid -> td', h_pre, x_tile) // in SRAM
+          store(residual[tile, :, :], residual_tile)  // to HBM
+          store(sub_input[tile, :], sub_input_tile)   // to HBM
+
+    HBM traffic:
+      Read:  x_l [T, n, D]              → bpe × T × n × D
+      Read:  H_res_logits [n, n]         → 4 × n² (negligible)
+      Read:  H_pre_logits [n]            → 4 × n  (negligible)
+      Write: residual [T, n, D]          → bpe × T × n × D
+      Write: sub_input [T, D]            → bpe × T × D
+      ─────────────────────────────────────────────────
+      Total ≈ bpe × T × D × (2n + 1)
+
+    where bpe = 2 (BF16, inference-safe) or 4 (FP32).
+
+    Compared to unfused: 4 × T × (n²+2n) × n × D  (≈ 21× more for n=4, FP32)
+
+    FLOPs unchanged — same computation, just better memory access pattern.
+    """
+    n = cfg.model.hc_mult
+    D = cfg.model.hidden_size
+
+    # FLOPs: identical to unfused pre + sinkhorn combined
+    # pre:      2*T*(n²+2n)*n*D + 5*T*n + 2*T*n²  (H_res matmul + H_pre dot)
+    # sinkhorn: T*n² + 40*T*n*(2n-1)               (20 iters × row/col norm)
+    cube_flops = 2 * T * (n**2 + 2*n) * n * D + 5 * T * n + 2 * T * n**2
+    vec_ops = T * n**2 + 40 * T * n * (2*n - 1) + 2 * T * n
+
+    # Fused HBM traffic: ONLY input read + output writes
+    # BF16 is safe for inference because H_res is doubly stochastic
+    # (spectral norm ≤ 1, no signal amplification without gradients)
+    bpe = 2 if cfg.rt.mhc_fused_bf16 else 4
+    mem_bytes = (
+        bpe * T * n * D           # read x_l [T, n, D]
+        + bpe * T * n * D         # write residual [T, n, D]
+        + bpe * T * D             # write sub_input [T, D]
+        + 4 * (n * n + n)         # read weights (FP32, negligible)
+    )
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+
+
+def op_mhc_post_fused(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile:
+    """Fused mHC post: distribute sub-layer output back to n streams + residual add.
+
+    Mathematical operation:
+      x_{l+1}[t, i, :] = residual[t, i, :] + H_post[i] × sub_output[t, :]
+
+    where H_post = softmax(H_post_logits) ∈ [n], non-negative, sums to 1.
+    This scatters the sub-layer's [T, D] output into the [T, n, D] stream,
+    weighted by H_post, then adds the stored residual from mhc_pre.
+
+    Kernel pseudocode:
+    ──────────────────────────────────────────
+      h_post = softmax(H_post_logits)                // [n] in registers
+      for tile in tiles(T):
+          res_tile = load(residual[tile, :, :])       // [tile_sz, n, D] from HBM
+          y_tile = load(sub_output[tile, :])           // [tile_sz, D] from HBM
+          // Broadcast multiply + add:
+          // x_next[t, i, d] = res[t, i, d] + h_post[i] * y[t, d]
+          x_next_tile = res_tile + outer(h_post, y_tile)  // in SRAM
+          store(x_next[tile, :, :], x_next_tile)      // to HBM
+
+    HBM traffic:
+      Read:  residual [T, n, D]          → bpe × T × n × D
+      Read:  sub_output [T, D]           → bpe × T × D
+      Read:  H_post_logits [n]           → 4 × n  (negligible)
+      Write: x_{l+1} [T, n, D]          → bpe × T × n × D
+      ─────────────────────────────────────────────────
+      Total ≈ bpe × T × D × (2n + 1)
+
+    Compared to unfused: 4 × (T*n + T*D + 6*T*n*D + T*n²)  (≈ 2.8× more)
+    """
+    n = cfg.model.hc_mult
+    D = cfg.model.hidden_size
+
+    # FLOPs: same as unfused
+    cube_flops = 2 * T * n**2 * D + 3 * T * n * D
+    vec_ops = 0
+
+    # Fused HBM traffic
+    bpe = 2 if cfg.rt.mhc_fused_bf16 else 4
+    mem_bytes = (
+        bpe * T * n * D           # read residual [T, n, D]
+        + bpe * T * D             # read sub_output [T, D]
+        + bpe * T * n * D         # write x_{l+1} [T, n, D]
+        + 4 * n                   # read H_post logits (FP32, negligible)
+    )
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+
+
+def op_mhc_post_pre_fused(T: int, cfg: Config, label: str = "mhc_post_pre") -> OpProfile:
+    """Deep-fused mHC: post(sublayer_k) + sinkhorn(k+1) + pre(sublayer_k+1).
+
+    This fuses across the sublayer boundary (e.g. post_attn → pre_moe),
+    eliminating the intermediate x_{l+0.5} from HBM entirely.
+
+    In the standard (unfused) flow within one layer:
+      ... → F_attn() → mhc_post_attn → mhc_pre_moe → RMSNorm → F_moe() → ...
+                           ↓   writes x_{l+0.5}   ↑ reads x_{l+0.5}
+
+    With deep fusion, x_{l+0.5} stays in SRAM:
+      ... → F_attn() → [mhc_post_attn + mhc_pre_moe fused] → RMSNorm → F_moe() → ...
+
+    Kernel pseudocode:
+    ──────────────────────────────────────────
+      // Load all weights into registers
+      h_post_k   = softmax(H_post_logits_k)               // [n]
+      H_res_k1   = sinkhorn(exp(H_res_logits_{k+1}), 20)  // [n, n]
+      h_pre_k1   = softmax(H_pre_logits_{k+1})             // [n]
+
+      for tile in tiles(T):
+          res_k     = load(residual_k[tile])                // [tile_sz, n, D]
+          y_k       = load(sub_output_k[tile])              // [tile_sz, D]
+
+          // ── Post step (sublayer k) ──
+          // x_mid = res_k + h_post_k ⊗ y_k                // [tile_sz, n, D]
+          x_mid = res_k + outer(h_post_k, y_k)             // stays in SRAM!
+
+          // ── Pre step (sublayer k+1) ──
+          // residual_{k+1} = H_res_{k+1} @ x_mid
+          res_k1 = einsum('ij, tjd -> tid', H_res_k1, x_mid)   // in SRAM
+          // sub_input_{k+1} = h_pre_{k+1} · x_mid
+          sub_k1 = einsum('i, tid -> td', h_pre_k1, x_mid)     // in SRAM
+
+          store(residual_{k+1}[tile], res_k1)               // to HBM
+          store(sub_input_{k+1}[tile], sub_k1)               // to HBM
+
+    HBM traffic:
+      Read:  residual_k [T, n, D]            → bpe × T × n × D
+      Read:  sub_output_k [T, D]             → bpe × T × D
+      Read:  weights (3 sets)                → 4 × (n² + 2n)  (negligible)
+      Write: residual_{k+1} [T, n, D]       → bpe × T × n × D
+      Write: sub_input_{k+1} [T, D]         → bpe × T × D
+      ─────────────────────────────────────────────────
+      Total ≈ bpe × T × D × (2n + 2)
+
+    vs. separate fused post + fused pre = 2 × bpe × T × D × (2n + 1)
+    Savings: eliminates bpe × T × n × D × 2 bytes (read+write of x_{l+0.5})
+    """
+    n = cfg.model.hc_mult
+    D = cfg.model.hidden_size
+
+    # FLOPs: sum of post + sinkhorn + pre
+    cube_flops = (
+        (2 * T * n**2 * D + 3 * T * n * D)                   # post
+        + (2 * T * (n**2 + 2*n) * n * D + 5 * T * n + 2 * T * n**2)  # pre
+    )
+    vec_ops = T * n**2 + 40 * T * n * (2*n - 1) + 2 * T * n  # sinkhorn + pre
+
+    # Deep-fused HBM traffic: x_{l+0.5} never written to HBM
+    bpe = 2 if cfg.rt.mhc_fused_bf16 else 4
+    mem_bytes = (
+        bpe * T * n * D           # read residual_k [T, n, D]
+        + bpe * T * D             # read sub_output_k [T, D]
+        + bpe * T * n * D         # write residual_{k+1} [T, n, D]
+        + bpe * T * D             # write sub_input_{k+1} [T, D]
+        + 4 * (n * n + 2 * n)    # read all weights (FP32, negligible)
+    )
     return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
 
 

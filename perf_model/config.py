@@ -86,6 +86,8 @@ class RuntimeConfig:
     output_len: int = 256
     shared_expert_overlapped: bool = True
     mhc_sp: bool = False
+    mhc_kernel_fused: bool = False   # Fuse mHC pre+sinkhorn+post into single kernels
+    mhc_fused_bf16: bool = False     # Use BF16 activations in fused mHC (inference only)
 
 
 @dataclass

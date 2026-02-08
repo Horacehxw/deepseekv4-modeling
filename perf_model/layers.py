@@ -15,6 +15,7 @@ from .ops import (
     op_attention_prefill_full, op_attention_prefill_compressed,
     op_attention_decode_full, op_attention_decode_compressed,
     op_mhc_pre, op_mhc_sinkhorn, op_mhc_post,
+    op_mhc_pre_fused, op_mhc_post_fused, op_mhc_post_pre_fused,
     op_moe_gate, op_moe_ep_dispatch, op_moe_ep_combine,
     op_moe_routed_experts, op_moe_shared_expert,
     op_rmsnorm, op_embedding, op_lm_head,
@@ -42,11 +43,17 @@ def prefill_layer(layer_idx: int, cfg: Config) -> LayerProfile:
     T_full = B * S
     T_sp = B * S // TP if cfg.rt.sp else T_full
     T_mhc = T_sp if (cfg.rt.sp and cfg.rt.mhc_sp) else T_full
+    fused = cfg.rt.mhc_kernel_fused
 
     ops = []
 
-    # mHC pre-attention
-    ops.append(op_mhc_pre(T_mhc, cfg, "mhc_pre_attn"))
+    # ── mHC pre-attention ──
+    # Unfused: mhc_pre + (later) sinkhorn_attn + mhc_post_attn
+    # Fused:   mhc_pre_fused absorbs sinkhorn; post handled later
+    if fused:
+        ops.append(op_mhc_pre_fused(T_mhc, cfg, "mhc_pre_attn"))
+    else:
+        ops.append(op_mhc_pre(T_mhc, cfg, "mhc_pre_attn"))
 
     # RMSNorm (in SP region)
     ops.append(op_rmsnorm(T_sp, cfg, "rmsnorm_attn"))
@@ -92,12 +99,15 @@ def prefill_layer(layer_idx: int, cfg: Config) -> LayerProfile:
     # TP AllReduce (or AG+RS for SP, same volume)
     ops.append(op_attn_tp_allreduce(T_full, cfg))
 
-    # mHC post-attention: sinkhorn + post
-    ops.append(op_mhc_sinkhorn(T_mhc, cfg, "sinkhorn_attn"))
-    ops.append(op_mhc_post(T_mhc, cfg, "mhc_post_attn"))
-
-    # mHC pre-MoE
-    ops.append(op_mhc_pre(T_mhc, cfg, "mhc_pre_moe"))
+    # ── mHC post-attention → pre-MoE ──
+    # Unfused: sinkhorn_attn + mhc_post_attn + mhc_pre_moe (3 separate ops)
+    # Fused:   deep-fused post_pre replaces all 3 — x_{l+0.5} stays on-chip
+    if fused:
+        ops.append(op_mhc_post_pre_fused(T_mhc, cfg, "mhc_post_attn_pre_moe"))
+    else:
+        ops.append(op_mhc_sinkhorn(T_mhc, cfg, "sinkhorn_attn"))
+        ops.append(op_mhc_post(T_mhc, cfg, "mhc_post_attn"))
+        ops.append(op_mhc_pre(T_mhc, cfg, "mhc_pre_moe"))
 
     # RMSNorm (in SP region)
     ops.append(op_rmsnorm(T_sp, cfg, "rmsnorm_moe"))
@@ -132,9 +142,14 @@ def prefill_layer(layer_idx: int, cfg: Config) -> LayerProfile:
     # SP AllGather: T_sp -> T_full after MoE combine
     ops.append(op_sp_allgather(T_sp, cfg, "sp_ag_after_moe"))
 
-    # mHC post-MoE: sinkhorn + post
-    ops.append(op_mhc_sinkhorn(T_mhc, cfg, "sinkhorn_moe"))
-    ops.append(op_mhc_post(T_mhc, cfg, "mhc_post_moe"))
+    # ── mHC post-MoE ──
+    # Unfused: sinkhorn_moe + mhc_post_moe
+    # Fused:   mhc_post_fused (sinkhorn was already in the pre_fused of next layer)
+    if fused:
+        ops.append(op_mhc_post_fused(T_mhc, cfg, "mhc_post_moe"))
+    else:
+        ops.append(op_mhc_sinkhorn(T_mhc, cfg, "sinkhorn_moe"))
+        ops.append(op_mhc_post(T_mhc, cfg, "mhc_post_moe"))
 
     lp = LayerProfile(layer_idx=layer_idx, ratio=ratio, ops=ops)
     lp.compute_total()
@@ -147,11 +162,15 @@ def decode_layer(layer_idx: int, S_total: int, cfg: Config) -> LayerProfile:
     TP = cfg.rt.tp
     ratio = cfg.model.compress_ratios[layer_idx]
     T_full = B * 1  # 1 token per sequence
+    fused = cfg.rt.mhc_kernel_fused
 
     ops = []
 
     # mHC pre-attention
-    ops.append(op_mhc_pre(T_full, cfg, "mhc_pre_attn"))
+    if fused:
+        ops.append(op_mhc_pre_fused(T_full, cfg, "mhc_pre_attn"))
+    else:
+        ops.append(op_mhc_pre(T_full, cfg, "mhc_pre_attn"))
 
     # RMSNorm
     ops.append(op_rmsnorm(T_full, cfg, "rmsnorm_attn"))
@@ -191,12 +210,13 @@ def decode_layer(layer_idx: int, S_total: int, cfg: Config) -> LayerProfile:
     # TP AllReduce
     ops.append(op_attn_tp_allreduce(T_full, cfg))
 
-    # mHC post-attention: sinkhorn + post
-    ops.append(op_mhc_sinkhorn(T_full, cfg, "sinkhorn_attn"))
-    ops.append(op_mhc_post(T_full, cfg, "mhc_post_attn"))
-
-    # mHC pre-MoE
-    ops.append(op_mhc_pre(T_full, cfg, "mhc_pre_moe"))
+    # mHC post-attention → pre-MoE
+    if fused:
+        ops.append(op_mhc_post_pre_fused(T_full, cfg, "mhc_post_attn_pre_moe"))
+    else:
+        ops.append(op_mhc_sinkhorn(T_full, cfg, "sinkhorn_attn"))
+        ops.append(op_mhc_post(T_full, cfg, "mhc_post_attn"))
+        ops.append(op_mhc_pre(T_full, cfg, "mhc_pre_moe"))
 
     # RMSNorm
     ops.append(op_rmsnorm(T_full, cfg, "rmsnorm_moe"))
@@ -224,9 +244,12 @@ def decode_layer(layer_idx: int, S_total: int, cfg: Config) -> LayerProfile:
         ops.append(op_moe_ep_combine(T_full, layer_idx, cfg))
         ops.extend(shared_ops)
 
-    # mHC post-MoE: sinkhorn + post
-    ops.append(op_mhc_sinkhorn(T_full, cfg, "sinkhorn_moe"))
-    ops.append(op_mhc_post(T_full, cfg, "mhc_post_moe"))
+    # mHC post-MoE
+    if fused:
+        ops.append(op_mhc_post_fused(T_full, cfg, "mhc_post_moe"))
+    else:
+        ops.append(op_mhc_sinkhorn(T_full, cfg, "sinkhorn_moe"))
+        ops.append(op_mhc_post(T_full, cfg, "mhc_post_moe"))
 
     lp = LayerProfile(layer_idx=layer_idx, ratio=ratio, ops=ops)
     lp.compute_total()
