@@ -30,6 +30,7 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 COMBOS = [
     {"name": "8K_4K",   "seq_len": 8192,   "output_len": 4096},
+    {"name": "32K_4K",  "seq_len": 32768,  "output_len": 4096},
     {"name": "128K_4K", "seq_len": 131072, "output_len": 4096},
     {"name": "256K_4K", "seq_len": 262144, "output_len": 4096},
 ]
@@ -413,6 +414,356 @@ def run_mhc_optimization_comparison(base_cfg, seq_len, output_len, tp, ep, dp, b
 
 
 # ---------------------------------------------------------------------------
+# V3 Comparison
+# ---------------------------------------------------------------------------
+
+# DeepSeek V3 reference parameters (from paper)
+V3_PARAMS = {
+    "hidden_size": 7168,
+    "num_hidden_layers": 61,
+    "num_attention_heads": 128,
+    "num_kv_heads": 1,  # MLA with kv_lora_rank
+    "kv_lora_rank": 512,
+    "qk_rope_head_dim": 64,
+    "qk_nope_head_dim": 128,
+    "v_head_dim": 128,
+    "q_lora_rank": 1536,
+    "n_routed_experts": 256,
+    "n_activated_experts": 8,  # top-8
+    "n_shared_experts": 1,
+    "moe_inter_dim": 2048,
+    "vocab_size": 129280,
+    "has_kv_compression": False,
+    "has_mhc": False,
+}
+
+
+def compute_v3_comparison():
+    """Compute side-by-side V4 vs V3 architecture comparison."""
+    v4 = {
+        "hidden_size": 4096,
+        "num_hidden_layers": 43,
+        "num_attention_heads": 64,
+        "num_kv_heads": 1,
+        "head_dim": 512,
+        "q_lora_rank": 1024,
+        "o_groups": 8,
+        "o_lora_rank": 1024,
+        "n_routed_experts": 256,
+        "n_activated_experts": 6,
+        "n_shared_experts": 1,
+        "moe_inter_dim": 2048,
+        "vocab_size": 129280,
+        "has_kv_compression": True,
+        "compress_ratios": "2 full + 21 C4A + 20 C128A",
+        "has_mhc": True,
+        "hc_mult": 4,
+        "index_n_heads": 64,
+        "index_head_dim": 128,
+        "index_topk": 512,
+        "window_size": 128,
+    }
+    v3 = dict(V3_PARAMS)
+
+    # --- Parameter count estimates ---
+    # V4 attention per layer (approx)
+    v4_attn_params = (
+        v4["hidden_size"] * v4["q_lora_rank"]  # W_dq
+        + v4["q_lora_rank"] * v4["num_attention_heads"] * (v4["head_dim"] + 64)  # W_uq (head_dim + rope)
+        + v4["hidden_size"] * v4["head_dim"]  # W_k
+        + v4["hidden_size"] * v4["head_dim"]  # W_v
+        + v4["o_groups"] * (v4["num_attention_heads"] // v4["o_groups"]) * v4["head_dim"] * v4["o_lora_rank"]  # wo_a
+        + v4["o_groups"] * v4["o_lora_rank"] * v4["hidden_size"]  # wo_b
+    )
+
+    # V3 attention per layer (MLA)
+    v3_attn_params = (
+        v3["hidden_size"] * v3["q_lora_rank"]  # W_dq
+        + v3["q_lora_rank"] * v3["num_attention_heads"] * (v3["qk_nope_head_dim"] + v3["qk_rope_head_dim"])  # W_uq
+        + v3["hidden_size"] * (v3["kv_lora_rank"] + v3["qk_rope_head_dim"])  # W_kv_down (joint K+V)
+        + v3["kv_lora_rank"] * v3["num_attention_heads"] * (v3["qk_nope_head_dim"] + v3["v_head_dim"])  # W_kv_up
+        + v3["num_attention_heads"] * v3["v_head_dim"] * v3["hidden_size"]  # W_o
+    )
+
+    # MoE per layer
+    v4_moe_params = (
+        v4["hidden_size"] * v4["n_routed_experts"]  # gate
+        + v4["n_routed_experts"] * 3 * v4["hidden_size"] * v4["moe_inter_dim"]  # routed
+        + v4["n_shared_experts"] * 3 * v4["hidden_size"] * v4["moe_inter_dim"]  # shared
+    )
+    v3_moe_params = (
+        v3["hidden_size"] * v3["n_routed_experts"]  # gate
+        + v3["n_routed_experts"] * 3 * v3["hidden_size"] * v3["moe_inter_dim"]  # routed
+        + v3["n_shared_experts"] * 3 * v3["hidden_size"] * v3["moe_inter_dim"]  # shared
+    )
+
+    # V4 mHC per layer: 4 sub-layers × 3 matrices × hc_mult × hc_mult
+    v4_mhc_params = 4 * 3 * v4["hc_mult"] * v4["hc_mult"]
+
+    # V4 index per layer (for compressed layers)
+    v4_index_params = (
+        v4["hidden_size"] * v4["index_n_heads"] * v4["index_head_dim"]  # W_iq
+        + v4["hidden_size"] * v4["index_head_dim"]  # W_ik
+    )
+
+    # Total params estimate
+    v4_total = (
+        v4_attn_params * v4["num_hidden_layers"]
+        + v4_moe_params * v4["num_hidden_layers"]
+        + v4_mhc_params * v4["num_hidden_layers"]
+        + v4_index_params * 41  # 21 C4A + 20 C128A layers
+        + v4["vocab_size"] * v4["hidden_size"] * 2  # embedding + lm_head
+    )
+    v3_total = (
+        v3_attn_params * v3["num_hidden_layers"]
+        + v3_moe_params * v3["num_hidden_layers"]
+        + v3["vocab_size"] * v3["hidden_size"] * 2  # embedding + lm_head
+    )
+
+    # --- KV cache per token (BF16 = 2 bytes) ---
+    # V4: compressed layers have much less KV cache
+    # Full layers: (k_dim + v_dim) × 2 = (512 + 512) × 2 = 2048 bytes
+    v4_kv_full = (v4["head_dim"] + v4["head_dim"]) * 2  # per token per layer
+    # C4A: compressed KV at 1/4 + SWA window is fixed
+    v4_kv_c4a_per_token = (v4["head_dim"] + v4["head_dim"]) * 2 / 4  # compressed contribution per input token
+    # C128A: compressed KV at 1/128
+    v4_kv_c128a_per_token = (v4["head_dim"] + v4["head_dim"]) * 2 / 128
+
+    # V3: MLA stores kv_lora_rank + rope dim per token per layer
+    v3_kv_per_token_per_layer = (v3["kv_lora_rank"] + v3["qk_rope_head_dim"]) * 2  # (512+64)*2 = 1152 bytes
+
+    v4_kv_per_token_total = (
+        v4_kv_full * 2  # 2 full layers
+        + v4_kv_c4a_per_token * 21  # 21 C4A layers
+        + v4_kv_c128a_per_token * 20  # 20 C128A layers
+    )
+    v3_kv_per_token_total = v3_kv_per_token_per_layer * v3["num_hidden_layers"]
+
+    # --- Per-layer FLOPs estimate (prefill, per token) ---
+    # Attention FLOPs per token (approx, just matmuls):
+    v4_attn_flops = v4_attn_params * 2  # each param contributes ~2 FLOPs for matmul
+    v3_attn_flops = v3_attn_params * 2
+
+    # MoE FLOPs per token (only activated experts):
+    v4_moe_flops = (
+        v4["n_activated_experts"] * 3 * v4["hidden_size"] * v4["moe_inter_dim"] * 2
+        + v4["n_shared_experts"] * 3 * v4["hidden_size"] * v4["moe_inter_dim"] * 2
+    )
+    v3_moe_flops = (
+        v3["n_activated_experts"] * 3 * v3["hidden_size"] * v3["moe_inter_dim"] * 2
+        + v3["n_shared_experts"] * 3 * v3["hidden_size"] * v3["moe_inter_dim"] * 2
+    )
+
+    # Weight memory per rank (for reference, at TP=8, EP=16)
+    # Use V4 model to get actual weight memory
+    base_cfg = load_base_config("910C")
+    cfg_v4 = make_config(base_cfg, tp=8, ep=16, dp=2, batch_size=16,
+                         seq_len=8192, output_len=4096)
+    v4_weights = weight_memory_per_rank(cfg_v4)
+
+    return {
+        "v4": v4,
+        "v3": v3,
+        "comparison": {
+            "v4_attn_params_per_layer": v4_attn_params,
+            "v3_attn_params_per_layer": v3_attn_params,
+            "v4_moe_params_per_layer": v4_moe_params,
+            "v3_moe_params_per_layer": v3_moe_params,
+            "v4_mhc_params_per_layer": v4_mhc_params,
+            "v4_index_params_per_layer": v4_index_params,
+            "v4_total_params_approx": v4_total,
+            "v3_total_params_approx": v3_total,
+            "v4_kv_per_token_bytes": round(v4_kv_per_token_total, 1),
+            "v3_kv_per_token_bytes": round(v3_kv_per_token_total, 1),
+            "kv_compression_ratio": round(v3_kv_per_token_total / v4_kv_per_token_total, 2)
+                if v4_kv_per_token_total > 0 else 0,
+            "v4_attn_flops_per_token": v4_attn_flops,
+            "v3_attn_flops_per_token": v3_attn_flops,
+            "v4_moe_flops_per_token": v4_moe_flops,
+            "v3_moe_flops_per_token": v3_moe_flops,
+            "v4_weight_memory_per_rank_gb": round(v4_weights["total"] / 1e9, 2),
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# KV Cache Scaling
+# ---------------------------------------------------------------------------
+
+KV_SCALING_SEQ_LENS = [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072]
+
+
+def compute_kv_cache_scaling(base_cfg, hw_name):
+    """Sweep seq_len and compute KV cache, decode time, and op breakdown."""
+    hbm_limit = HARDWARE_CONFIGS[hw_name]["hbm_limit_gb"]
+    results = []
+
+    for seq_len in KV_SCALING_SEQ_LENS:
+        # Use a standard config: TP=4, EP=32, DP=8, BS=8 for decode
+        tp, ep, dp, bs = 4, 32, 8, 8
+        cfg = make_config(base_cfg, tp=tp, ep=ep, dp=dp,
+                          batch_size=bs, seq_len=seq_len, output_len=4096)
+
+        # KV cache
+        kv = kv_cache_memory(cfg)
+        kv_gb = kv["total_bytes"] / 1e9
+
+        # Weight memory
+        wm = weight_memory_per_rank(cfg)
+        weight_gb = wm["total"] / 1e9
+        total_gb = weight_gb + kv_gb
+        fits = total_gb <= hbm_limit
+
+        # Decode step time
+        if fits:
+            ops_d, time_d = collect_all_ops_decode(cfg)
+            cat_d = categorize_ops(ops_d)
+            decode_ms = time_d * 1000
+        else:
+            cat_d = {}
+            decode_ms = None
+
+        # Compute hypothetical "no compression" KV cache
+        # If all 43 layers used full attention: S * (k_dim + v_dim) * 2 * B * 43
+        B = bs // dp
+        no_comp_kv_bytes = B * seq_len * (cfg.model.kv_dim * 2) * 2 * cfg.model.num_hidden_layers
+        no_comp_kv_gb = no_comp_kv_bytes / 1e9
+
+        # V3-style KV cache: (kv_lora_rank + rope_dim) * 2 * B * 61 layers
+        v3_kv_bytes = B * seq_len * (V3_PARAMS["kv_lora_rank"] + V3_PARAMS["qk_rope_head_dim"]) * 2 * V3_PARAMS["num_hidden_layers"]
+        v3_kv_gb = v3_kv_bytes / 1e9
+
+        results.append({
+            "seq_len": seq_len,
+            "kv_cache_gb": round(kv_gb, 3),
+            "weight_gb": round(weight_gb, 3),
+            "total_hbm_gb": round(total_gb, 3),
+            "fits_in_hbm": fits,
+            "decode_step_ms": round(decode_ms, 3) if decode_ms else None,
+            "no_compression_kv_gb": round(no_comp_kv_gb, 3),
+            "v3_style_kv_gb": round(v3_kv_gb, 3),
+            "compression_ratio": round(no_comp_kv_gb / kv_gb, 2) if kv_gb > 0 else 0,
+            "category_breakdown": cat_d,
+        })
+
+    return results
+
+
+# ---------------------------------------------------------------------------
+# Attention Analysis
+# ---------------------------------------------------------------------------
+
+def compute_attention_analysis(base_cfg, hw_name):
+    """Per-layer-type KV cache breakdown and attention scaling analysis."""
+    hbm_limit = HARDWARE_CONFIGS[hw_name]["hbm_limit_gb"]
+
+    # --- Per-layer-type KV cache breakdown ---
+    layer_type_kv = {}
+    for seq_len in [8192, 32768, 131072]:
+        cfg = make_config(base_cfg, tp=4, ep=32, dp=8, batch_size=8,
+                          seq_len=seq_len, output_len=4096)
+        kv = kv_cache_memory(cfg)
+        B = cfg.rt.batch_size // cfg.rt.dp
+
+        full_bytes = sum(l["bytes"] for l in kv["layers"].values() if l["type"] == "full")
+        c4a_bytes = sum(l["bytes"] for l in kv["layers"].values() if l["type"] == "C4A")
+        c128a_bytes = sum(l["bytes"] for l in kv["layers"].values() if l["type"] == "C128A")
+
+        layer_type_kv[str(seq_len)] = {
+            "full_attn_gb": round(full_bytes / 1e9, 4),
+            "c4a_gb": round(c4a_bytes / 1e9, 4),
+            "c128a_gb": round(c128a_bytes / 1e9, 4),
+            "total_gb": round(kv["total_bytes"] / 1e9, 4),
+            "full_attn_pct": round(full_bytes / kv["total_bytes"] * 100, 1) if kv["total_bytes"] > 0 else 0,
+            "c4a_pct": round(c4a_bytes / kv["total_bytes"] * 100, 1) if kv["total_bytes"] > 0 else 0,
+            "c128a_pct": round(c128a_bytes / kv["total_bytes"] * 100, 1) if kv["total_bytes"] > 0 else 0,
+        }
+
+    # --- Compressed vs uncompressed comparison ---
+    compressed_vs_uncompressed = {}
+    for seq_len in [8192, 32768, 65536, 131072]:
+        cfg = make_config(base_cfg, tp=4, ep=32, dp=8, batch_size=8,
+                          seq_len=seq_len, output_len=4096)
+        kv = kv_cache_memory(cfg)
+        B = cfg.rt.batch_size // cfg.rt.dp
+
+        v4_kv_gb = kv["total_bytes"] / 1e9
+        # Hypothetical uncompressed: all 43 layers as full attention
+        no_comp = B * seq_len * (cfg.model.kv_dim * 2) * 2 * cfg.model.num_hidden_layers / 1e9
+        # V3 MLA style
+        v3_kv = B * seq_len * (V3_PARAMS["kv_lora_rank"] + V3_PARAMS["qk_rope_head_dim"]) * 2 * V3_PARAMS["num_hidden_layers"] / 1e9
+
+        compressed_vs_uncompressed[str(seq_len)] = {
+            "v4_compressed_gb": round(v4_kv_gb, 3),
+            "v4_uncompressed_gb": round(no_comp, 3),
+            "v3_mla_gb": round(v3_kv, 3),
+            "v4_savings_vs_uncompressed": round(no_comp / v4_kv_gb, 2) if v4_kv_gb > 0 else 0,
+            "v4_vs_v3": round(v3_kv / v4_kv_gb, 2) if v4_kv_gb > 0 else 0,
+        }
+
+    # --- Attention compute scaling across seq_len per layer type ---
+    attn_scaling = {}
+    for seq_len in [8192, 32768, 131072]:
+        cfg = make_config(base_cfg, tp=8, ep=16, dp=2, batch_size=16,
+                          seq_len=seq_len, output_len=4096)
+
+        # Check memory
+        _, _, total_gb, fits = check_memory(cfg, hbm_limit)
+        if not fits:
+            # Try smaller batch
+            for smaller_bs in [8, 4, 2]:
+                cfg = make_config(base_cfg, tp=8, ep=16, dp=2,
+                                  batch_size=smaller_bs, seq_len=seq_len, output_len=4096)
+                _, _, total_gb, fits = check_memory(cfg, hbm_limit)
+                if fits:
+                    break
+            else:
+                attn_scaling[str(seq_len)] = {"error": "OOM"}
+                continue
+
+        # Get per-layer breakdown for different layer types
+        # Layer 0 = full attention, Layer 2 = C4A, Layer 3 = C128A (check ratios)
+        layer_data = {}
+        for layer_idx in [0, 2, 3]:  # full, first C4A, first C128A
+            ratio = cfg.model.compress_ratios[layer_idx]
+            if ratio == 1:
+                ltype = "full"
+            elif ratio == 4:
+                ltype = "C4A"
+            else:
+                ltype = f"C{ratio}A"
+
+            lp = prefill_layer(layer_idx, cfg)
+            # Extract attention-related ops
+            attn_ops_time = 0
+            total_time = 0
+            for op in lp.ops:
+                total_time += op.time_s
+                if op.name in ["attention_full", "attention_comp", "q_proj_dq", "q_proj_uq",
+                               "k_proj", "v_proj", "wo_a", "wo_b"]:
+                    attn_ops_time += op.time_s
+
+            layer_data[ltype] = {
+                "layer_idx": layer_idx,
+                "ratio": ratio,
+                "attn_time_ms": round(attn_ops_time * 1000, 3),
+                "layer_total_ms": round(total_time * 1000, 3),
+                "attn_pct": round(attn_ops_time / total_time * 100, 1) if total_time > 0 else 0,
+            }
+
+        attn_scaling[str(seq_len)] = {
+            "batch_size": cfg.rt.batch_size,
+            "layers": layer_data,
+        }
+
+    return {
+        "layer_type_kv_breakdown": layer_type_kv,
+        "compressed_vs_uncompressed": compressed_vs_uncompressed,
+        "attention_compute_scaling": attn_scaling,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -644,6 +995,50 @@ def main():
         all_sp_comparison[hw_name] = hw_sp
         all_mhc_comparison[hw_name] = hw_mhc
 
+    # --- V3 Comparison ---
+    print(f"\n{'='*70}")
+    print("V3 COMPARISON")
+    print(f"{'='*70}")
+    v3_comparison = compute_v3_comparison()
+    comp = v3_comparison["comparison"]
+    print(f"  V4 total params (approx): {comp['v4_total_params_approx']/1e9:.1f}B")
+    print(f"  V3 total params (approx): {comp['v3_total_params_approx']/1e9:.1f}B")
+    print(f"  V4 KV per token: {comp['v4_kv_per_token_bytes']:.0f} bytes")
+    print(f"  V3 KV per token: {comp['v3_kv_per_token_bytes']:.0f} bytes")
+    print(f"  KV compression ratio (V3/V4): {comp['kv_compression_ratio']:.1f}x")
+
+    # --- KV Cache Scaling ---
+    print(f"\n{'='*70}")
+    print("KV CACHE SCALING")
+    print(f"{'='*70}")
+    all_kv_scaling = {}
+    for hw_name in ["910C", "H20"]:
+        base_cfg = load_base_config(hw_name)
+        kv_results = compute_kv_cache_scaling(base_cfg, hw_name)
+        all_kv_scaling[hw_name] = kv_results
+        print(f"\n  {hw_name}:")
+        for r in kv_results:
+            status = "OK" if r["fits_in_hbm"] else "OOM"
+            dec_str = f"{r['decode_step_ms']:.2f}ms" if r["decode_step_ms"] else "N/A"
+            print(f"    S={r['seq_len']:>6}: KV={r['kv_cache_gb']:.2f}GB "
+                  f"noComp={r['no_compression_kv_gb']:.2f}GB "
+                  f"ratio={r['compression_ratio']:.1f}x "
+                  f"decode={dec_str} [{status}]")
+
+    # --- Attention Analysis ---
+    print(f"\n{'='*70}")
+    print("ATTENTION ANALYSIS")
+    print(f"{'='*70}")
+    all_attention_analysis = {}
+    for hw_name in ["910C", "H20"]:
+        base_cfg = load_base_config(hw_name)
+        attn_results = compute_attention_analysis(base_cfg, hw_name)
+        all_attention_analysis[hw_name] = attn_results
+        print(f"\n  {hw_name} - Layer-type KV breakdown:")
+        for sl, data in attn_results["layer_type_kv_breakdown"].items():
+            print(f"    S={sl}: full={data['full_attn_pct']:.1f}% "
+                  f"C4A={data['c4a_pct']:.1f}% C128A={data['c128a_pct']:.1f}%")
+
     # --- Hardware Comparison ---
     print(f"\n{'='*70}")
     print("HARDWARE COMPARISON")
@@ -681,6 +1076,9 @@ def main():
     save_json("sp_comparison.json", all_sp_comparison)
     save_json("mhc_optimization_comparison.json", all_mhc_comparison)
     save_json("hardware_comparison.json", hw_comparison)
+    save_json("v3_comparison.json", v3_comparison)
+    save_json("kv_cache_scaling.json", all_kv_scaling)
+    save_json("attention_analysis.json", all_attention_analysis)
 
     # --- Summary ---
     elapsed = time.time() - start_time

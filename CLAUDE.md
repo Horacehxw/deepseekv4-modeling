@@ -30,6 +30,13 @@ param_search/             # Parameter search tool
   analyze.py              # Analyze results and generate search_report.md
   report.md               # Detailed analysis of search results
   results/                # Auto-generated: timestamped search results with CSVs
+report/                   # Analysis reports
+  analyze_scenarios.py    # Comprehensive analysis: search, P/D ratio, op analysis, V3 comparison
+  report_en.md            # Main analysis report (English, 8-section structure)
+  report_zh.md            # Main analysis report (Chinese translation)
+  ppt_outline_en.md       # PPT outline (English)
+  ppt_outline_zh.md       # PPT outline (Chinese)
+  data/                   # Auto-generated: 10 JSON data files from analyze_scenarios.py
 ```
 
 ## Architecture
@@ -96,13 +103,14 @@ python param_search/analyze.py    # Analyze results and generate report
 **GPU formula:** `physical_gpus = TP * DP`, constraint `(TP*DP) % EP == 0`
 **Search grid:** TP ∈ {1..64}, EP ∈ {1..256}, DP ∈ {1..8}, BS ∈ {1..512}, seq ∈ {1K..32K}
 
-Key results (Ascend 910C):
-- Best prefill latency: TP=8, EP=64, DP=8, BS=8 → 330ms (64 GPUs)
-- Best decode latency: TP=4, EP=32, DP=8, BS=8 → 19.3ms/step (32 GPUs)
-- Best prefill throughput: TP=8, EP=16, DP=2, BS=256 → 1,656 tps/gpu (16 GPUs)
-- Best decode throughput: TP=4, EP=16, DP=4, BS=512 → 181 tps/gpu (16 GPUs)
+Key results (Ascend 910C, 8K/4K):
+- Best prefill latency: TP=8, EP=64, DP=8, BS=8 → 325ms (64 GPUs)
+- Best decode latency: TP=4, EP=32, DP=8, BS=8 → 19.4ms/step (32 GPUs)
+- Best prefill throughput: TP=8, EP=16, DP=2, BS=512 → 1,679 tps/gpu (16 GPUs)
+- Best decode throughput: TP=8, EP=16, DP=2, BS=512 → 307 tps/gpu (16 GPUs)
 
-See `param_search/report.md` for detailed analysis.
+4 serving combos analyzed: 8K/4K, 32K/4K, 128K/4K, 256K/4K.
+See `report/report_en.md` for detailed analysis and `param_search/report.md` for search details.
 
 ## Decode Fast Mode
 
@@ -137,3 +145,7 @@ Current file pairs:
 Exceptions (no Chinese mirror needed):
 - `CLAUDE.md` — internal instructions for Claude Code
 - `.claude/commands/*.md` — internal command definitions
+
+
+## Keyword Explanation
+mHC -> manifold Hyper Connection

@@ -2,4 +2,6 @@ __pycache__/
 *.pyc
 output/
 **results/
-.claude/settings.local.json
+report/data/
+.claude/*
+!.claude/commands/

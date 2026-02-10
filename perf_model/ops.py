@@ -334,7 +334,7 @@ def op_attention_decode_compressed(B: int, S_total: int, ratio: int, cfg: Config
     return roofline_time("attention_comp", total_flops, vec_ops, mem, cfg.hw)
 
 
-# --- mHC (Hyper Connection) ---
+# --- mHC (manifold Hyper Connection) ---
 
 def op_mhc_pre(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
     """mHC pre (UNFUSED baseline): linear projections before sub-layer.

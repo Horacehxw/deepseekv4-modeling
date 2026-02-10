@@ -57,6 +57,13 @@ param_search/             # 参数搜索工具
   analyze.py              # 分析结果并生成 search_report.md
   report.md               # 搜索结果详细分析报告
   results/                # 自动生成：带时间戳的搜索结果 CSV
+report/                   # 分析报告
+  analyze_scenarios.py    # 综合分析：搜索、P/D 比例、算子分析、V3 对比
+  report_en.md            # 主分析报告（英文，8 章结构）
+  report_zh.md            # 主分析报告（中文翻译）
+  ppt_outline_en.md       # PPT 提纲（英文）
+  ppt_outline_zh.md       # PPT 提纲（中文）
+  data/                   # 自动生成：10 个 JSON 数据文件
 ```
 
 ## 架构
@@ -106,12 +113,12 @@ python param_search/analyze.py    # 分析结果并生成报告
 
 | 场景 | 最优配置 | 关键指标 | GPU 数 |
 |:---|:---|---:|---:|
-| Prefill 延迟 | TP=8, EP=64, DP=8, BS=8 | 330 ms | 64 |
-| Decode 延迟 | TP=4, EP=32, DP=8, BS=8 | 19.3 ms/步 | 32 |
-| Prefill 吞吐 | TP=8, EP=16, DP=2, BS=256 | 1,656 tok/s/GPU | 16 |
-| Decode 吞吐 | TP=4, EP=16, DP=4, BS=512 | 181 tok/s/GPU | 16 |
+| Prefill 延迟 | TP=8, EP=64, DP=8, BS=8 | 325 ms | 64 |
+| Decode 延迟 | TP=4, EP=32, DP=8, BS=8 | 19.4 ms/步 | 32 |
+| Prefill 吞吐 | TP=8, EP=16, DP=2, BS=512 | 1,679 tok/s/GPU | 16 |
+| Decode 吞吐 | TP=8, EP=16, DP=2, BS=512 | 307 tok/s/GPU | 16 |
 
-详细分析请参见 [`param_search/report.md`](param_search/report.md)，包含逐序列长度分析、SP 影响、批大小缩放和部署建议。
+详细搜索分析请参见 [`param_search/report.md`](param_search/report.md)；综合 8 章分析报告（V4 vs V3 对比、瓶颈分析、4 个服务场景：8K/32K/128K/256K、mHC 优化、KV Cache 缩放、部署建议）请参见 [`report/report_en.md`](report/report_en.md)。
 
 ## 关键假设
 
