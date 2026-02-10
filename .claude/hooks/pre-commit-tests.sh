@@ -20,4 +20,5 @@ if [ $EXIT_CODE -ne 0 ]; then
   exit 2
 fi
 
+echo "All tests passed. Proceeding with $COMMAND."
 exit 0
