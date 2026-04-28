@@ -136,6 +136,11 @@ class TestRuntimeConfig(unittest.TestCase):
     def test_validate_serving_fields_accepts_defaults(self):
         RuntimeConfig().validate_serving_fields()
 
+    def test_validate_serving_fields_not_called_on_construction(self):
+        rt = RuntimeConfig(quant_mode="bad")
+        with self.assertRaisesRegex(ValueError, "quant_mode"):
+            rt.validate_serving_fields()
+
     def test_validate_serving_fields_rejects_negative_mtp(self):
         with self.assertRaisesRegex(ValueError, "mtp must be >= 0"):
             RuntimeConfig(mtp=-1).validate_serving_fields()
