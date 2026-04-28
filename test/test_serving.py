@@ -89,6 +89,14 @@ class TestServingHelpers(unittest.TestCase):
         with self.assertRaises(ValueError):
             make_prefill_compute_config(cfg)
 
+        cfg = make_config(input_len=100, prefix_cache_hit_rate=-0.1)
+        with self.assertRaises(ValueError):
+            make_prefill_compute_config(cfg)
+
+        cfg = make_config(input_len=100, prefix_cache_hit_rate=1.1)
+        with self.assertRaises(ValueError):
+            evaluate_prefill_serving(cfg)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -133,6 +133,8 @@ class RuntimeConfig:
         return self.decode_context_len if self.decode_context_len is not None else self.request_input_len
 
     def validate_serving_fields(self) -> None:
+        if not 0 <= self.prefix_cache_hit_rate <= 1:
+            raise ValueError("prefix_cache_hit_rate must be in [0, 1]")
         if self.mtp < 0:
             raise ValueError("mtp must be >= 0")
         if not 0 <= self.mtp_accept_ratio <= 1:
