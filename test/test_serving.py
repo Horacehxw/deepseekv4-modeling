@@ -125,10 +125,11 @@ class TestServingHelpers(unittest.TestCase):
     def test_invalid_serving_model_shapes_raise_through_helpers(self):
         invalid_cases = [
             (make_config(num_attention_heads=7, ep=2), "num_attention_heads.*tp"),
-            (make_config(o_groups=3, ep=2), "o_groups.*tp"),
+            (make_config(num_attention_heads=6, o_groups=3, ep=2), "o_groups.*tp"),
             (make_config(index_n_heads=7, ep=2), "index_n_heads.*tp"),
             (make_config(vocab_size=1025, ep=2), "vocab_size.*tp"),
             (make_config(n_routed_experts=15, ep=2), "n_routed_experts.*ep"),
+            (make_config(num_attention_heads=7, o_groups=2, tp=1, ep=1), "num_attention_heads.*o_groups"),
         ]
         for cfg, message in invalid_cases:
             with self.subTest(message=message):

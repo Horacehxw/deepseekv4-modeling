@@ -42,6 +42,8 @@ def _validate_serving_config(cfg: Config) -> None:
 
     if cfg.model.num_attention_heads % cfg.rt.tp != 0:
         raise ValueError("num_attention_heads must be divisible by tp")
+    if cfg.model.num_attention_heads % cfg.model.o_groups != 0:
+        raise ValueError("num_attention_heads must be divisible by o_groups")
     if cfg.model.o_groups % cfg.rt.tp != 0:
         raise ValueError("o_groups must be divisible by tp")
     if cfg.model.index_n_heads % cfg.rt.tp != 0:
