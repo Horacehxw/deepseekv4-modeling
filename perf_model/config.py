@@ -1,7 +1,7 @@
 """Config dataclasses and JSON loader."""
 
 import json
-import math
+from decimal import Decimal, ROUND_CEILING
 from dataclasses import dataclass, field, fields as dataclass_fields
 from typing import List
 
@@ -104,7 +104,10 @@ class RuntimeConfig:
 
     @property
     def effective_prefill_len(self) -> int:
-        return math.ceil(self.request_input_len * (1 - self.prefix_cache_hit_rate))
+        request_input_len = Decimal(self.request_input_len)
+        prefix_cache_fraction = Decimal(str(self.prefix_cache_hit_rate))
+        effective_prefill = request_input_len * (Decimal("1") - prefix_cache_fraction)
+        return int(effective_prefill.to_integral_value(rounding=ROUND_CEILING))
 
     @property
     def decode_context_len_effective(self) -> int:

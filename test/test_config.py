@@ -131,6 +131,20 @@ class TestRuntimeConfig(unittest.TestCase):
         self.assertEqual(rt.effective_prefill_len, 3687)
         self.assertEqual(rt.decode_context_len_effective, 512)
 
+    def test_effective_prefill_len_rounding_boundaries(self):
+        self.assertEqual(
+            RuntimeConfig(seq_len=10, input_len=10, prefix_cache_hit_rate=0.7).effective_prefill_len,
+            3,
+        )
+        self.assertEqual(
+            RuntimeConfig(seq_len=10, input_len=10, prefix_cache_hit_rate=0.0).effective_prefill_len,
+            10,
+        )
+        self.assertEqual(
+            RuntimeConfig(seq_len=10, input_len=10, prefix_cache_hit_rate=1.0).effective_prefill_len,
+            0,
+        )
+
 
 class TestConfigFromJson(unittest.TestCase):
     """Config.from_json loading, normalization, and error handling."""
