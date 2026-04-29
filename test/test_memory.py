@@ -5,7 +5,10 @@ import unittest
 from test.helpers import make_config
 
 from perf_model.roofline import bytes2
-from perf_model.memory import kv_cache_memory, weight_memory_per_rank
+from perf_model.memory import (
+    kv_cache_memory, weight_memory_per_rank,
+    _kv_cache_memory_bf16, _weight_memory_per_rank_bf16,
+)
 
 
 # ── KV Cache Memory ──────────────────────────────────────────────────────
@@ -267,6 +270,16 @@ class TestMemoryQuantization(unittest.TestCase):
         r_base = kv_cache_memory(make_config())
         r_overhead = kv_cache_memory(make_config(kv_scale_overhead_bytes=45.0))
         self.assertEqual(r_overhead["total_bytes"], r_base["total_bytes"])
+
+    def test_bf16_weight_memory_full_dict(self):
+        """BF16 weight_memory_per_rank returns byte-for-byte identical dict to the bf16 helper."""
+        cfg = make_config()
+        self.assertEqual(weight_memory_per_rank(cfg), _weight_memory_per_rank_bf16(cfg))
+
+    def test_bf16_kv_cache_memory_full_dict(self):
+        """BF16 kv_cache_memory returns byte-for-byte identical dict to the bf16 helper."""
+        cfg = make_config()
+        self.assertEqual(kv_cache_memory(cfg), _kv_cache_memory_bf16(cfg))
 
     # ── AC-7: W8A8 weight memory exact ratios ─────────────────────────────
 
