@@ -52,9 +52,8 @@ def kv_cache_memory(cfg: Config) -> dict:
     kv_ratio = KV_BYTE_RATIOS[cfg.rt.kv_cache_quant_mode]
     layers = {}
     for i, info in base["layers"].items():
-        scaled = {k: (v * kv_ratio if k not in ("type",) else v)
-                  for k, v in info.items()}
-        layers[i] = scaled
+        layers[i] = {k: (v * kv_ratio if k != "type" else v)
+                     for k, v in info.items()}
     return {
         "layers": layers,
         "total_bytes": base["total_bytes"] * kv_ratio,
@@ -139,7 +138,6 @@ def weight_memory_per_rank(cfg: Config) -> dict:
     w_ratio = WEIGHT_BYTE_RATIOS[cfg.rt.quant_mode]
     scaled = {k: (v * w_ratio if isinstance(v, float) else v)
               for k, v in base.items()}
-    scaled["total"] = base["total"] * w_ratio
     scaled["scale_overhead_bytes"] = cfg.rt.weight_scale_overhead_bytes
     scaled["quant_mode"] = cfg.rt.quant_mode
     return scaled

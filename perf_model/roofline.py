@@ -69,7 +69,7 @@ def roofline_time(name: str, flops: float, vec_ops: float, mem_bytes: float,
 
     if op_kind == "gemm" and rt.quant_mode == "w8a8":
         cube_tflops   = hw.effective_w8a8_tflops
-        effective_mem = mem_bytes * WEIGHT_BYTE_RATIOS["w8a8"]
+        effective_mem = mem_bytes * WEIGHT_BYTE_RATIOS[rt.quant_mode]
     elif op_kind == "attention":
         effective_mem = mem_bytes * KV_BYTE_RATIOS[rt.kv_cache_quant_mode]
 
