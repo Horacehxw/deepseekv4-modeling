@@ -4,7 +4,7 @@ from typing import List
 
 from .config import Config
 from .roofline import OpProfile, roofline_time, allreduce_time, alltoall_time, allgather_time, bytes2, bytes4
-
+import math
 
 # --- Attention Projections ---
 
@@ -147,11 +147,12 @@ def op_index_score(B: int, S: int, ratio: int, cfg: Config) -> OpProfile:
     nh = cfg.model.index_n_heads // TP
     hd = cfg.model.index_head_dim
     S_compressed = S // ratio
-    flops = B * nh * S * S_compressed * hd * 2
-    # Act memory: iq[B, nh, S, hd] + ik[B, 1, S_compressed, hd] + scores[B, S, S_compressed]
-    act_in = bytes2(B * nh * S * hd) + bytes2(B * S_compressed * hd)
+    cube_flops = B * nh * S * S_compressed * hd * 2 + B * nh * S * S_compressed
+    vec_flops = B * nh * S * S_compressed * 3 + B * S * S_compressed * math.log(S)
+    # Act memory: iq[B, nh, S, hd] + ik[B, 1, S_compressed, hd] + indexer_weight_proj[B, S, nh] + scores[B, S, S_compressed]
+    act_in = bytes2(B * nh * S * hd) + bytes2(B * S_compressed * hd) + bytes2(B * S * nh)
     act_out = bytes4(B * S * S_compressed)  # FP32 scores
-    return roofline_time("index_score", flops, 0, act_in + act_out, cfg.hw)
+    return roofline_time("index_score", cube_flops, vec_flops, act_in + act_out, cfg.hw)
 
 
 def op_index_score_allreduce(B: int, S: int, ratio: int, cfg: Config) -> OpProfile:
@@ -172,11 +173,12 @@ def op_index_score_decode(B: int, S_total: int, ratio: int, cfg: Config) -> OpPr
     nh = cfg.model.index_n_heads // TP
     hd = cfg.model.index_head_dim
     S_compressed = S_total // ratio
-    flops = B * nh * S_compressed * hd * 2
-    # Memory: read all index K cache + query
-    act_in = bytes2(B * S_compressed * hd) + bytes2(B * nh * hd)
+    cube_flops = B * nh * S_compressed * hd * 2 + B * nh * S_compressed
+    vec_flops = B * nh * S_compressed * 3 + B * S_compressed * math.log(S_total)
+    # Act memory: iq[B, nh, hd] + ik[B, 1, S_compressed, hd] + indexer_weight_proj[B, nh] + scores[B, S_compressed]
+    act_in = bytes2(B * nh * hd) + bytes2(B * S_compressed * hd) + bytes2(B * nh)
     act_out = bytes4(B * S_compressed)  # FP32 scores
-    return roofline_time("index_score", flops, 0, act_in + act_out, cfg.hw)
+    return roofline_time("index_score", cube_flops, vec_flops, act_in + act_out, cfg.hw)
 
 
 def op_index_score_allreduce_decode(B: int, S_total: int, ratio: int, cfg: Config) -> OpProfile:
