@@ -154,6 +154,13 @@ _GOLDEN_W8A8_WEIGHT_HBM_GB     = 0.015125504
 _GOLDEN_KV8_DECODE_TOTAL_MS    = 1.7520919378684803
 _GOLDEN_KV8_KV_HBM_GB          = 2.1376e-05
 
+# Golden for W8A8 + no-SP + shared-expert-overlap config (input_len=4096, ep=2, sp=False).
+# The inline quant path correctly gives LESS excess than the old BF16+post-scale path:
+# at W8A8 speed the shared-expert GEMM (0.0346 ms) finishes before dispatch+combine
+# comm (0.0467 ms), so shared_expert_excess == 0.  The old quantize_phase_profile()
+# left shared_expert_excess at its BF16 value (0.005 ms), which was a latent bug.
+_GOLDEN_W8A8_NO_SP_PREFILL_MS  = 1.5178283116868236
+
 _REL_TOL = 1e-9   # numerical tolerance for golden-value checks
 
 
@@ -200,6 +207,26 @@ class TestServingQuantizationIntegration(unittest.TestCase):
         r_bf16 = evaluate_prefill_serving(self.cfg_bf16)
         r_w8a8 = evaluate_prefill_serving(self.cfg_w8a8)
         self.assertLess(r_w8a8["prefill_time_ms"], r_bf16["prefill_time_ms"])
+
+    def test_w8a8_no_sp_shared_overlap_prefill_time_matches_golden(self):
+        """W8A8 + no-SP + shared-expert-overlap: freeze correct inline-quant value.
+
+        The inline path correctly reports zero shared_expert_excess because the W8A8
+        shared-expert GEMM (0.0346 ms) finishes before dispatch+combine comm (0.0467 ms).
+        The old quantize_phase_profile() path leaked the BF16 excess (+0.005 ms) as a
+        latent bug; the new value is physically correct.
+        """
+        cfg = make_config(
+            input_len=4096, ep=2, sp=False,
+            shared_expert_overlapped=True,
+            quant_mode="w8a8", kv_cache_quant_mode="kv8",
+        )
+        result = evaluate_prefill_serving(cfg)
+        self._assert_rel(
+            result["prefill_time_ms"],
+            _GOLDEN_W8A8_NO_SP_PREFILL_MS,
+            "W8A8 no-SP shared-overlap prefill_time_ms",
+        )
 
     def test_kv8_decode_time_matches_golden(self):
         result = evaluate_decode_serving(self.cfg_kv8)
