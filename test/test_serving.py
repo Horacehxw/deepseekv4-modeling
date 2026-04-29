@@ -238,17 +238,18 @@ class TestServingQuantizationIntegration(unittest.TestCase):
             importlib.import_module("perf_model.quantization")
 
     def test_removed_exports_raise_import_error(self):
-        """Removed public exports must not be importable from perf_model."""
-        import importlib
-        mod = importlib.import_module("perf_model")
-        for name in ("infer_op_kind", "quantize_op_profile",
-                     "quantize_phase_profile", "quantized_weight_memory_per_rank",
-                     "quantized_kv_cache_memory"):
+        """Removed public exports must raise ImportError when imported from perf_model."""
+        removed = (
+            "infer_op_kind",
+            "quantize_op_profile",
+            "quantize_phase_profile",
+            "quantized_weight_memory_per_rank",
+            "quantized_kv_cache_memory",
+        )
+        for name in removed:
             with self.subTest(name=name):
-                self.assertFalse(
-                    hasattr(mod, name),
-                    f"perf_model.{name} should have been removed",
-                )
+                with self.assertRaises(ImportError):
+                    exec(f"from perf_model import {name}")
 
 
 if __name__ == "__main__":
