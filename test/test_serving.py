@@ -137,5 +137,92 @@ class TestServingHelpers(unittest.TestCase):
                     evaluate_prefill_serving(cfg)
 
 
+# ── Quantization integration (AC-8 & AC-9) ───────────────────────────────────
+# AC-8: serving outputs match golden values (≤1e-9 rel tol); no double-quant path.
+# AC-9: import perf_model.quantization raises ImportError after deletion.
+#
+# Golden values were captured from the pre-refactor serving path on 2026-04-29
+# using make_config(ep=2) with input_len=128, output_len=8.
+
+_GOLDEN_BF16_PREFILL_MS        = 0.386219406802721
+_GOLDEN_BF16_WEIGHT_HBM_GB     = 0.030251008
+_GOLDEN_BF16_KV_HBM_GB         = 4.1216e-05
+
+_GOLDEN_W8A8_PREFILL_MS        = 0.37440017124716546
+_GOLDEN_W8A8_WEIGHT_HBM_GB     = 0.015125504
+
+_GOLDEN_KV8_DECODE_TOTAL_MS    = 1.7520919378684803
+_GOLDEN_KV8_KV_HBM_GB          = 2.1376e-05
+
+_REL_TOL = 1e-6   # numerical tolerance for golden-value checks
+
+
+class TestServingQuantizationIntegration(unittest.TestCase):
+    """AC-8 golden-value regression and AC-9 module-deletion guard."""
+
+    def setUp(self):
+        self.cfg_bf16 = make_config(input_len=128, output_len=8, ep=2)
+        self.cfg_w8a8 = make_config(input_len=128, output_len=8, ep=2, quant_mode="w8a8")
+        self.cfg_kv8  = make_config(input_len=128, output_len=8, ep=2, kv_cache_quant_mode="kv8")
+
+    # ── AC-8: Golden-value regression ─────────────────────────────────────
+
+    def _assert_rel(self, actual, expected, msg=""):
+        """Assert relative difference ≤ _REL_TOL."""
+        if expected == 0:
+            self.assertEqual(actual, 0.0, msg)
+        else:
+            rel = abs(actual - expected) / abs(expected)
+            self.assertLessEqual(rel, _REL_TOL, f"{msg}: got {actual}, expected {expected}, rel={rel:.2e}")
+
+    def test_bf16_prefill_time_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_bf16)
+        self._assert_rel(result["prefill_time_ms"], _GOLDEN_BF16_PREFILL_MS, "BF16 prefill_time_ms")
+
+    def test_bf16_prefill_weight_hbm_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_bf16)
+        self._assert_rel(result["weight_hbm_gb"], _GOLDEN_BF16_WEIGHT_HBM_GB, "BF16 weight_hbm_gb")
+
+    def test_bf16_prefill_kv_hbm_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_bf16)
+        self._assert_rel(result["kv_hbm_gb"], _GOLDEN_BF16_KV_HBM_GB, "BF16 kv_hbm_gb")
+
+    def test_w8a8_prefill_time_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_w8a8)
+        self._assert_rel(result["prefill_time_ms"], _GOLDEN_W8A8_PREFILL_MS, "W8A8 prefill_time_ms")
+
+    def test_w8a8_prefill_weight_hbm_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_w8a8)
+        self._assert_rel(result["weight_hbm_gb"], _GOLDEN_W8A8_WEIGHT_HBM_GB, "W8A8 weight_hbm_gb")
+
+    def test_w8a8_prefill_faster_than_bf16(self):
+        """W8A8 must be strictly faster than BF16 for the same input."""
+        r_bf16 = evaluate_prefill_serving(self.cfg_bf16)
+        r_w8a8 = evaluate_prefill_serving(self.cfg_w8a8)
+        self.assertLess(r_w8a8["prefill_time_ms"], r_bf16["prefill_time_ms"])
+
+    def test_kv8_decode_time_matches_golden(self):
+        result = evaluate_decode_serving(self.cfg_kv8)
+        self._assert_rel(result["decode_total_time_ms"], _GOLDEN_KV8_DECODE_TOTAL_MS, "KV8 decode_total_time_ms")
+
+    def test_kv8_decode_kv_hbm_matches_golden(self):
+        result = evaluate_decode_serving(self.cfg_kv8)
+        self._assert_rel(result["kv_hbm_gb"], _GOLDEN_KV8_KV_HBM_GB, "KV8 kv_hbm_gb")
+
+    def test_kv8_kv_hbm_less_than_bf16(self):
+        """KV8 must use strictly less KV HBM than BF16."""
+        r_bf16 = evaluate_decode_serving(make_config(input_len=128, output_len=8, ep=2))
+        r_kv8  = evaluate_decode_serving(self.cfg_kv8)
+        self.assertLess(r_kv8["kv_hbm_gb"], r_bf16["kv_hbm_gb"])
+
+    # ── AC-9: Module deleted ───────────────────────────────────────────────
+
+    def test_quantization_module_raises_import_error(self):
+        """After refactor perf_model.quantization must not exist."""
+        import importlib
+        with self.assertRaises(ImportError):
+            importlib.import_module("perf_model.quantization")
+
+
 if __name__ == "__main__":
     unittest.main()

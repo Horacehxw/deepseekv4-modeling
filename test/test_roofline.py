@@ -15,6 +15,139 @@ from perf_model.roofline import (
     sum_ops,
 )
 
+# ── Quant-policy tests (AC-1 through AC-5, AC-10) ────────────────────────────
+# These tests use the NEW roofline_time(cfg, op_kind) signature.
+# They fail with TypeError/AttributeError before the refactor.
+
+_HW_KWARGS = dict(
+    cube_tflops=100, vec_tflops=10,
+    hbm_bandwidth_gbps=1000,
+    flops_utilization=0.5, hbm_bw_utilization=0.8,
+    vec_static_latency_us=0.0,
+)
+
+
+class TestRooflineTimeQuantPolicy(unittest.TestCase):
+    """New roofline_time signature: cfg + op_kind with inline quantization policy."""
+
+    def setUp(self):
+        # Configs share the same hw settings so BF16 identity comparisons are exact.
+        self.hw = HardwareConfig(**_HW_KWARGS)
+        self.cfg_bf16 = make_config(**_HW_KWARGS, quant_mode="bf16", kv_cache_quant_mode="bf16")
+        self.cfg_w8a8 = make_config(**_HW_KWARGS, quant_mode="w8a8", kv_cache_quant_mode="bf16")
+        self.cfg_kv8  = make_config(**_HW_KWARGS, quant_mode="bf16", kv_cache_quant_mode="kv8")
+        self.cfg_kv4  = make_config(**_HW_KWARGS, quant_mode="bf16", kv_cache_quant_mode="kv4")
+
+    # ── AC-1: BF16 numerical identity ─────────────────────────────────────
+
+    def _bf16_identity(self, op_kind):
+        """BF16 config + any op_kind must produce the same numbers as direct hw formula."""
+        flops, vec_ops, mem_bytes = 1e12, 1e11, 1e9
+        hw = self.cfg_bf16.hw
+        expected_cube = flops  / (hw.cube_tflops  * 1e12 * hw.effective_cube_utilization)
+        expected_vec  = vec_ops / (hw.vec_tflops   * 1e12 * hw.effective_vec_utilization)
+        expected_mem  = mem_bytes / (hw.hbm_bandwidth_gbps * 1e9 * hw.hbm_bw_utilization)
+        op = roofline_time("x", flops=flops, vec_ops=vec_ops, mem_bytes=mem_bytes,
+                           cfg=self.cfg_bf16, op_kind=op_kind)
+        self.assertAlmostEqual(op.cube_time_s, expected_cube, places=15)
+        self.assertAlmostEqual(op.vec_time_s,  expected_vec,  places=15)
+        self.assertAlmostEqual(op.mem_time_s,  expected_mem,  places=15)
+        self.assertAlmostEqual(op.time_s,      max(expected_cube + expected_vec, expected_mem), places=15)
+
+    def test_bf16_identity_gemm(self):      self._bf16_identity("gemm")
+    def test_bf16_identity_attention(self): self._bf16_identity("attention")
+    def test_bf16_identity_vector(self):    self._bf16_identity("vector")
+    def test_bf16_identity_other(self):     self._bf16_identity("other")
+    def test_bf16_identity_comm(self):      self._bf16_identity("comm")
+
+    # ── AC-2: W8A8 GEMM policy ────────────────────────────────────────────
+
+    def test_w8a8_gemm_uses_w8a8_tflops(self):
+        """W8A8 + gemm: cube_time uses effective_w8a8_tflops (= cube_tflops*2 when unset)."""
+        flops = 1e12
+        op = roofline_time("g", flops=flops, vec_ops=0, mem_bytes=0,
+                           cfg=self.cfg_w8a8, op_kind="gemm")
+        w8a8_tflops = self.cfg_bf16.hw.effective_w8a8_tflops  # 200 (2×cube)
+        expected_cube = flops / (w8a8_tflops * 1e12 * self.cfg_bf16.hw.flops_utilization)
+        self.assertAlmostEqual(op.cube_time_s, expected_cube, places=15)
+
+    def test_w8a8_gemm_scales_mem_bytes_by_half(self):
+        """W8A8 + gemm: op.mem_bytes in returned profile == raw_mem_bytes * 0.5."""
+        raw_mem = 1e9
+        op = roofline_time("g", flops=0, vec_ops=0, mem_bytes=raw_mem,
+                           cfg=self.cfg_w8a8, op_kind="gemm")
+        self.assertAlmostEqual(op.mem_bytes, raw_mem * 0.5, places=6)
+
+    def test_w8a8_gemm_cube_faster_than_bf16(self):
+        """W8A8 cube must be strictly faster than BF16 for identical flops."""
+        flops = 1e12
+        op_bf16 = roofline_time("g", flops=flops, vec_ops=0, mem_bytes=0,
+                                cfg=self.cfg_bf16, op_kind="gemm")
+        op_w8a8 = roofline_time("g", flops=flops, vec_ops=0, mem_bytes=0,
+                                cfg=self.cfg_w8a8, op_kind="gemm")
+        self.assertLess(op_w8a8.cube_time_s, op_bf16.cube_time_s)
+
+    # ── AC-3: Attention KV quantization policy ────────────────────────────
+
+    def test_kv8_attention_scales_mem_by_half(self):
+        """kv8 + attention: mem_bytes in profile == raw * 0.5."""
+        raw_mem = 1e9
+        op = roofline_time("a", flops=0, vec_ops=0, mem_bytes=raw_mem,
+                           cfg=self.cfg_kv8, op_kind="attention")
+        self.assertAlmostEqual(op.mem_bytes, raw_mem * 0.5, places=6)
+
+    def test_kv4_attention_scales_mem_by_quarter(self):
+        """kv4 + attention: mem_bytes in profile == raw * 0.25."""
+        raw_mem = 1e9
+        op = roofline_time("a", flops=0, vec_ops=0, mem_bytes=raw_mem,
+                           cfg=self.cfg_kv4, op_kind="attention")
+        self.assertAlmostEqual(op.mem_bytes, raw_mem * 0.25, places=6)
+
+    def test_kv8_attention_compute_throughput_unchanged(self):
+        """kv8 + attention: cube_time == BF16 cube_time (KV mode doesn't change compute)."""
+        flops = 1e12
+        op_bf16 = roofline_time("a", flops=flops, vec_ops=0, mem_bytes=0,
+                                cfg=self.cfg_bf16, op_kind="attention")
+        op_kv8  = roofline_time("a", flops=flops, vec_ops=0, mem_bytes=0,
+                                cfg=self.cfg_kv8,  op_kind="attention")
+        self.assertAlmostEqual(op_kv8.cube_time_s, op_bf16.cube_time_s, places=15)
+
+    # ── AC-4: Vector / other unchanged under any quant mode ──────────────
+
+    def _quant_unchanged(self, op_kind, quant_cfg):
+        flops, vec_ops, mem_bytes = 1e12, 1e11, 1e9
+        op_bf16 = roofline_time("v", flops=flops, vec_ops=vec_ops, mem_bytes=mem_bytes,
+                                cfg=self.cfg_bf16, op_kind=op_kind)
+        op_q    = roofline_time("v", flops=flops, vec_ops=vec_ops, mem_bytes=mem_bytes,
+                                cfg=quant_cfg, op_kind=op_kind)
+        self.assertAlmostEqual(op_q.cube_time_s, op_bf16.cube_time_s, places=15)
+        self.assertAlmostEqual(op_q.mem_time_s,  op_bf16.mem_time_s,  places=15)
+        self.assertAlmostEqual(op_q.time_s,      op_bf16.time_s,      places=15)
+
+    def test_vector_unchanged_under_w8a8(self):  self._quant_unchanged("vector", self.cfg_w8a8)
+    def test_vector_unchanged_under_kv8(self):   self._quant_unchanged("vector", self.cfg_kv8)
+    def test_other_unchanged_under_w8a8(self):   self._quant_unchanged("other",  self.cfg_w8a8)
+    def test_other_unchanged_under_kv4(self):    self._quant_unchanged("other",  self.cfg_kv4)
+
+    # ── AC-5: Comm unchanged ──────────────────────────────────────────────
+
+    def test_comm_unchanged_under_w8a8(self):    self._quant_unchanged("comm", self.cfg_w8a8)
+    def test_comm_unchanged_under_kv8(self):     self._quant_unchanged("comm", self.cfg_kv8)
+
+    # ── AC-10: Invalid op_kind raises ValueError ──────────────────────────
+
+    def test_invalid_op_kind_raises_value_error(self):
+        with self.assertRaises(ValueError):
+            roofline_time("x", flops=0, vec_ops=0, mem_bytes=0,
+                          cfg=self.cfg_bf16, op_kind="bad_kind")
+
+    def test_all_valid_op_kinds_accepted(self):
+        for kind in ("gemm", "attention", "vector", "other", "comm"):
+            with self.subTest(op_kind=kind):
+                op = roofline_time("x", flops=0, vec_ops=0, mem_bytes=0,
+                                   cfg=self.cfg_bf16, op_kind=kind)
+                assert_op_valid(self, op)
+
 
 class TestBytes2(unittest.TestCase):
     """bytes2: BF16 byte count = count * 2."""
@@ -39,10 +172,17 @@ class TestRooflineTime(unittest.TestCase):
             flops_utilization=0.5, hbm_bw_utilization=0.8,
             vec_static_latency_us=0.0,
         )
+        self.cfg = make_config(
+            cube_tflops=100, vec_tflops=10,
+            hbm_bandwidth_gbps=1000,
+            flops_utilization=0.5, hbm_bw_utilization=0.8,
+            vec_static_latency_us=0.0,
+        )
 
     def test_cube_bound(self):
         """Large flops, small vec/mem -> CUBE bottleneck."""
-        op = roofline_time("cube_test", flops=1e15, vec_ops=0, mem_bytes=0, hw=self.hw)
+        op = roofline_time("cube_test", flops=1e15, vec_ops=0, mem_bytes=0,
+                           cfg=self.cfg, op_kind="gemm")
         assert_op_valid(self, op)
         self.assertEqual(op.bottleneck, "CUBE")
         self.assertGreater(op.cube_time_s, 0)
@@ -51,20 +191,22 @@ class TestRooflineTime(unittest.TestCase):
 
     def test_vec_bound(self):
         """Large vec_ops, small flops/mem -> VEC bottleneck."""
-        op = roofline_time("vec_test", flops=0, vec_ops=1e15, mem_bytes=0, hw=self.hw)
+        op = roofline_time("vec_test", flops=0, vec_ops=1e15, mem_bytes=0,
+                           cfg=self.cfg, op_kind="vector")
         assert_op_valid(self, op)
         self.assertEqual(op.bottleneck, "VEC")
 
     def test_mem_bound(self):
         """Large mem_bytes, small flops/vec -> MEM bottleneck."""
-        op = roofline_time("mem_test", flops=0, vec_ops=0, mem_bytes=1e15, hw=self.hw)
+        op = roofline_time("mem_test", flops=0, vec_ops=0, mem_bytes=1e15,
+                           cfg=self.cfg, op_kind="other")
         assert_op_valid(self, op)
         self.assertEqual(op.bottleneck, "MEM")
 
     def test_comm_bound(self):
         """comm_time_s > compute_time -> COMM bottleneck."""
         op = roofline_time("comm_test", flops=0, vec_ops=0, mem_bytes=0,
-                           hw=self.hw, comm_time_s=1.0)
+                           cfg=self.cfg, op_kind="comm", comm_time_s=1.0)
         assert_op_valid(self, op)
         self.assertEqual(op.bottleneck, "COMM")
         self.assertAlmostEqual(op.time_s, 1.0, places=12)
@@ -72,14 +214,15 @@ class TestRooflineTime(unittest.TestCase):
     def test_total_time_formula(self):
         """total = max(cube+vec, mem) + comm."""
         op = roofline_time("formula_test", flops=1e12, vec_ops=1e11,
-                           mem_bytes=1e9, hw=self.hw, comm_time_s=0.001)
+                           mem_bytes=1e9, cfg=self.cfg, op_kind="gemm", comm_time_s=0.001)
         assert_op_valid(self, op)
         compute = max(op.cube_time_s + op.vec_time_s, op.mem_time_s)
         self.assertAlmostEqual(op.time_s, compute + op.comm_time_s, places=12)
 
     def test_all_zero(self):
         """All zeros -> empty bottleneck."""
-        op = roofline_time("zero", flops=0, vec_ops=0, mem_bytes=0, hw=self.hw)
+        op = roofline_time("zero", flops=0, vec_ops=0, mem_bytes=0,
+                           cfg=self.cfg, op_kind="other")
         assert_op_valid(self, op)
         self.assertEqual(op.bottleneck, "")
         self.assertEqual(op.time_s, 0.0)
@@ -88,18 +231,20 @@ class TestRooflineTime(unittest.TestCase):
         """cube_time = flops / (tflops * 1e12 * util)."""
         flops = 1e12
         expected = flops / (self.hw.cube_tflops * 1e12 * self.hw.flops_utilization)
-        op = roofline_time("exact_cube", flops=flops, vec_ops=0, mem_bytes=0, hw=self.hw)
+        op = roofline_time("exact_cube", flops=flops, vec_ops=0, mem_bytes=0,
+                           cfg=self.cfg, op_kind="gemm")
         self.assertAlmostEqual(op.cube_time_s, expected, places=15)
 
     def test_exact_vec_time(self):
         """vec_time = vec_ops / (vec_tflops * 1e12 * util)."""
         vec_ops = 1e12
         expected = vec_ops / (self.hw.vec_tflops * 1e12 * self.hw.flops_utilization)
-        op = roofline_time("exact_vec", flops=0, vec_ops=vec_ops, mem_bytes=0, hw=self.hw)
+        op = roofline_time("exact_vec", flops=0, vec_ops=vec_ops, mem_bytes=0,
+                           cfg=self.cfg, op_kind="vector")
         self.assertAlmostEqual(op.vec_time_s, expected, places=15)
 
     def test_separate_cube_and_vec_utilization(self):
-        hw = HardwareConfig(
+        cfg = make_config(
             cube_tflops=100,
             vec_tflops=10,
             hbm_bandwidth_gbps=1000,
@@ -109,7 +254,8 @@ class TestRooflineTime(unittest.TestCase):
             hbm_bw_utilization=0.8,
             vec_static_latency_us=0.0,
         )
-        op = roofline_time("split_util", flops=1e12, vec_ops=1e12, mem_bytes=0, hw=hw)
+        op = roofline_time("split_util", flops=1e12, vec_ops=1e12, mem_bytes=0,
+                           cfg=cfg, op_kind="gemm")
         self.assertAlmostEqual(op.cube_time_s, 1e12 / (100 * 1e12 * 0.25), places=15)
         self.assertAlmostEqual(op.vec_time_s, 1e12 / (10 * 1e12 * 0.1), places=15)
 
@@ -117,29 +263,30 @@ class TestRooflineTime(unittest.TestCase):
         """mem_time = mem_bytes / (bw_gbps * 1e9 * bw_util)."""
         mem_bytes = 1e12
         expected = mem_bytes / (self.hw.hbm_bandwidth_gbps * 1e9 * self.hw.hbm_bw_utilization)
-        op = roofline_time("exact_mem", flops=0, vec_ops=0, mem_bytes=mem_bytes, hw=self.hw)
+        op = roofline_time("exact_mem", flops=0, vec_ops=0, mem_bytes=mem_bytes,
+                           cfg=self.cfg, op_kind="other")
         self.assertAlmostEqual(op.mem_time_s, expected, places=15)
 
     def test_name_passthrough(self):
-        op = roofline_time("my_op_name", flops=0, vec_ops=0, mem_bytes=0, hw=self.hw)
+        op = roofline_time("my_op_name", flops=0, vec_ops=0, mem_bytes=0,
+                           cfg=self.cfg, op_kind="other")
         self.assertEqual(op.name, "my_op_name")
 
     def test_comm_bytes_passthrough(self):
         op = roofline_time("cb", flops=0, vec_ops=0, mem_bytes=0,
-                           hw=self.hw, comm_bytes=12345)
+                           cfg=self.cfg, op_kind="comm", comm_bytes=12345)
         self.assertEqual(op.comm_bytes, 12345)
 
     def test_cube_beats_vec_and_mem(self):
         """When cube > vec > mem, bottleneck is CUBE."""
-        # cube_time = 1e14 / (100*1e12*0.5) = 2.0
-        # vec_time  = 1e13 / (10*1e12*0.5)  = 2.0 -- tie goes to cube (>= check)
-        # Use different values to avoid tie
-        op = roofline_time("priority", flops=1e14, vec_ops=1e12, mem_bytes=1e9, hw=self.hw)
+        op = roofline_time("priority", flops=1e14, vec_ops=1e12, mem_bytes=1e9,
+                           cfg=self.cfg, op_kind="gemm")
         self.assertEqual(op.bottleneck, "CUBE")
 
     def test_vec_beats_mem_but_not_cube(self):
         """vec_time > mem_time, both > 0, but no cube -> VEC."""
-        op = roofline_time("vec_vs_mem", flops=0, vec_ops=1e13, mem_bytes=1e6, hw=self.hw)
+        op = roofline_time("vec_vs_mem", flops=0, vec_ops=1e13, mem_bytes=1e6,
+                           cfg=self.cfg, op_kind="vector")
         self.assertEqual(op.bottleneck, "VEC")
 
 
@@ -242,7 +389,7 @@ class TestSumOps(unittest.TestCase):
     """sum_ops: aggregate OpProfiles."""
 
     def setUp(self):
-        self.hw = HardwareConfig(
+        self.cfg = make_config(
             cube_tflops=100, vec_tflops=10,
             hbm_bandwidth_gbps=1000,
             flops_utilization=0.5, hbm_bw_utilization=0.8,
@@ -256,7 +403,8 @@ class TestSumOps(unittest.TestCase):
         self.assertEqual(total.bottleneck, "")
 
     def test_single_op(self):
-        op = roofline_time("single", flops=1e12, vec_ops=0, mem_bytes=0, hw=self.hw)
+        op = roofline_time("single", flops=1e12, vec_ops=0, mem_bytes=0,
+                           cfg=self.cfg, op_kind="gemm")
         total = sum_ops([op], "agg")
         self.assertEqual(total.name, "agg")
         self.assertAlmostEqual(total.flops, op.flops, places=12)
@@ -264,8 +412,10 @@ class TestSumOps(unittest.TestCase):
         self.assertAlmostEqual(total.cube_time_s, op.cube_time_s, places=12)
 
     def test_two_ops_aggregation(self):
-        op1 = roofline_time("a", flops=1e12, vec_ops=0, mem_bytes=0, hw=self.hw)
-        op2 = roofline_time("b", flops=0, vec_ops=0, mem_bytes=1e12, hw=self.hw)
+        op1 = roofline_time("a", flops=1e12, vec_ops=0, mem_bytes=0,
+                            cfg=self.cfg, op_kind="gemm")
+        op2 = roofline_time("b", flops=0, vec_ops=0, mem_bytes=1e12,
+                            cfg=self.cfg, op_kind="other")
         total = sum_ops([op1, op2], "both")
         self.assertAlmostEqual(total.flops, op1.flops + op2.flops, places=12)
         self.assertAlmostEqual(total.mem_bytes, op1.mem_bytes + op2.mem_bytes, places=12)
@@ -275,9 +425,10 @@ class TestSumOps(unittest.TestCase):
 
     def test_bottleneck_determination(self):
         """Bottleneck = component with largest aggregate time."""
-        # Make a cube-heavy op and a mem-heavy op where cube dominates
-        op_cube = roofline_time("c", flops=1e15, vec_ops=0, mem_bytes=0, hw=self.hw)
-        op_mem = roofline_time("m", flops=0, vec_ops=0, mem_bytes=1e9, hw=self.hw)
+        op_cube = roofline_time("c", flops=1e15, vec_ops=0, mem_bytes=0,
+                                cfg=self.cfg, op_kind="gemm")
+        op_mem  = roofline_time("m", flops=0, vec_ops=0, mem_bytes=1e9,
+                                cfg=self.cfg, op_kind="other")
         total = sum_ops([op_cube, op_mem], "cube_dom")
         self.assertEqual(total.bottleneck, "CUBE")
 
@@ -295,8 +446,10 @@ class TestSumOps(unittest.TestCase):
         self.assertEqual(total.comm_bytes, 300)
 
     def test_vec_ops_aggregated(self):
-        op1 = roofline_time("v1", flops=0, vec_ops=1e12, mem_bytes=0, hw=self.hw)
-        op2 = roofline_time("v2", flops=0, vec_ops=2e12, mem_bytes=0, hw=self.hw)
+        op1 = roofline_time("v1", flops=0, vec_ops=1e12, mem_bytes=0,
+                            cfg=self.cfg, op_kind="vector")
+        op2 = roofline_time("v2", flops=0, vec_ops=2e12, mem_bytes=0,
+                            cfg=self.cfg, op_kind="vector")
         total = sum_ops([op1, op2], "vec_agg")
         self.assertAlmostEqual(total.vec_ops, 3e12, places=6)
 
@@ -305,27 +458,29 @@ class TestVecStaticLatency(unittest.TestCase):
     """vec_static_latency_us is added to vec_time only when vec_ops > 0."""
 
     def setUp(self):
-        self.hw = HardwareConfig(
+        self.cfg = make_config(
             cube_tflops=100, vec_tflops=10,
             hbm_bandwidth_gbps=1000,
             flops_utilization=0.5, hbm_bw_utilization=0.8,
             vec_static_latency_us=10.0,
         )
+        self.hw = self.cfg.hw
 
     def test_static_latency_not_added_when_vec_ops_zero(self):
-        op = roofline_time("no_vec", flops=1e12, vec_ops=0, mem_bytes=0, hw=self.hw)
+        op = roofline_time("no_vec", flops=1e12, vec_ops=0, mem_bytes=0,
+                           cfg=self.cfg, op_kind="gemm")
         self.assertEqual(op.vec_time_s, 0.0)
 
     def test_static_latency_added_when_vec_ops_positive(self):
         vec_ops = 1e12
-        op = roofline_time("with_vec", flops=0, vec_ops=vec_ops, mem_bytes=0, hw=self.hw)
+        op = roofline_time("with_vec", flops=0, vec_ops=vec_ops, mem_bytes=0,
+                           cfg=self.cfg, op_kind="vector")
         expected_compute = vec_ops / (self.hw.vec_tflops * 1e12 * self.hw.effective_vec_utilization)
         expected_vec_time = expected_compute + 10.0 * 1e-6
         self.assertAlmostEqual(op.vec_time_s, expected_vec_time, places=15)
 
     def test_static_latency_is_phase_independent(self):
         """vec_static_latency_us is not scaled by for_phase()."""
-        from perf_model.config import Config
         cfg = make_config(vec_static_latency_us=10.0, prefill_utilization=0.5)
         scaled = cfg.for_phase("prefill")
         self.assertAlmostEqual(scaled.hw.vec_static_latency_us, 10.0)
@@ -335,25 +490,28 @@ class TestNewBottleneckFormula(unittest.TestCase):
     """Bottleneck uses cube+vec vs mem, not max(cube, vec, mem)."""
 
     def setUp(self):
-        self.hw = HardwareConfig(
+        self.cfg = make_config(
             cube_tflops=100, vec_tflops=10,
             hbm_bandwidth_gbps=1000,
             flops_utilization=0.5, hbm_bw_utilization=0.8,
             vec_static_latency_us=0.0,
         )
+        self.hw = self.cfg.hw
 
     def test_cube_plus_vec_exceeds_mem_gives_cube_bottleneck(self):
         """cube+vec > mem, and cube >= vec -> CUBE."""
         # cube = 1e13/(100*1e12*0.5) = 0.2s, vec = 1e11/(10*1e12*0.5) = 0.02s
         # cube+vec = 0.22s > mem = 1e6/(1000*1e9*0.8) = 1.25e-6s
-        op = roofline_time("cube_dom", flops=1e13, vec_ops=1e11, mem_bytes=1e6, hw=self.hw)
+        op = roofline_time("cube_dom", flops=1e13, vec_ops=1e11, mem_bytes=1e6,
+                           cfg=self.cfg, op_kind="other")
         self.assertEqual(op.bottleneck, "CUBE")
         self.assertGreater(op.cube_time_s + op.vec_time_s, op.mem_time_s)
 
     def test_cube_plus_vec_exceeds_mem_but_vec_larger_gives_vec(self):
         """cube+vec > mem, and vec > cube -> VEC."""
         # cube = 1e11/(100*1e12*0.5) = 0.002s, vec = 1e13/(10*1e12*0.5) = 2.0s
-        op = roofline_time("vec_dom", flops=1e11, vec_ops=1e13, mem_bytes=1e6, hw=self.hw)
+        op = roofline_time("vec_dom", flops=1e11, vec_ops=1e13, mem_bytes=1e6,
+                           cfg=self.cfg, op_kind="other")
         self.assertEqual(op.bottleneck, "VEC")
 
     def test_mem_exceeds_cube_plus_vec_gives_mem(self):
@@ -361,7 +519,8 @@ class TestNewBottleneckFormula(unittest.TestCase):
         # cube = 1e12/(100*1e12*0.5) = 0.02s, vec = 1e11/(10*1e12*0.5) = 0.02s
         # cube+vec = 0.04s
         # mem_time = X / (1000*1e9*0.8), want mem_time > 0.04 → X > 0.04 * 8e11 = 3.2e10
-        op = roofline_time("mem_dom", flops=1e12, vec_ops=1e11, mem_bytes=4e10, hw=self.hw)
+        op = roofline_time("mem_dom", flops=1e12, vec_ops=1e11, mem_bytes=4e10,
+                           cfg=self.cfg, op_kind="other")
         self.assertEqual(op.bottleneck, "MEM")
         self.assertGreater(op.mem_time_s, op.cube_time_s + op.vec_time_s)
 
@@ -379,7 +538,8 @@ class TestNewBottleneckFormula(unittest.TestCase):
         # cube = 0.01 → flops = 0.01 * 100*1e12*0.5 = 5e11
         # vec = 0.005 → vec_ops = 0.005 * 10*1e12*0.5 = 2.5e10
         # mem = 0.012 → mem_bytes = 0.012 * 1000*1e9*0.8 = 9.6e9
-        op = roofline_time("disagree", flops=5e11, vec_ops=2.5e10, mem_bytes=9.6e9, hw=self.hw)
+        op = roofline_time("disagree", flops=5e11, vec_ops=2.5e10, mem_bytes=9.6e9,
+                           cfg=self.cfg, op_kind="other")
         self.assertEqual(op.bottleneck, "CUBE")
         # Verify: old formula would have given MEM
         self.assertGreater(op.mem_time_s, op.cube_time_s)
@@ -388,7 +548,7 @@ class TestNewBottleneckFormula(unittest.TestCase):
     def test_comm_dominates(self):
         """comm > compute_time -> COMM."""
         op = roofline_time("comm_dom", flops=1e12, vec_ops=1e11, mem_bytes=1e9,
-                           hw=self.hw, comm_time_s=100.0)
+                           cfg=self.cfg, op_kind="comm", comm_time_s=100.0)
         self.assertEqual(op.bottleneck, "COMM")
 
 
@@ -396,7 +556,7 @@ class TestSumOpsNewBottleneck(unittest.TestCase):
     """sum_ops() aggregate bottleneck uses cube+vec vs mem."""
 
     def setUp(self):
-        self.hw = HardwareConfig(
+        self.cfg = make_config(
             cube_tflops=100, vec_tflops=10,
             hbm_bandwidth_gbps=1000,
             flops_utilization=0.5, hbm_bw_utilization=0.8,
@@ -404,15 +564,19 @@ class TestSumOpsNewBottleneck(unittest.TestCase):
         )
 
     def test_aggregate_cube_plus_vec_gt_mem_gives_cube(self):
-        op1 = roofline_time("a", flops=1e13, vec_ops=0, mem_bytes=0, hw=self.hw)
-        op2 = roofline_time("b", flops=0, vec_ops=1e12, mem_bytes=1e6, hw=self.hw)
+        op1 = roofline_time("a", flops=1e13, vec_ops=0, mem_bytes=0,
+                            cfg=self.cfg, op_kind="other")
+        op2 = roofline_time("b", flops=0, vec_ops=1e12, mem_bytes=1e6,
+                            cfg=self.cfg, op_kind="vector")
         total = sum_ops([op1, op2], "agg")
         self.assertGreater(total.cube_time_s + total.vec_time_s, total.mem_time_s)
         self.assertIn(total.bottleneck, {"CUBE", "VEC"})
 
     def test_aggregate_mem_gt_cube_plus_vec_gives_mem(self):
-        op1 = roofline_time("a", flops=1e9, vec_ops=0, mem_bytes=0, hw=self.hw)
-        op2 = roofline_time("b", flops=0, vec_ops=0, mem_bytes=1e13, hw=self.hw)
+        op1 = roofline_time("a", flops=1e9, vec_ops=0, mem_bytes=0,
+                            cfg=self.cfg, op_kind="other")
+        op2 = roofline_time("b", flops=0, vec_ops=0, mem_bytes=1e13,
+                            cfg=self.cfg, op_kind="other")
         total = sum_ops([op1, op2], "agg")
         self.assertEqual(total.bottleneck, "MEM")
 

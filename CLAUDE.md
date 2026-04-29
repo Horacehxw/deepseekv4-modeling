@@ -18,10 +18,10 @@ configs/                  # Hardware, network, model, runtime JSON configs
 perf_model/               # Core package
   __init__.py             # Re-exports public API
   config.py               # Config dataclasses + JSON loader
-  roofline.py             # OpProfile, roofline engine, comm helpers (allreduce/alltoall/allgather)
+  roofline.py             # OpProfile, roofline engine, comm helpers; OP_KINDS, WEIGHT_BYTE_RATIOS, KV_BYTE_RATIOS constants; inline quant policy via op_kind
   ops.py                  # ~30 per-op cost functions (attention, MoE, index, etc.)
   layers.py               # Layer/phase aggregation (prefill_layer, decode_layer, prefill_model, decode_model)
-  memory.py               # KV cache + weight memory analysis
+  memory.py               # KV cache + weight memory analysis; applies W8A8/KV8/KV4 quant ratios and overhead
   report.py               # Formatting, printing, CSV export, comm vs compute analysis
 main.py                   # CLI entry point (thin wrapper)
 output/                   # Auto-generated: timestamped runs with CSV + console output
@@ -46,7 +46,7 @@ Pipeline: **config** -> **roofline** -> **ops** -> **layers** -> **memory/report
 - Each op computes `cube_time`, `vec_time`, `mem_time` separately
 - Bottleneck = `argmax(cube, vec, mem)`
 - Total time = `max(cube, vec, mem) + comm`
-- All sizes use BF16 = 2 bytes per element
+- All sizes use BF16 = 2 bytes per element (unless quantization enabled via `quant_mode`/`kv_cache_quant_mode`)
 - FLOPs convention: matmul `[M, K] x [K, N]` = `M * N * K * 2`
 
 ## Key Conventions
@@ -85,6 +85,15 @@ All compression ops are now implemented with exact per-step costs:
 - `op_kv_compression_decode()` — K/V compression per decode step (cost varies by `S_total % ratio`)
 - `op_index_kv_compression_prefill()` — index key compression for Lightning Index (prefill)
 - `op_index_kv_compression_decode()` — index key compression per decode step (cost varies by `S_total % ratio`)
+
+## Quantization
+
+`RuntimeConfig` fields control quantization behavior:
+- `quant_mode`: `"bf16"` (default) or `"w8a8"` — W8A8 GEMM ops use `effective_w8a8_tflops`; weight memory halved
+- `kv_cache_quant_mode`: `"bf16"` (default), `"kv8"`, or `"kv4"` — attention memory and KV cache halved/quartered
+- `weight_scale_overhead_bytes` / `kv_scale_overhead_bytes`: extra bytes added to totals for scale storage
+
+The quantization policy is inline in `roofline_time()` via the required `op_kind` parameter. All 5 valid op_kinds: `"gemm"`, `"attention"`, `"vector"`, `"other"`, `"comm"`. Invalid op_kind raises `ValueError`.
 
 ## Future Work (TODO)
 - Overlap optimization: SWA and compressed attention currently modeled as separate ops.

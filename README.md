@@ -10,7 +10,7 @@ A roofline-based performance model for estimating DeepSeek V4 inference latency 
 - **Per-op breakdown**: ~30 individual operation cost functions covering attention projections, Lightning Index, MoE, mHC, and more
 - **mHC kernel fusion** (enabled by default): Fused mHC ops reduce HBM traffic ~10x by keeping intermediates in registers/SRAM
 - **Shared expert overlap** (enabled by default): Shared expert computation overlaps with MoE dispatch/combine communication
-- **Memory analysis**: KV cache sizing and weight memory per rank
+- **Memory analysis**: KV cache sizing and weight memory per rank, with W8A8/KV8/KV4 quantization ratios applied directly in `memory.py`
 - **CSV export**: Timestamped output directory with per-op, per-layer, memory, and summary CSVs
 - **No dependencies**: Python standard library only
 
@@ -125,9 +125,27 @@ The search evaluates 4 independent scenarios:
 
 See [`param_search/report.md`](param_search/report.md) for detailed search analysis and [`report/report_en.md`](report/report_en.md) for the comprehensive 8-section analysis (V4 vs V3 comparison, bottleneck analysis, 4 serving combos: 8K/32K/128K/256K, mHC optimization, KV cache scaling, deployment recommendations).
 
+## Quantization Support
+
+The model supports quantization modes via `RuntimeConfig`:
+
+| Field | Values | Effect |
+|---|---|---|
+| `quant_mode` | `bf16` (default), `w8a8` | W8A8: GEMM ops use `effective_w8a8_tflops`; weight memory halved |
+| `kv_cache_quant_mode` | `bf16` (default), `kv8`, `kv4` | KV8/KV4: attention memory and KV cache halved/quartered |
+| `weight_scale_overhead_bytes` | float (default 0) | Added to total weight memory for quantization scale storage |
+| `kv_scale_overhead_bytes` | float (default 0) | Added to total KV memory for quantization scale storage |
+
+Quantization policy is applied inline in `roofline_time()` via `op_kind`:
+- `"gemm"` + W8A8 → uses `effective_w8a8_tflops`, scales `mem_bytes` × 0.5
+- `"attention"` + KV8/KV4 → scales `mem_bytes` × 0.5 / 0.25; compute throughput stays BF16
+- `"vector"`, `"other"`, `"comm"` → no change regardless of quant mode
+
+All five `op_kind` values are validated; invalid values raise `ValueError`.
+
 ## Key Assumptions
 
-- BF16 (2 bytes) for all weights and activations
+- BF16 (2 bytes) for all weights and activations (unless quantization enabled)
 - Flash attention memory model (no intermediate materialization to HBM)
 - `head_dim` (512) already contains `rope_head_dim` (64) — RoPE is embedded within the head dimension, not a separate projection. Q byte calculations use `Dqc` only.
 - Prefill attention reads full KV cache (`B * S * kv_d`) rather than per-query window reads — since every Q position needs its local window, a single sequential read is more efficient. Decode reads only the window (SWA) or top-K entries (compressed).

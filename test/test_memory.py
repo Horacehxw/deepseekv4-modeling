@@ -206,5 +206,143 @@ class TestWeightMemory(unittest.TestCase):
         self.assertEqual(result["n_comp_layers"], 3)
 
 
+# ── Quantization-aware memory (AC-6 & AC-7) ──────────────────────────────────
+# AC-6 tests: BF16 identity (same keys, same values, no extra metadata keys).
+# AC-7 tests: W8A8/KV8/KV4 exact ratios + overhead; metadata keys present.
+# W8A8/KV8/KV4 ratio tests fail NOW because memory.py doesn't apply quant yet.
+
+class TestMemoryQuantization(unittest.TestCase):
+    """weight_memory_per_rank and kv_cache_memory with quantization ratios."""
+
+    # ── AC-6: BF16 identity ───────────────────────────────────────────────
+
+    def test_bf16_weight_memory_identical_keys(self):
+        """BF16 weight_memory_per_rank: same keys as baseline, no extra metadata keys."""
+        cfg = make_config()
+        result = weight_memory_per_rank(cfg)
+        expected_keys = {
+            "attn_per_layer", "index_per_layer", "moe_per_layer",
+            "mhc_per_layer", "norm_per_layer",
+            "n_swa_layers", "n_comp_layers",
+            "total_attn", "total_moe", "total_other",
+            "embedding", "lm_head", "total",
+        }
+        self.assertEqual(set(result.keys()), expected_keys)
+
+    def test_bf16_kv_cache_memory_identical_keys(self):
+        """BF16 kv_cache_memory: keys are exactly {'layers', 'total_bytes'}, no extras."""
+        cfg = make_config()
+        result = kv_cache_memory(cfg)
+        self.assertEqual(set(result.keys()), {"layers", "total_bytes"})
+
+    def test_bf16_weight_memory_identical_values(self):
+        """BF16 weight_memory_per_rank values unchanged vs direct formula."""
+        cfg = make_config()
+        result = weight_memory_per_rank(cfg)
+        m, TP, EP = cfg.model, cfg.rt.tp, cfg.rt.ep
+        H = m.hidden_size
+        expected_moe = bytes2(
+            H * m.n_routed_experts
+            + (m.n_routed_experts // EP) * 3 * H * m.moe_inter_dim
+            + m.n_shared_experts * 3 * H * m.moe_inter_dim
+        )
+        self.assertEqual(result["moe_per_layer"], expected_moe)
+        # BF16 ratio = 1.0, so total must equal the raw formula sum
+        self.assertEqual(result["total"], result["total_attn"] + result["total_moe"] + result["total_other"])
+
+    # ── AC-7: W8A8 weight memory exact ratios ─────────────────────────────
+
+    def test_w8a8_weight_total_is_half_bf16(self):
+        """W8A8: weight_memory_per_rank total == bf16_total * 0.5."""
+        cfg_bf16 = make_config()
+        cfg_w8a8 = make_config(quant_mode="w8a8")
+        r_bf16 = weight_memory_per_rank(cfg_bf16)
+        r_w8a8 = weight_memory_per_rank(cfg_w8a8)
+        self.assertAlmostEqual(r_w8a8["total"], r_bf16["total"] * 0.5, places=3)
+
+    def test_w8a8_weight_per_layer_fields_scaled(self):
+        """W8A8: numeric per-layer fields are scaled by 0.5."""
+        cfg_bf16 = make_config()
+        cfg_w8a8 = make_config(quant_mode="w8a8")
+        r_bf16 = weight_memory_per_rank(cfg_bf16)
+        r_w8a8 = weight_memory_per_rank(cfg_w8a8)
+        for key in ("attn_per_layer", "moe_per_layer", "mhc_per_layer"):
+            with self.subTest(key=key):
+                self.assertAlmostEqual(r_w8a8[key], r_bf16[key] * 0.5, places=3)
+
+    def test_w8a8_weight_with_scale_overhead(self):
+        """W8A8 with overhead: total == bf16_total * 0.5 + weight_scale_overhead_bytes."""
+        overhead = 1_000_000.0
+        cfg_bf16 = make_config()
+        cfg_w8a8 = make_config(quant_mode="w8a8", weight_scale_overhead_bytes=overhead)
+        r_bf16 = weight_memory_per_rank(cfg_bf16)
+        r_w8a8 = weight_memory_per_rank(cfg_w8a8)
+        expected = r_bf16["total"] * 0.5 + overhead
+        self.assertAlmostEqual(r_w8a8["total"], expected, places=3)
+
+    def test_w8a8_weight_has_quant_mode_key(self):
+        """W8A8: returned dict has 'quant_mode' metadata key."""
+        cfg = make_config(quant_mode="w8a8")
+        result = weight_memory_per_rank(cfg)
+        self.assertIn("quant_mode", result)
+        self.assertEqual(result["quant_mode"], "w8a8")
+
+    # ── AC-7: KV cache exact ratios ────────────────────────────────────────
+
+    def test_kv8_total_bytes_is_half_bf16(self):
+        """KV8: kv_cache_memory total_bytes == bf16_total * 0.5."""
+        cfg_bf16 = make_config()
+        cfg_kv8  = make_config(kv_cache_quant_mode="kv8")
+        r_bf16 = kv_cache_memory(cfg_bf16)
+        r_kv8  = kv_cache_memory(cfg_kv8)
+        self.assertAlmostEqual(r_kv8["total_bytes"], r_bf16["total_bytes"] * 0.5, places=3)
+
+    def test_kv4_total_bytes_is_quarter_bf16(self):
+        """KV4: kv_cache_memory total_bytes == bf16_total * 0.25."""
+        cfg_bf16 = make_config()
+        cfg_kv4  = make_config(kv_cache_quant_mode="kv4")
+        r_bf16 = kv_cache_memory(cfg_bf16)
+        r_kv4  = kv_cache_memory(cfg_kv4)
+        self.assertAlmostEqual(r_kv4["total_bytes"], r_bf16["total_bytes"] * 0.25, places=3)
+
+    def test_kv8_per_layer_bytes_scaled(self):
+        """KV8: per-layer byte fields all scaled by 0.5."""
+        cfg_bf16 = make_config()
+        cfg_kv8  = make_config(kv_cache_quant_mode="kv8")
+        r_bf16 = kv_cache_memory(cfg_bf16)
+        r_kv8  = kv_cache_memory(cfg_kv8)
+        for i in range(cfg_bf16.model.num_hidden_layers):
+            with self.subTest(layer=i):
+                self.assertAlmostEqual(
+                    r_kv8["layers"][i]["bytes"],
+                    r_bf16["layers"][i]["bytes"] * 0.5,
+                    places=3,
+                )
+
+    def test_kv8_with_scale_overhead(self):
+        """KV8 with overhead: total == bf16_total * 0.5 + kv_scale_overhead_bytes."""
+        overhead = 500_000.0
+        cfg_bf16 = make_config()
+        cfg_kv8  = make_config(kv_cache_quant_mode="kv8", kv_scale_overhead_bytes=overhead)
+        r_bf16 = kv_cache_memory(cfg_bf16)
+        r_kv8  = kv_cache_memory(cfg_kv8)
+        expected = r_bf16["total_bytes"] * 0.5 + overhead
+        self.assertAlmostEqual(r_kv8["total_bytes"], expected, places=3)
+
+    def test_kv8_has_kv_cache_quant_mode_key(self):
+        """KV8: returned dict has 'kv_cache_quant_mode' metadata key."""
+        cfg = make_config(kv_cache_quant_mode="kv8")
+        result = kv_cache_memory(cfg)
+        self.assertIn("kv_cache_quant_mode", result)
+        self.assertEqual(result["kv_cache_quant_mode"], "kv8")
+
+    def test_kv4_has_kv_cache_quant_mode_key(self):
+        """KV4: returned dict has 'kv_cache_quant_mode' metadata key."""
+        cfg = make_config(kv_cache_quant_mode="kv4")
+        result = kv_cache_memory(cfg)
+        self.assertIn("kv_cache_quant_mode", result)
+        self.assertEqual(result["kv_cache_quant_mode"], "kv4")
+
+
 if __name__ == "__main__":
     unittest.main()

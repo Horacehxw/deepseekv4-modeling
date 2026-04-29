@@ -10,7 +10,7 @@
 - **逐算子分析**：约 30 个独立算子代价函数，覆盖注意力投影、Lightning Index、MoE、mHC 等
 - **mHC 内核融合**（默认开启）：融合 mHC 算子将 HBM 流量减少约 10 倍，中间结果保留在寄存器/SRAM 中
 - **共享专家重叠**（默认开启）：共享专家计算与 MoE 调度/汇总通信重叠
-- **显存分析**：KV Cache 大小和每卡权重显存
+- **显存分析**：KV Cache 大小和每卡权重显存，支持 W8A8/KV8/KV4 量化比例（直接在 `memory.py` 中应用）
 - **CSV 导出**：带时间戳的输出目录，包含逐算子、逐层、显存和汇总 CSV
 - **零依赖**：仅使用 Python 标准库
 
@@ -124,9 +124,27 @@ python param_search/analyze.py    # 分析结果并生成报告
 
 详细搜索分析请参见 [`param_search/report.md`](param_search/report.md)；综合 8 章分析报告（V4 vs V3 对比、瓶颈分析、4 个服务场景：8K/32K/128K/256K、mHC 优化、KV Cache 缩放、部署建议）请参见 [`report/report_en.md`](report/report_en.md)。
 
+## 量化支持
+
+通过 `RuntimeConfig` 字段控制量化行为：
+
+| 字段 | 取值 | 效果 |
+|---|---|---|
+| `quant_mode` | `bf16`（默认）、`w8a8` | W8A8：GEMM 算子使用 `effective_w8a8_tflops`；权重显存减半 |
+| `kv_cache_quant_mode` | `bf16`（默认）、`kv8`、`kv4` | KV8/KV4：注意力显存和 KV Cache 减半/减至 1/4 |
+| `weight_scale_overhead_bytes` | float（默认 0） | 量化 scale 存储的额外权重显存开销 |
+| `kv_scale_overhead_bytes` | float（默认 0） | 量化 scale 存储的额外 KV 显存开销 |
+
+量化策略通过 `roofline_time()` 的 `op_kind` 参数内联应用：
+- `"gemm"` + W8A8 → 使用 `effective_w8a8_tflops`，`mem_bytes` × 0.5
+- `"attention"` + KV8/KV4 → `mem_bytes` × 0.5 / 0.25；计算吞吐量保持 BF16
+- `"vector"`、`"other"`、`"comm"` → 无论量化模式如何均不变
+
+所有 5 个有效 `op_kind` 值均经过校验；无效值抛出 `ValueError`。
+
 ## 关键假设
 
-- 所有权重和激活使用 BF16（2 字节）
+- 所有权重和激活使用 BF16（2 字节，启用量化时除外）
 - Flash Attention 显存模型（中间结果不写回 HBM）
 - `head_dim`（512）已包含 `rope_head_dim`（64）— RoPE 嵌入在头维度内，不需要单独投影。Q 字节计算仅使用 `Dqc`。
 - Prefill 注意力读取完整 KV 缓存（`B * S * kv_d`），而非逐 Query 窗口读取 — 由于每个 Q 位置都需要其局部窗口，单次顺序读取比逐 Q 随机窗口读取更高效。Decode 仅读取窗口（SWA）或 top-K 条目（压缩注意力）。
