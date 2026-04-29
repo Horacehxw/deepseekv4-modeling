@@ -141,17 +141,18 @@ class TestServingHelpers(unittest.TestCase):
 # AC-8: serving outputs match golden values (≤1e-9 rel tol); no double-quant path.
 # AC-9: import perf_model.quantization raises ImportError after deletion.
 #
-# Golden values were captured from the pre-refactor serving path on 2026-04-29
-# using make_config(ep=2) with input_len=128, output_len=8.
+# Golden values were refreshed after rebasing onto origin/master's
+# max(cube+vec, mem) roofline formula, using make_config(ep=2) with
+# input_len=128, output_len=8.
 
-_GOLDEN_BF16_PREFILL_MS        = 0.386219406802721
+_GOLDEN_BF16_PREFILL_MS        = 0.7184863751047317
 _GOLDEN_BF16_WEIGHT_HBM_GB     = 0.030251008
 _GOLDEN_BF16_KV_HBM_GB         = 4.1216e-05
 
-_GOLDEN_W8A8_PREFILL_MS        = 0.37440017124716546
+_GOLDEN_W8A8_PREFILL_MS        = 0.7066671395491761
 _GOLDEN_W8A8_WEIGHT_HBM_GB     = 0.015125504
 
-_GOLDEN_KV8_DECODE_TOTAL_MS    = 1.7520919378684803
+_GOLDEN_KV8_DECODE_TOTAL_MS    = 4.349494466698779
 _GOLDEN_KV8_KV_HBM_GB          = 2.1376e-05
 
 # Golden for W8A8 + no-SP + shared-expert-overlap config (input_len=4096, ep=2, sp=False).
@@ -159,7 +160,7 @@ _GOLDEN_KV8_KV_HBM_GB          = 2.1376e-05
 # at W8A8 speed the shared-expert GEMM (0.0346 ms) finishes before dispatch+combine
 # comm (0.0467 ms), so shared_expert_excess == 0.  The old quantize_phase_profile()
 # left shared_expert_excess at its BF16 value (0.005 ms), which was a latent bug.
-_GOLDEN_W8A8_NO_SP_PREFILL_MS  = 1.5178283116868236
+_GOLDEN_W8A8_NO_SP_PREFILL_MS  = 1.6680422452605426
 
 _REL_TOL = 1e-9   # numerical tolerance for golden-value checks
 
