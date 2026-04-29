@@ -267,7 +267,8 @@ def print_memory_report(cfg: Config):
     print()
 
     # Total HBM
-    total_hbm = wm["total"] + kv["total_bytes"]
+    total_hbm = (wm["total"] + wm.get("scale_overhead_bytes", 0)
+                 + kv["total_bytes"] + kv.get("scale_overhead_bytes", 0))
     capacity = cfg.hw.hbm_capacity_gb * 1e9
     usable_capacity = cfg.hw.usable_hbm_capacity_gb * 1e9
     print(f"  Total HBM Usage:         {fmt_bytes(total_hbm)}")
@@ -381,7 +382,8 @@ def export_memory_csv(filepath: str, cfg: Config):
         writer.writerow(["weights", "total", f"{wm['total']:.0f}", fmt_bytes(wm['total'])])
 
         # Total HBM
-        total_hbm = wm["total"] + kv["total_bytes"]
+        total_hbm = (wm["total"] + wm.get("scale_overhead_bytes", 0)
+                 + kv["total_bytes"] + kv.get("scale_overhead_bytes", 0))
         writer.writerow(["total", "hbm_usage", f"{total_hbm:.0f}", fmt_bytes(total_hbm)])
         capacity = cfg.hw.hbm_capacity_gb * 1e9
         writer.writerow(["total", "hbm_capacity", f"{capacity:.0f}", fmt_bytes(capacity)])

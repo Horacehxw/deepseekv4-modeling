@@ -321,10 +321,11 @@ class TestMemoryQuantization(unittest.TestCase):
                 self.assertEqual(r_w8a8[key], r_bf16[key] * 0.5)
 
     def test_w8a8_weight_with_scale_overhead(self):
-        """W8A8 + overhead: total == bf16_total * 0.5 + overhead (exact)."""
+        """W8A8 + overhead: total == bf16_total * 0.5 (data only); overhead in scale_overhead_bytes."""
         overhead = 1_000_000.0
         r_w8a8 = weight_memory_per_rank(make_config(quant_mode="w8a8", weight_scale_overhead_bytes=overhead))
-        self.assertEqual(r_w8a8["total"], _GOLDEN_BF16_WEIGHT_TOTAL * 0.5 + overhead)
+        self.assertEqual(r_w8a8["total"], _GOLDEN_BF16_WEIGHT_TOTAL * 0.5)
+        self.assertEqual(r_w8a8["scale_overhead_bytes"], overhead)
 
     def test_w8a8_weight_has_quant_mode_key(self):
         """W8A8: returned dict has 'quant_mode' metadata key."""
@@ -353,16 +354,18 @@ class TestMemoryQuantization(unittest.TestCase):
                 self.assertEqual(r_kv8["layers"][i]["bytes"], r_bf16["layers"][i]["bytes"] * 0.5)
 
     def test_kv8_with_scale_overhead(self):
-        """KV8 + overhead: total_bytes == bf16_total * 0.5 + overhead (exact)."""
+        """KV8 + overhead: total_bytes == bf16_total * 0.5 (data only); overhead in scale_overhead_bytes."""
         overhead = 500_000.0
         r_kv8 = kv_cache_memory(make_config(kv_cache_quant_mode="kv8", kv_scale_overhead_bytes=overhead))
-        self.assertEqual(r_kv8["total_bytes"], _GOLDEN_BF16_KV_TOTAL * 0.5 + overhead)
+        self.assertEqual(r_kv8["total_bytes"], _GOLDEN_BF16_KV_TOTAL * 0.5)
+        self.assertEqual(r_kv8["scale_overhead_bytes"], overhead)
 
     def test_kv4_with_scale_overhead(self):
-        """KV4 + overhead: total_bytes == bf16_total * 0.25 + overhead (exact)."""
+        """KV4 + overhead: total_bytes == bf16_total * 0.25 (data only); overhead in scale_overhead_bytes."""
         overhead = 200_000.0
         r_kv4 = kv_cache_memory(make_config(kv_cache_quant_mode="kv4", kv_scale_overhead_bytes=overhead))
-        self.assertEqual(r_kv4["total_bytes"], _GOLDEN_BF16_KV_TOTAL * 0.25 + overhead)
+        self.assertEqual(r_kv4["total_bytes"], _GOLDEN_BF16_KV_TOTAL * 0.25)
+        self.assertEqual(r_kv4["scale_overhead_bytes"], overhead)
 
     def test_kv8_has_kv_cache_quant_mode_key(self):
         """KV8: returned dict has 'kv_cache_quant_mode' metadata key."""
