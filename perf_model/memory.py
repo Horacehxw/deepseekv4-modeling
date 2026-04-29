@@ -39,6 +39,13 @@ def _kv_cache_memory_bf16(cfg: Config) -> dict:
 
 def kv_cache_memory(cfg: Config) -> dict:
     """Per-layer and total KV cache memory (per batch), after KV quantization policy."""
+    if cfg.rt.kv_cache_quant_mode not in KV_BYTE_RATIOS:
+        raise ValueError(
+            f"Unknown kv_cache_quant_mode {cfg.rt.kv_cache_quant_mode!r}. "
+            f"Valid values: {sorted(KV_BYTE_RATIOS)}"
+        )
+    if cfg.rt.kv_scale_overhead_bytes < 0:
+        raise ValueError("kv_scale_overhead_bytes must be >= 0")
     base = _kv_cache_memory_bf16(cfg)
     if cfg.rt.kv_cache_quant_mode == "bf16":
         return base
@@ -118,6 +125,13 @@ def _weight_memory_per_rank_bf16(cfg: Config) -> dict:
 
 def weight_memory_per_rank(cfg: Config) -> dict:
     """Weight memory per rank in bytes, after weight quantization policy."""
+    if cfg.rt.quant_mode not in WEIGHT_BYTE_RATIOS:
+        raise ValueError(
+            f"Unknown quant_mode {cfg.rt.quant_mode!r}. "
+            f"Valid values: {sorted(WEIGHT_BYTE_RATIOS)}"
+        )
+    if cfg.rt.weight_scale_overhead_bytes < 0:
+        raise ValueError("weight_scale_overhead_bytes must be >= 0")
     base = _weight_memory_per_rank_bf16(cfg)
     if cfg.rt.quant_mode == "bf16":
         return base

@@ -54,6 +54,15 @@ def roofline_time(name: str, flops: float, vec_ops: float, mem_bytes: float,
     hw = cfg.hw
     rt = cfg.rt
 
+    if rt.quant_mode not in WEIGHT_BYTE_RATIOS:
+        raise ValueError(
+            f"Unknown quant_mode {rt.quant_mode!r}. Valid values: {sorted(WEIGHT_BYTE_RATIOS)}"
+        )
+    if rt.kv_cache_quant_mode not in KV_BYTE_RATIOS:
+        raise ValueError(
+            f"Unknown kv_cache_quant_mode {rt.kv_cache_quant_mode!r}. Valid values: {sorted(KV_BYTE_RATIOS)}"
+        )
+
     # Apply quantization policy to cube throughput and mem_bytes.
     cube_tflops = hw.cube_tflops
     effective_mem = mem_bytes
