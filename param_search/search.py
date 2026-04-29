@@ -106,8 +106,8 @@ def check_memory(cfg):
     """Check if config fits in HBM. Returns (weight_gb, kv_gb, total_gb, fits)."""
     wm = weight_memory_per_rank(cfg)
     kv = kv_cache_memory(cfg)
-    weight_gb = wm["total"] / 1e9
-    kv_gb = kv["total_bytes"] / 1e9
+    weight_gb = (wm["total"] + wm.get("scale_overhead_bytes", 0)) / 1e9
+    kv_gb = (kv["total_bytes"] + kv.get("scale_overhead_bytes", 0)) / 1e9
     total_gb = weight_gb + kv_gb
     return weight_gb, kv_gb, total_gb, total_gb <= cfg.hw.usable_hbm_capacity_gb
 

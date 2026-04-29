@@ -371,6 +371,11 @@ def export_memory_csv(filepath: str, cfg: Config):
             "kv_cache", "total",
             f"{kv['total_bytes']:.0f}", fmt_bytes(kv['total_bytes'])
         ])
+        if "scale_overhead_bytes" in kv:
+            writer.writerow([
+                "kv_cache", "scale_overhead",
+                f"{kv['scale_overhead_bytes']:.0f}", fmt_bytes(kv['scale_overhead_bytes'])
+            ])
 
         # Weight memory
         writer.writerow(["weights", "attn_per_layer", f"{wm['attn_per_layer']:.0f}", fmt_bytes(wm['attn_per_layer'])])
@@ -380,6 +385,11 @@ def export_memory_csv(filepath: str, cfg: Config):
         writer.writerow(["weights", "total_moe", f"{wm['total_moe']:.0f}", fmt_bytes(wm['total_moe'])])
         writer.writerow(["weights", "total_other", f"{wm['total_other']:.0f}", fmt_bytes(wm['total_other'])])
         writer.writerow(["weights", "total", f"{wm['total']:.0f}", fmt_bytes(wm['total'])])
+        if "scale_overhead_bytes" in wm:
+            writer.writerow([
+                "weights", "scale_overhead",
+                f"{wm['scale_overhead_bytes']:.0f}", fmt_bytes(wm['scale_overhead_bytes'])
+            ])
 
         # Total HBM
         total_hbm = (wm["total"] + wm.get("scale_overhead_bytes", 0)

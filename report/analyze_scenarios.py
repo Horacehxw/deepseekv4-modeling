@@ -145,8 +145,8 @@ def validate_parallelism(tp, ep, model_cfg):
 def check_memory(cfg, hbm_limit_gb=None):
     wm = weight_memory_per_rank(cfg)
     kv = kv_cache_memory(cfg)
-    weight_gb = wm["total"] / 1e9
-    kv_gb = kv["total_bytes"] / 1e9
+    weight_gb = (wm["total"] + wm.get("scale_overhead_bytes", 0)) / 1e9
+    kv_gb = (kv["total_bytes"] + kv.get("scale_overhead_bytes", 0)) / 1e9
     total_gb = weight_gb + kv_gb
     hbm_limit_gb = cfg.hw.usable_hbm_capacity_gb if hbm_limit_gb is None else hbm_limit_gb
     return weight_gb, kv_gb, total_gb, total_gb <= hbm_limit_gb
@@ -778,11 +778,11 @@ def compute_kv_cache_scaling(base_cfg, hw_name):
 
         # KV cache
         kv = kv_cache_memory(cfg)
-        kv_gb = kv["total_bytes"] / 1e9
+        kv_gb = (kv["total_bytes"] + kv.get("scale_overhead_bytes", 0)) / 1e9
 
         # Weight memory
         wm = weight_memory_per_rank(cfg)
-        weight_gb = wm["total"] / 1e9
+        weight_gb = (wm["total"] + wm.get("scale_overhead_bytes", 0)) / 1e9
         total_gb = weight_gb + kv_gb
         fits = total_gb <= hbm_limit
 
