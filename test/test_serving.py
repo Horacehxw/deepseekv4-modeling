@@ -154,7 +154,7 @@ _GOLDEN_W8A8_WEIGHT_HBM_GB     = 0.015125504
 _GOLDEN_KV8_DECODE_TOTAL_MS    = 1.7520919378684803
 _GOLDEN_KV8_KV_HBM_GB          = 2.1376e-05
 
-_REL_TOL = 1e-6   # numerical tolerance for golden-value checks
+_REL_TOL = 1e-9   # numerical tolerance for golden-value checks
 
 
 class TestServingQuantizationIntegration(unittest.TestCase):
@@ -215,6 +215,20 @@ class TestServingQuantizationIntegration(unittest.TestCase):
         r_kv8  = evaluate_decode_serving(self.cfg_kv8)
         self.assertLess(r_kv8["kv_hbm_gb"], r_bf16["kv_hbm_gb"])
 
+    # ── AC-8: Static assertion — no quantize_phase_profile in serving/init ──
+
+    def test_no_quantize_phase_profile_in_serving_py(self):
+        """serving.py must not reference quantize_phase_profile."""
+        import pathlib
+        src = pathlib.Path(__file__).parent.parent / "perf_model" / "serving.py"
+        self.assertNotIn("quantize_phase_profile", src.read_text())
+
+    def test_no_quantize_phase_profile_in_init_py(self):
+        """perf_model/__init__.py must not export quantize_phase_profile."""
+        import pathlib
+        src = pathlib.Path(__file__).parent.parent / "perf_model" / "__init__.py"
+        self.assertNotIn("quantize_phase_profile", src.read_text())
+
     # ── AC-9: Module deleted ───────────────────────────────────────────────
 
     def test_quantization_module_raises_import_error(self):
@@ -222,6 +236,19 @@ class TestServingQuantizationIntegration(unittest.TestCase):
         import importlib
         with self.assertRaises(ImportError):
             importlib.import_module("perf_model.quantization")
+
+    def test_removed_exports_raise_import_error(self):
+        """Removed public exports must not be importable from perf_model."""
+        import importlib
+        mod = importlib.import_module("perf_model")
+        for name in ("infer_op_kind", "quantize_op_profile",
+                     "quantize_phase_profile", "quantized_weight_memory_per_rank",
+                     "quantized_kv_cache_memory"):
+            with self.subTest(name=name):
+                self.assertFalse(
+                    hasattr(mod, name),
+                    f"perf_model.{name} should have been removed",
+                )
 
 
 if __name__ == "__main__":

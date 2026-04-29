@@ -39,9 +39,13 @@ def kv_cache_memory(cfg: Config) -> dict:
             layers[i] = layer_info
         total_bytes += layer_bytes
 
-    result = {"layers": layers, "total_bytes": total_bytes + cfg.rt.kv_scale_overhead_bytes}
-    if cfg.rt.kv_cache_quant_mode != "bf16":
-        result["kv_cache_quant_mode"] = cfg.rt.kv_cache_quant_mode
+    if cfg.rt.kv_cache_quant_mode == "bf16":
+        return {"layers": layers, "total_bytes": total_bytes}
+    result = {
+        "layers": layers,
+        "total_bytes": total_bytes + cfg.rt.kv_scale_overhead_bytes,
+        "kv_cache_quant_mode": cfg.rt.kv_cache_quant_mode,
+    }
     return result
 
 
@@ -94,9 +98,8 @@ def weight_memory_per_rank(cfg: Config) -> dict:
 
     total_other = total_mhc + total_norm + emb_bytes + lm_head_bytes + final_norm
     raw_total   = total_attn + total_moe + total_other
-    total       = raw_total + cfg.rt.weight_scale_overhead_bytes
 
-    result = {
+    base = {
         "attn_per_layer":  attn_per_layer,
         "index_per_layer": index_per_layer,
         "moe_per_layer":   moe_per_layer,
@@ -109,8 +112,10 @@ def weight_memory_per_rank(cfg: Config) -> dict:
         "total_other":     total_other,
         "embedding":       emb_bytes,
         "lm_head":         lm_head_bytes,
-        "total":           total,
+        "total":           raw_total,
     }
-    if cfg.rt.quant_mode != "bf16":
-        result["quant_mode"] = cfg.rt.quant_mode
-    return result
+    if cfg.rt.quant_mode == "bf16":
+        return base
+    base["total"] = raw_total + cfg.rt.weight_scale_overhead_bytes
+    base["quant_mode"] = cfg.rt.quant_mode
+    return base
