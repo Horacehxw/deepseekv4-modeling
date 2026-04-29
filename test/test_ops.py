@@ -1,5 +1,6 @@
 """Comprehensive tests for all per-operation cost functions in perf_model.ops."""
 
+import math
 import unittest
 
 from test.helpers import make_config, assert_op_valid
@@ -153,8 +154,10 @@ class TestLightningIndex(unittest.TestCase):
         nh = cfg.model.index_n_heads // TP   # 8//2 = 4
         hd = cfg.model.index_head_dim        # 32
         S_comp = S // ratio                  # 32
-        expected_flops = B * nh * S * S_comp * hd * 2
+        expected_flops = B * nh * S * S_comp * hd * 2 + B * nh * S * S_comp
         self.assertEqual(op.flops, expected_flops)
+        expected_vec_ops = B * nh * S * S_comp * 3 + B * S * S_comp * math.log(S)
+        self.assertAlmostEqual(op.vec_ops, expected_vec_ops)
 
     def test_index_score_output_fp32(self):
         """Output scores are FP32 (4 bytes per element)."""
@@ -165,7 +168,7 @@ class TestLightningIndex(unittest.TestCase):
         TP = cfg.rt.tp
         nh = cfg.model.index_n_heads // TP
         hd = cfg.model.index_head_dim
-        act_in = bytes2(B * nh * S * hd) + bytes2(B * S_comp * hd)
+        act_in = bytes2(B * nh * S * hd) + bytes2(B * S_comp * hd) + bytes2(B * S * nh)
         act_out = bytes4(B * S * S_comp)  # FP32 scores
         expected_mem = act_in + act_out
         self.assertEqual(op.mem_bytes, expected_mem)
@@ -652,8 +655,24 @@ class TestDecodeScoreOps(unittest.TestCase):
         nh = cfg.model.index_n_heads // TP
         hd = cfg.model.index_head_dim
         S_comp = S_total // ratio
-        expected_flops = B * nh * S_comp * hd * 2
+        expected_flops = B * nh * S_comp * hd * 2 + B * nh * S_comp
         self.assertEqual(op.flops, expected_flops)
+        expected_vec_ops = B * nh * S_comp * 3 + B * S_comp * math.log(S_total)
+        self.assertAlmostEqual(op.vec_ops, expected_vec_ops)
+
+    def test_index_score_decode_output_fp32(self):
+        """Decode output scores are FP32 and include indexer weight reads."""
+        cfg = make_config()
+        B, S_total, ratio = 2, 128, 4
+        op = ops.op_index_score_decode(B, S_total, ratio, cfg)
+        TP = cfg.rt.tp
+        nh = cfg.model.index_n_heads // TP
+        hd = cfg.model.index_head_dim
+        S_comp = S_total // ratio
+        act_in = bytes2(B * nh * hd) + bytes2(B * S_comp * hd) + bytes2(B * nh)
+        act_out = bytes4(B * S_comp)  # FP32 scores
+        expected_mem = act_in + act_out
+        self.assertEqual(op.mem_bytes, expected_mem)
 
     def test_index_score_allreduce_decode_tp1(self):
         cfg = make_config(tp=1)
