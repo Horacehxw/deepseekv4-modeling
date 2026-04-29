@@ -5,10 +5,7 @@ import unittest
 from test.helpers import make_config
 
 from perf_model.roofline import bytes2
-from perf_model.memory import (
-    kv_cache_memory, weight_memory_per_rank,
-    _kv_cache_memory_bf16, _weight_memory_per_rank_bf16,
-)
+from perf_model.memory import kv_cache_memory, weight_memory_per_rank
 
 
 # ── KV Cache Memory ──────────────────────────────────────────────────────
@@ -216,6 +213,35 @@ _GOLDEN_BF16_WEIGHT_ATTN_LAYER = 245760.0
 _GOLDEN_BF16_WEIGHT_MOE_LAYER  = 3940352.0
 _GOLDEN_BF16_KV_TOTAL          = 41216.0
 
+# AC-6: Full frozen fixture dicts — literal public output of make_config() with BF16.
+# These are independent of the implementation; a regression in any helper changes
+# the public output and breaks the test even if both implementation sides regress together.
+_FROZEN_BF16_WEIGHT_DICT = {
+    "attn_per_layer":  245760.0,
+    "index_per_layer": 65536.0,
+    "moe_per_layer":   3940352.0,
+    "mhc_per_layer":   384.0,
+    "norm_per_layer":  1024.0,
+    "n_swa_layers":    1,
+    "n_comp_layers":   3,
+    "total_attn":      1114112.0,
+    "total_moe":       15761408.0,
+    "total_other":     792576.0,
+    "embedding":       524288.0,
+    "lm_head":         262144.0,
+    "total":           17668096.0,
+}
+
+_FROZEN_BF16_KV_DICT = {
+    "layers": {
+        0: {"type": "SWA", "bytes": 4096},
+        1: {"type": "C4A", "comp_bytes": 8192, "swa_bytes": 4096, "bytes": 16384, "idx_bytes": 4096},
+        2: {"type": "C128A", "comp_bytes": 256, "swa_bytes": 4096, "bytes": 4352},
+        3: {"type": "C4A", "comp_bytes": 8192, "swa_bytes": 4096, "bytes": 16384, "idx_bytes": 4096},
+    },
+    "total_bytes": 41216,
+}
+
 # AC-6 tests: BF16 identity (same keys, same values, no extra metadata keys).
 # AC-7 tests: W8A8/KV8/KV4 exact ratios + overhead; metadata keys present.
 
@@ -272,14 +298,12 @@ class TestMemoryQuantization(unittest.TestCase):
         self.assertEqual(r_overhead["total_bytes"], r_base["total_bytes"])
 
     def test_bf16_weight_memory_full_dict(self):
-        """BF16 weight_memory_per_rank returns byte-for-byte identical dict to the bf16 helper."""
-        cfg = make_config()
-        self.assertEqual(weight_memory_per_rank(cfg), _weight_memory_per_rank_bf16(cfg))
+        """BF16 weight_memory_per_rank matches frozen fixture — all keys and values."""
+        self.assertEqual(weight_memory_per_rank(make_config()), _FROZEN_BF16_WEIGHT_DICT)
 
     def test_bf16_kv_cache_memory_full_dict(self):
-        """BF16 kv_cache_memory returns byte-for-byte identical dict to the bf16 helper."""
-        cfg = make_config()
-        self.assertEqual(kv_cache_memory(cfg), _kv_cache_memory_bf16(cfg))
+        """BF16 kv_cache_memory matches frozen fixture — all keys and nested per-layer values."""
+        self.assertEqual(kv_cache_memory(make_config()), _FROZEN_BF16_KV_DICT)
 
     # ── AC-7: W8A8 weight memory exact ratios ─────────────────────────────
 
