@@ -8,7 +8,12 @@ from typing import List, Optional
 from .config import Config
 from .roofline import OpProfile
 from .layers import LayerProfile, PhaseProfile
-from .memory import kv_cache_memory, weight_memory_per_rank
+from .memory import (
+    kv_cache_memory,
+    kv_cache_total_bytes,
+    weight_memory_per_rank,
+    weight_memory_total_bytes,
+)
 
 
 def fmt_bytes(b: float) -> str:
@@ -267,7 +272,7 @@ def print_memory_report(cfg: Config):
     print()
 
     # Total HBM
-    total_hbm = wm["total"] + kv["total_bytes"]
+    total_hbm = weight_memory_total_bytes(wm) + kv_cache_total_bytes(kv)
     capacity = cfg.hw.hbm_capacity_gb * 1e9
     usable_capacity = cfg.hw.usable_hbm_capacity_gb * 1e9
     print(f"  Total HBM Usage:         {fmt_bytes(total_hbm)}")
@@ -370,6 +375,11 @@ def export_memory_csv(filepath: str, cfg: Config):
             "kv_cache", "total",
             f"{kv['total_bytes']:.0f}", fmt_bytes(kv['total_bytes'])
         ])
+        if "scale_overhead_bytes" in kv:
+            writer.writerow([
+                "kv_cache", "scale_overhead",
+                f"{kv['scale_overhead_bytes']:.0f}", fmt_bytes(kv['scale_overhead_bytes'])
+            ])
 
         # Weight memory
         writer.writerow(["weights", "attn_per_layer", f"{wm['attn_per_layer']:.0f}", fmt_bytes(wm['attn_per_layer'])])
@@ -379,9 +389,14 @@ def export_memory_csv(filepath: str, cfg: Config):
         writer.writerow(["weights", "total_moe", f"{wm['total_moe']:.0f}", fmt_bytes(wm['total_moe'])])
         writer.writerow(["weights", "total_other", f"{wm['total_other']:.0f}", fmt_bytes(wm['total_other'])])
         writer.writerow(["weights", "total", f"{wm['total']:.0f}", fmt_bytes(wm['total'])])
+        if "scale_overhead_bytes" in wm:
+            writer.writerow([
+                "weights", "scale_overhead",
+                f"{wm['scale_overhead_bytes']:.0f}", fmt_bytes(wm['scale_overhead_bytes'])
+            ])
 
         # Total HBM
-        total_hbm = wm["total"] + kv["total_bytes"]
+        total_hbm = weight_memory_total_bytes(wm) + kv_cache_total_bytes(kv)
         writer.writerow(["total", "hbm_usage", f"{total_hbm:.0f}", fmt_bytes(total_hbm)])
         capacity = cfg.hw.hbm_capacity_gb * 1e9
         writer.writerow(["total", "hbm_capacity", f"{capacity:.0f}", fmt_bytes(capacity)])

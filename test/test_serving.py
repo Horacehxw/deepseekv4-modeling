@@ -137,5 +137,148 @@ class TestServingHelpers(unittest.TestCase):
                     evaluate_prefill_serving(cfg)
 
 
+# ── Quantization integration (AC-8 & AC-9) ───────────────────────────────────
+# AC-8: serving outputs match golden values (≤1e-9 rel tol); no double-quant path.
+# AC-9: import perf_model.quantization raises ImportError after deletion.
+#
+# Golden values were refreshed after rebasing onto origin/master's
+# max(cube+vec, mem) roofline formula, using make_config(ep=2) with
+# input_len=128, output_len=8.
+
+_GOLDEN_BF16_PREFILL_MS        = 0.7184863751047317
+_GOLDEN_BF16_WEIGHT_HBM_GB     = 0.030251008
+_GOLDEN_BF16_KV_HBM_GB         = 4.1216e-05
+
+_GOLDEN_W8A8_PREFILL_MS        = 0.7066671395491761
+_GOLDEN_W8A8_WEIGHT_HBM_GB     = 0.015125504
+
+_GOLDEN_KV8_DECODE_TOTAL_MS    = 4.349494466698779
+_GOLDEN_KV8_KV_HBM_GB          = 2.1376e-05
+
+# Golden for W8A8 + no-SP + shared-expert-overlap config (input_len=4096, ep=2, sp=False).
+# The inline quant path correctly gives LESS excess than the old BF16+post-scale path:
+# at W8A8 speed the shared-expert GEMM (0.0346 ms) finishes before dispatch+combine
+# comm (0.0467 ms), so shared_expert_excess == 0.  The old quantize_phase_profile()
+# left shared_expert_excess at its BF16 value (0.005 ms), which was a latent bug.
+_GOLDEN_W8A8_NO_SP_PREFILL_MS  = 1.6680422452605426
+
+_REL_TOL = 1e-9   # numerical tolerance for golden-value checks
+
+
+class TestServingQuantizationIntegration(unittest.TestCase):
+    """AC-8 golden-value regression and AC-9 module-deletion guard."""
+
+    def setUp(self):
+        self.cfg_bf16 = make_config(input_len=128, output_len=8, ep=2)
+        self.cfg_w8a8 = make_config(input_len=128, output_len=8, ep=2, quant_mode="w8a8")
+        self.cfg_kv8  = make_config(input_len=128, output_len=8, ep=2, kv_cache_quant_mode="kv8")
+
+    # ── AC-8: Golden-value regression ─────────────────────────────────────
+
+    def _assert_rel(self, actual, expected, msg=""):
+        """Assert relative difference ≤ _REL_TOL."""
+        if expected == 0:
+            self.assertEqual(actual, 0.0, msg)
+        else:
+            rel = abs(actual - expected) / abs(expected)
+            self.assertLessEqual(rel, _REL_TOL, f"{msg}: got {actual}, expected {expected}, rel={rel:.2e}")
+
+    def test_bf16_prefill_time_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_bf16)
+        self._assert_rel(result["prefill_time_ms"], _GOLDEN_BF16_PREFILL_MS, "BF16 prefill_time_ms")
+
+    def test_bf16_prefill_weight_hbm_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_bf16)
+        self._assert_rel(result["weight_hbm_gb"], _GOLDEN_BF16_WEIGHT_HBM_GB, "BF16 weight_hbm_gb")
+
+    def test_bf16_prefill_kv_hbm_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_bf16)
+        self._assert_rel(result["kv_hbm_gb"], _GOLDEN_BF16_KV_HBM_GB, "BF16 kv_hbm_gb")
+
+    def test_w8a8_prefill_time_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_w8a8)
+        self._assert_rel(result["prefill_time_ms"], _GOLDEN_W8A8_PREFILL_MS, "W8A8 prefill_time_ms")
+
+    def test_w8a8_prefill_weight_hbm_matches_golden(self):
+        result = evaluate_prefill_serving(self.cfg_w8a8)
+        self._assert_rel(result["weight_hbm_gb"], _GOLDEN_W8A8_WEIGHT_HBM_GB, "W8A8 weight_hbm_gb")
+
+    def test_w8a8_prefill_faster_than_bf16(self):
+        """W8A8 must be strictly faster than BF16 for the same input."""
+        r_bf16 = evaluate_prefill_serving(self.cfg_bf16)
+        r_w8a8 = evaluate_prefill_serving(self.cfg_w8a8)
+        self.assertLess(r_w8a8["prefill_time_ms"], r_bf16["prefill_time_ms"])
+
+    def test_w8a8_no_sp_shared_overlap_prefill_time_matches_golden(self):
+        """W8A8 + no-SP + shared-expert-overlap: freeze correct inline-quant value.
+
+        The inline path correctly reports zero shared_expert_excess because the W8A8
+        shared-expert GEMM (0.0346 ms) finishes before dispatch+combine comm (0.0467 ms).
+        The old quantize_phase_profile() path leaked the BF16 excess (+0.005 ms) as a
+        latent bug; the new value is physically correct.
+        """
+        cfg = make_config(
+            input_len=4096, ep=2, sp=False,
+            shared_expert_overlapped=True,
+            quant_mode="w8a8", kv_cache_quant_mode="kv8",
+        )
+        result = evaluate_prefill_serving(cfg)
+        self._assert_rel(
+            result["prefill_time_ms"],
+            _GOLDEN_W8A8_NO_SP_PREFILL_MS,
+            "W8A8 no-SP shared-overlap prefill_time_ms",
+        )
+
+    def test_kv8_decode_time_matches_golden(self):
+        result = evaluate_decode_serving(self.cfg_kv8)
+        self._assert_rel(result["decode_total_time_ms"], _GOLDEN_KV8_DECODE_TOTAL_MS, "KV8 decode_total_time_ms")
+
+    def test_kv8_decode_kv_hbm_matches_golden(self):
+        result = evaluate_decode_serving(self.cfg_kv8)
+        self._assert_rel(result["kv_hbm_gb"], _GOLDEN_KV8_KV_HBM_GB, "KV8 kv_hbm_gb")
+
+    def test_kv8_kv_hbm_less_than_bf16(self):
+        """KV8 must use strictly less KV HBM than BF16."""
+        r_bf16 = evaluate_decode_serving(make_config(input_len=128, output_len=8, ep=2))
+        r_kv8  = evaluate_decode_serving(self.cfg_kv8)
+        self.assertLess(r_kv8["kv_hbm_gb"], r_bf16["kv_hbm_gb"])
+
+    # ── AC-8: Module/API assertions — no quantize_phase_profile export ──
+
+    def test_no_quantize_phase_profile_in_serving_py(self):
+        """perf_model.serving must not expose quantize_phase_profile."""
+        import importlib
+        serving = importlib.import_module("perf_model.serving")
+        self.assertFalse(hasattr(serving, "quantize_phase_profile"))
+
+    def test_no_quantize_phase_profile_in_init_py(self):
+        """perf_model must not export quantize_phase_profile."""
+        import importlib
+        perf_model = importlib.import_module("perf_model")
+        self.assertFalse(hasattr(perf_model, "quantize_phase_profile"))
+
+    # ── AC-9: Module deleted ───────────────────────────────────────────────
+
+    def test_quantization_module_raises_import_error(self):
+        """After refactor perf_model.quantization must not exist."""
+        import importlib
+        with self.assertRaises(ImportError):
+            importlib.import_module("perf_model.quantization")
+
+    def test_removed_exports_raise_import_error(self):
+        """Removed public exports must raise ImportError when imported from perf_model."""
+        removed = (
+            "infer_op_kind",
+            "quantize_op_profile",
+            "quantize_phase_profile",
+            "quantized_weight_memory_per_rank",
+            "quantized_kv_cache_memory",
+        )
+        for name in removed:
+            with self.subTest(name=name):
+                with self.assertRaises(ImportError):
+                    exec(f"from perf_model import {name}")
+
+
 if __name__ == "__main__":
     unittest.main()

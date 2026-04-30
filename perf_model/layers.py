@@ -120,14 +120,17 @@ def prefill_layer(layer_idx: int, cfg: Config) -> LayerProfile:
     shared_ops = op_moe_shared_expert(T_sp, cfg)
 
     if cfg.rt.shared_expert_overlapped:
-        # Shared expert overlaps with dispatch + combime (comptation & communication overlap)
+        # Shared expert overlaps with dispatch + combine (comm stays fixed; compute scales).
+        # shared_time and routed_comm are already at the active quant speed, so in W8A8
+        # mode the shared-expert GEMMs complete faster and may finish before the comm,
+        # yielding zero excess — which is physically correct.
         routed_time = sum(op.time_s for op in routed_ops)
         shared_time = sum(op.time_s for op in shared_ops)
         dispatch_op = ops[-1]  # ep_dispatch
         ops.extend(routed_ops)
         ops.append(op_moe_ep_combine(T_sp, layer_idx, cfg))
         combine_time = ops[-1].time_s
-        routed_comm = dispatch_op.time_s +  combine_time
+        routed_comm = dispatch_op.time_s + combine_time
         if shared_time > routed_comm:
             excess = shared_time - routed_comm
             ops.append(OpProfile(name="shared_expert_excess", time_s=excess))

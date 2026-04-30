@@ -24,7 +24,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from perf_model.config import Config
 from perf_model.layers import prefill_model, decode_step, decode_model
-from perf_model.memory import kv_cache_memory, weight_memory_per_rank
+from perf_model.memory import (
+    kv_cache_memory,
+    kv_cache_total_bytes,
+    weight_memory_per_rank,
+    weight_memory_total_bytes,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -106,8 +111,8 @@ def check_memory(cfg):
     """Check if config fits in HBM. Returns (weight_gb, kv_gb, total_gb, fits)."""
     wm = weight_memory_per_rank(cfg)
     kv = kv_cache_memory(cfg)
-    weight_gb = wm["total"] / 1e9
-    kv_gb = kv["total_bytes"] / 1e9
+    weight_gb = weight_memory_total_bytes(wm) / 1e9
+    kv_gb = kv_cache_total_bytes(kv) / 1e9
     total_gb = weight_gb + kv_gb
     return weight_gb, kv_gb, total_gb, total_gb <= cfg.hw.usable_hbm_capacity_gb
 

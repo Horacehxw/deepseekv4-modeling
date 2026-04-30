@@ -16,7 +16,7 @@ def op_q_proj_dq(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(H * qlr)
     act_in = bytes2(T * H)
     act_out = bytes2(T * qlr)
-    return roofline_time("q_proj_dq", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("q_proj_dq", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 
 def op_q_proj_uq(T: int, cfg: Config) -> OpProfile:
@@ -31,7 +31,7 @@ def op_q_proj_uq(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(qlr * out_dim)
     act_in = bytes2(T * qlr)
     act_out = bytes2(T * out_dim)
-    return roofline_time("q_proj_uq", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("q_proj_uq", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 
 def op_kv_proj(T: int, cfg: Config) -> OpProfile:
@@ -42,7 +42,7 @@ def op_kv_proj(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(H * kv_d)
     act_in = bytes2(T * H)
     act_out = bytes2(T * kv_d)
-    return roofline_time("kv_proj", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("kv_proj", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 
 def op_wo_a(T: int, cfg: Config) -> OpProfile:
@@ -59,7 +59,7 @@ def op_wo_a(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(weight_elems)
     act_in = bytes2(T * (Nq // TP) * Dqc)
     act_out = bytes2(T * (cfg.model.o_mid_dim // TP))
-    return roofline_time("wo_a", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("wo_a", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 
 def op_wo_b(T: int, cfg: Config) -> OpProfile:
@@ -72,7 +72,7 @@ def op_wo_b(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(in_dim * H)
     act_in = bytes2(T * in_dim)
     act_out = bytes2(T * H)
-    return roofline_time("wo_b", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("wo_b", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 
 def op_attn_tp_allreduce(T: int, cfg: Config) -> OpProfile:
@@ -99,7 +99,7 @@ def op_index_iq_proj(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(in_dim * out_dim)
     act_in = bytes2(T * in_dim)
     act_out = bytes2(T * out_dim)
-    return roofline_time("index_iq_proj", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("index_iq_proj", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 def op_index_kv_compression_prefill(B: int, S: int, ratio: int, cfg: Config) -> OpProfile:
     """Index key compression for Lightning Index.
@@ -115,7 +115,7 @@ def op_index_kv_compression_prefill(B: int, S: int, ratio: int, cfg: Config) -> 
     vec_ops = (14 * g - 1) * d * B * S_comp
     mem_bytes = bytes2(int((B * S * H + 4 * H * d + 2 * g * d + B * S_comp * d))) # assume we don't need to explicitly store Ca, Cb, Za, Zb
 
-    return roofline_time("index_kv_compress", cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time("index_kv_compress", cube_flops, vec_ops, mem_bytes, cfg, "other")
 
 def op_index_kv_compression_decode(B: int, S_total: int, ratio: int, cfg: Config) -> OpProfile:
     """Index key compression for decode: exact per-step cost.
@@ -137,7 +137,7 @@ def op_index_kv_compression_decode(B: int, S_total: int, ratio: int, cfg: Config
         mem_elems = int((B * H + 4 * H * d + 2* g * d))
 
 
-    return roofline_time("index_kv_compress_decode", cube_flops, vec_ops, bytes2(mem_elems), cfg.hw)
+    return roofline_time("index_kv_compress_decode", cube_flops, vec_ops, bytes2(mem_elems), cfg, "other")
 
 
 def op_index_score(B: int, S: int, ratio: int, cfg: Config) -> OpProfile:
@@ -152,7 +152,7 @@ def op_index_score(B: int, S: int, ratio: int, cfg: Config) -> OpProfile:
     # Act memory: iq[B, nh, S, hd] + ik[B, 1, S_compressed, hd] + indexer_weight_proj[B, S, nh] + scores[B, S, S_compressed]
     act_in = bytes2(B * nh * S * hd) + bytes2(B * S_compressed * hd) + bytes2(B * S * nh)
     act_out = bytes4(B * S * S_compressed)  # FP32 scores
-    return roofline_time("index_score", cube_flops, vec_flops, act_in + act_out, cfg.hw)
+    return roofline_time("index_score", cube_flops, vec_flops, act_in + act_out, cfg, "other")
 
 
 def op_index_score_allreduce(B: int, S: int, ratio: int, cfg: Config) -> OpProfile:
@@ -178,7 +178,7 @@ def op_index_score_decode(B: int, S_total: int, ratio: int, cfg: Config) -> OpPr
     # Act memory: iq[B, nh, hd] + ik[B, 1, S_compressed, hd] + indexer_weight_proj[B, nh] + scores[B, S_compressed]
     act_in = bytes2(B * nh * hd) + bytes2(B * S_compressed * hd) + bytes2(B * nh)
     act_out = bytes4(B * S_compressed)  # FP32 scores
-    return roofline_time("index_score", cube_flops, vec_flops, act_in + act_out, cfg.hw)
+    return roofline_time("index_score", cube_flops, vec_flops, act_in + act_out, cfg, "other")
 
 
 def op_index_score_allreduce_decode(B: int, S_total: int, ratio: int, cfg: Config) -> OpProfile:
@@ -211,7 +211,7 @@ def op_kv_compression_prefill(B: int, S: int, ratio: int, cfg: Config) -> OpProf
     mem_bytes = bytes2(int((B * S * H) + coeff * (4 * H * c_kv) + coeff * (2 * g * c_kv) + B * S_comp * c_kv))
     
 
-    return roofline_time("kv_compression", cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time("kv_compression", cube_flops, vec_ops, mem_bytes, cfg, "other")
 
 def op_kv_compression_decode(B: int, S_total: int, ratio: int, cfg: Config) -> OpProfile:
     """KV compression for decode: K=V shared, projection [H, c_kv] + group compression.
@@ -235,7 +235,7 @@ def op_kv_compression_decode(B: int, S_total: int, ratio: int, cfg: Config) -> O
         vec_ops    = 0
         mem_elems = coeff * int((B * H + coeff * (4 * H * c_kv + 2 * g * c_kv)))
 
-    return roofline_time("kv_compression_decode", cube_flops, vec_ops, bytes2(mem_elems), cfg.hw)
+    return roofline_time("kv_compression_decode", cube_flops, vec_ops, bytes2(mem_elems), cfg, "other")
 
 
 # --- Attention Score Computation ---
@@ -260,8 +260,7 @@ def op_attention_prefill_swa(B: int, S: int, cfg: Config) -> OpProfile:
     o_bytes = bytes2(B * Nq * S * Dqc)
     mem = q_bytes + kv_bytes + o_bytes
 
-    # TODO: move this 1.3/2 factor to config or make it adjustable per-op, since some ops may have more overhead than others
-    return roofline_time("attention_swa", total_flops * 1.3, vec_ops, mem * 2, cfg.hw)
+    return roofline_time("attention_swa", total_flops * 1.3, vec_ops, mem * 2, cfg, "attention")
 
 
 def op_attention_prefill_compressed(B: int, S: int, ratio: int, cfg: Config,
@@ -286,8 +285,7 @@ def op_attention_prefill_compressed(B: int, S: int, ratio: int, cfg: Config,
     o_bytes = bytes2(B * Nq * S * Dqc)
     mem = q_bytes + comp_kv_read + o_bytes
 
-    # TODO: move this 1.3/2 factor to config or make it adjustable per-op, since some ops may have more overhead than others
-    return roofline_time("attention_comp", total_flops * 1.3, vec_ops, mem * 2, cfg.hw)
+    return roofline_time("attention_comp", total_flops * 1.3, vec_ops, mem * 2, cfg, "attention")
 
 
 def op_attention_decode_swa(B: int, S_total: int, cfg: Config) -> OpProfile:
@@ -310,8 +308,7 @@ def op_attention_decode_swa(B: int, S_total: int, cfg: Config) -> OpProfile:
     o_bytes = bytes2(B * Nq * 1 * Dqc)
     mem = q_bytes + kv_cache_bytes + o_bytes
 
-    # TODO: move this 1.3/2 factor to config or make it adjustable per-op, since some ops may have more overhead than others
-    return roofline_time("attention_swa", total_flops * 1.3, vec_ops, mem * 2, cfg.hw)
+    return roofline_time("attention_swa", total_flops * 1.3, vec_ops, mem * 2, cfg, "attention")
 
 
 def op_attention_decode_compressed(B: int, S_total: int, ratio: int, cfg: Config,
@@ -336,8 +333,7 @@ def op_attention_decode_compressed(B: int, S_total: int, ratio: int, cfg: Config
     o_bytes = bytes2(B * Nq * 1 * Dqc)
     mem = q_bytes + comp_kv + o_bytes
 
-    # TODO: move this 1.3/2 factor to config or make it adjustable per-op, since some ops may have more overhead than others
-    return roofline_time("attention_comp", total_flops * 1.3, vec_ops, mem * 2, cfg.hw)
+    return roofline_time("attention_comp", total_flops * 1.3, vec_ops, mem * 2, cfg, "attention")
 
 
 # --- mHC (manifold Hyper Connection) ---
@@ -357,7 +353,7 @@ def op_mhc_pre(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
     vec_ops = 2 * T * n
     # FP32 memory: input/output activations + intermediate
     mem_bytes = bytes4(3 * T * n * D + T * (n**2 + 2*n) * n * D + T * (n**2 + 2*n))
-    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg, "vector")
 
 
 def op_mhc_sinkhorn(T: int, cfg: Config, label: str = "sinkhorn") -> OpProfile:
@@ -373,7 +369,7 @@ def op_mhc_sinkhorn(T: int, cfg: Config, label: str = "sinkhorn") -> OpProfile:
     vec_ops = T * n**2 + 40 * T * n * (2*n - 1)
     # FP32 memory
     mem_bytes = bytes4(2 * T * n**2 + 20 * (2 * T * n**2 + 2 * T * n**2))
-    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg, "vector")
 
 
 def op_mhc_post(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile:
@@ -386,7 +382,7 @@ def op_mhc_post(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile:
     vec_ops = T * n * D
     # FP32 memory
     mem_bytes = bytes4(T * n + T * D + 6 * T * n * D + T * n**2)
-    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg, "vector")
 
 
 # ── Fused mHC ops (kernel fusion) ──────────────────────────────────────────
@@ -493,7 +489,7 @@ def op_mhc_pre_fused(T: int, cfg: Config, label: str = "mhc_pre") -> OpProfile:
         + bpe * T * D             # write sub_input [T, D]
         + bytes4(n * n + n)       # read weights (FP32, negligible)
     )
-    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg, "vector")
 
 
 def op_mhc_post_fused(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile:
@@ -542,7 +538,7 @@ def op_mhc_post_fused(T: int, cfg: Config, label: str = "mhc_post") -> OpProfile
         + bpe * T * n * D         # write x_{l+1} [T, n, D]
         + bytes4(n)               # read H_post logits (FP32, negligible)
     )
-    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg, "vector")
 
 
 def op_mhc_post_pre_fused(T: int, cfg: Config, label: str = "mhc_post_pre") -> OpProfile:
@@ -613,7 +609,7 @@ def op_mhc_post_pre_fused(T: int, cfg: Config, label: str = "mhc_post_pre") -> O
         + bpe * T * D             # write sub_input_{k+1} [T, D]
         + bytes4(n * n + 2 * n)  # read all weights (FP32, negligible)
     )
-    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg.hw)
+    return roofline_time(label, cube_flops, vec_ops, mem_bytes, cfg, "vector")
 
 
 # --- MoE ---
@@ -626,7 +622,7 @@ def op_moe_gate(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(H * n_exp)
     act_in = bytes2(T * H)
     act_out = bytes2(T * n_exp)
-    return roofline_time("moe_gate", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("moe_gate", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 
 def op_moe_ep_dispatch(T: int, layer_idx: int, cfg: Config) -> OpProfile:
@@ -682,7 +678,7 @@ def op_moe_routed_experts(T: int, layer_idx: int, cfg: Config) -> List[OpProfile
     act_in_gate = bytes2(T_rank * H)
     act_out_gate = bytes2(T_rank * inter)
     gate_op = roofline_time("routed_gate_proj", flops_gate, 0,
-                            w_gate + act_in_gate + act_out_gate, cfg.hw)
+                            w_gate + act_in_gate + act_out_gate, cfg, "gemm")
 
     # up_proj: [H, inter]
     flops_up = T_rank * H * inter * 2
@@ -690,14 +686,14 @@ def op_moe_routed_experts(T: int, layer_idx: int, cfg: Config) -> List[OpProfile
     act_in_up = bytes2(T_rank * H)
     act_out_up = bytes2(T_rank * inter)
     up_op = roofline_time("routed_up_proj", flops_up, 0,
-                          w_up + act_in_up + act_out_up, cfg.hw)
+                          w_up + act_in_up + act_out_up, cfg, "gemm")
 
     # SiLU + element-wise multiply (vector ops)
     vec_silu = T_rank * inter * 2  # SiLU: x * sigmoid(x) ~ 2 ops
     vec_mul = T_rank * inter       # element-wise multiply
     total_vec = vec_silu + vec_mul
     act_silu_mem = bytes2(T_rank * inter) * 2 + bytes2(T_rank * inter)  # read gate+up, write
-    silu_op = roofline_time("routed_silu_mul", 0, total_vec, act_silu_mem, cfg.hw)
+    silu_op = roofline_time("routed_silu_mul", 0, total_vec, act_silu_mem, cfg, "vector")
 
     # down_proj: [inter, H]
     flops_down = T_rank * inter * H * 2
@@ -705,7 +701,7 @@ def op_moe_routed_experts(T: int, layer_idx: int, cfg: Config) -> List[OpProfile
     act_in_down = bytes2(T_rank * inter)
     act_out_down = bytes2(T_rank * H)
     down_op = roofline_time("routed_down_proj", flops_down, 0,
-                            w_down + act_in_down + act_out_down, cfg.hw)
+                            w_down + act_in_down + act_out_down, cfg, "gemm")
 
     return [gate_op, up_op, silu_op, down_op]
 
@@ -721,7 +717,7 @@ def op_moe_shared_expert(T: int, cfg: Config) -> List[OpProfile]:
     act_in_gate = bytes2(T * H)
     act_out_gate = bytes2(T * inter)
     gate_op = roofline_time("shared_gate_proj", flops_gate, 0,
-                            w_gate + act_in_gate + act_out_gate, cfg.hw)
+                            w_gate + act_in_gate + act_out_gate, cfg, "gemm")
 
     # up_proj: [H, inter]
     flops_up = T * H * inter * 2
@@ -729,14 +725,14 @@ def op_moe_shared_expert(T: int, cfg: Config) -> List[OpProfile]:
     act_in_up = bytes2(T * H)
     act_out_up = bytes2(T * inter)
     up_op = roofline_time("shared_up_proj", flops_up, 0,
-                          w_up + act_in_up + act_out_up, cfg.hw)
+                          w_up + act_in_up + act_out_up, cfg, "gemm")
 
     # SiLU + element-wise multiply (vector ops)
     vec_silu = T * inter * 2  # SiLU: x * sigmoid(x) ~ 2 ops
     vec_mul = T * inter       # element-wise multiply
     total_vec = vec_silu + vec_mul
     act_silu_mem = bytes2(T * inter) * 2 + bytes2(T * inter)  # read gate+up, write
-    silu_op = roofline_time("shared_silu_mul", 0, total_vec, act_silu_mem, cfg.hw)
+    silu_op = roofline_time("shared_silu_mul", 0, total_vec, act_silu_mem, cfg, "vector")
 
     # down_proj: [inter, H]
     flops_down = T * inter * H * 2
@@ -744,7 +740,7 @@ def op_moe_shared_expert(T: int, cfg: Config) -> List[OpProfile]:
     act_in_down = bytes2(T * inter)
     act_out_down = bytes2(T * H)
     down_op = roofline_time("shared_down_proj", flops_down, 0,
-                            w_down + act_in_down + act_out_down, cfg.hw)
+                            w_down + act_in_down + act_out_down, cfg, "gemm")
 
     return [gate_op, up_op, silu_op, down_op]
 
@@ -756,14 +752,14 @@ def op_rmsnorm(T: int, cfg: Config, label: str = "rmsnorm") -> OpProfile:
     H = cfg.model.hidden_size
     vec_ops = T * H * 3  # square, mean, divide
     mem = bytes2(T * H) * 2  # read + write
-    return roofline_time(label, 0, vec_ops, mem, cfg.hw)
+    return roofline_time(label, 0, vec_ops, mem, cfg, "vector")
 
 
 def op_embedding(B: int, S: int, cfg: Config) -> OpProfile:
     """Embedding lookup: no FLOPs, output B*S*H*2 bytes."""
     H = cfg.model.hidden_size
     mem = bytes2(B * S * H)
-    return roofline_time("embedding", 0, 0, mem, cfg.hw)
+    return roofline_time("embedding", 0, 0, mem, cfg, "gemm")
 
 
 def op_lm_head(T: int, cfg: Config) -> OpProfile:
@@ -776,7 +772,7 @@ def op_lm_head(T: int, cfg: Config) -> OpProfile:
     weight_bytes = bytes2(H * v_per_rank)
     act_in = bytes2(T * H)
     act_out = bytes2(T * v_per_rank)
-    return roofline_time("lm_head", flops, 0, weight_bytes + act_in + act_out, cfg.hw)
+    return roofline_time("lm_head", flops, 0, weight_bytes + act_in + act_out, cfg, "gemm")
 
 
 # --- SP AllGather ---

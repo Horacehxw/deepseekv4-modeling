@@ -5,10 +5,11 @@ from dataclasses import replace
 
 from .config import Config
 from .layers import decode_step, prefill_model
-from .quantization import (
-    quantize_phase_profile,
-    quantized_kv_cache_memory,
-    quantized_weight_memory_per_rank,
+from .memory import (
+    kv_cache_memory,
+    kv_cache_total_bytes,
+    weight_memory_per_rank,
+    weight_memory_total_bytes,
 )
 
 
@@ -103,10 +104,10 @@ def _parallelism_metrics(cfg: Config) -> dict:
 
 
 def _hbm_metrics(cfg: Config) -> dict:
-    wm = quantized_weight_memory_per_rank(cfg)
-    kv = quantized_kv_cache_memory(cfg)
-    weight_hbm_gb = wm["total"] / 1e9
-    kv_hbm_gb = kv["total_bytes"] / 1e9
+    wm = weight_memory_per_rank(cfg)
+    kv = kv_cache_memory(cfg)
+    weight_hbm_gb = weight_memory_total_bytes(wm) / 1e9
+    kv_hbm_gb = kv_cache_total_bytes(kv) / 1e9
     hbm_total_gb = weight_hbm_gb + kv_hbm_gb
     return {
         "weight_hbm_gb": weight_hbm_gb,
@@ -122,7 +123,7 @@ def evaluate_prefill_serving(cfg: Config) -> dict:
     if compute_cfg.rt.seq_len == 0:
         prefill_time_s = 0.0
     else:
-        phase = quantize_phase_profile(prefill_model(compute_cfg), compute_cfg)
+        phase = prefill_model(compute_cfg)
         prefill_time_s = phase.total_time_s
 
     physical_gpus = cfg.rt.tp * cfg.rt.dp
@@ -156,8 +157,8 @@ def evaluate_decode_serving(cfg: Config) -> dict:
         decode_total_s = 0.0
     else:
         last_context = math.ceil(first_context + max(0, num_forwards - 1) * tpf)
-        first_phase = quantize_phase_profile(decode_step(first_context, compute_cfg), compute_cfg)
-        last_phase = quantize_phase_profile(decode_step(last_context, compute_cfg), compute_cfg)
+        first_phase = decode_step(first_context, compute_cfg)
+        last_phase  = decode_step(last_context,  compute_cfg)
         decode_total_s = num_forwards * (first_phase.total_time_s + last_phase.total_time_s) / 2
 
     physical_gpus = cfg.rt.tp * cfg.rt.dp
