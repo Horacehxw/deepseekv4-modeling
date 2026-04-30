@@ -19,7 +19,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from perf_model.config import Config, HardwareConfig, NetworkConfig, RuntimeConfig
 from perf_model.layers import prefill_model, decode_step, prefill_layer, decode_layer
-from perf_model.memory import kv_cache_memory, weight_memory_per_rank
+from perf_model.memory import (
+    kv_cache_memory,
+    kv_cache_total_bytes,
+    weight_memory_per_rank,
+    weight_memory_total_bytes,
+)
 from perf_model.roofline import sum_ops
 
 # ---------------------------------------------------------------------------
@@ -145,8 +150,8 @@ def validate_parallelism(tp, ep, model_cfg):
 def check_memory(cfg, hbm_limit_gb=None):
     wm = weight_memory_per_rank(cfg)
     kv = kv_cache_memory(cfg)
-    weight_gb = (wm["total"] + wm.get("scale_overhead_bytes", 0)) / 1e9
-    kv_gb = (kv["total_bytes"] + kv.get("scale_overhead_bytes", 0)) / 1e9
+    weight_gb = weight_memory_total_bytes(wm) / 1e9
+    kv_gb = kv_cache_total_bytes(kv) / 1e9
     total_gb = weight_gb + kv_gb
     hbm_limit_gb = cfg.hw.usable_hbm_capacity_gb if hbm_limit_gb is None else hbm_limit_gb
     return weight_gb, kv_gb, total_gb, total_gb <= hbm_limit_gb
@@ -778,11 +783,11 @@ def compute_kv_cache_scaling(base_cfg, hw_name):
 
         # KV cache
         kv = kv_cache_memory(cfg)
-        kv_gb = (kv["total_bytes"] + kv.get("scale_overhead_bytes", 0)) / 1e9
+        kv_gb = kv_cache_total_bytes(kv) / 1e9
 
         # Weight memory
         wm = weight_memory_per_rank(cfg)
-        weight_gb = (wm["total"] + wm.get("scale_overhead_bytes", 0)) / 1e9
+        weight_gb = weight_memory_total_bytes(wm) / 1e9
         total_gb = weight_gb + kv_gb
         fits = total_gb <= hbm_limit
 

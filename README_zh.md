@@ -132,8 +132,8 @@ python param_search/analyze.py    # 分析结果并生成报告
 |---|---|---|
 | `quant_mode` | `bf16`（默认）、`w8a8` | W8A8：GEMM 算子使用 `effective_w8a8_tflops`；权重显存减半 |
 | `kv_cache_quant_mode` | `bf16`（默认）、`kv8`、`kv4` | KV8/KV4：注意力显存和 KV Cache 减半/减至 1/4 |
-| `weight_scale_overhead_bytes` | float（默认 0） | 量化 scale 存储的额外权重显存开销 |
-| `kv_scale_overhead_bytes` | float（默认 0） | 量化 scale 存储的额外 KV 显存开销 |
+| `weight_scale_overhead_bytes` | float（默认 0） | 权重量化 scale 存储开销；与数据部分的 `total`/`total_bytes` 分开报告 |
+| `kv_scale_overhead_bytes` | float（默认 0） | KV cache 量化 scale 存储开销；与数据部分的 `total`/`total_bytes` 分开报告 |
 
 量化策略通过 `roofline_time()` 的 `op_kind` 参数内联应用：
 - `"gemm"` + W8A8 → 使用 `effective_w8a8_tflops`，`mem_bytes` × 0.5

@@ -5,7 +5,12 @@ import unittest
 from test.helpers import make_config
 
 from perf_model.roofline import bytes2
-from perf_model.memory import kv_cache_memory, weight_memory_per_rank
+from perf_model.memory import (
+    kv_cache_memory,
+    kv_cache_total_bytes,
+    weight_memory_per_rank,
+    weight_memory_total_bytes,
+)
 
 
 # ── KV Cache Memory ──────────────────────────────────────────────────────
@@ -326,6 +331,7 @@ class TestMemoryQuantization(unittest.TestCase):
         r_w8a8 = weight_memory_per_rank(make_config(quant_mode="w8a8", weight_scale_overhead_bytes=overhead))
         self.assertEqual(r_w8a8["total"], _GOLDEN_BF16_WEIGHT_TOTAL * 0.5)
         self.assertEqual(r_w8a8["scale_overhead_bytes"], overhead)
+        self.assertEqual(weight_memory_total_bytes(r_w8a8), _GOLDEN_BF16_WEIGHT_TOTAL * 0.5 + overhead)
 
     def test_w8a8_weight_has_quant_mode_key(self):
         """W8A8: returned dict has 'quant_mode' metadata key."""
@@ -359,6 +365,7 @@ class TestMemoryQuantization(unittest.TestCase):
         r_kv8 = kv_cache_memory(make_config(kv_cache_quant_mode="kv8", kv_scale_overhead_bytes=overhead))
         self.assertEqual(r_kv8["total_bytes"], _GOLDEN_BF16_KV_TOTAL * 0.5)
         self.assertEqual(r_kv8["scale_overhead_bytes"], overhead)
+        self.assertEqual(kv_cache_total_bytes(r_kv8), _GOLDEN_BF16_KV_TOTAL * 0.5 + overhead)
 
     def test_kv4_with_scale_overhead(self):
         """KV4 + overhead: total_bytes == bf16_total * 0.25 (data only); overhead in scale_overhead_bytes."""
@@ -366,6 +373,7 @@ class TestMemoryQuantization(unittest.TestCase):
         r_kv4 = kv_cache_memory(make_config(kv_cache_quant_mode="kv4", kv_scale_overhead_bytes=overhead))
         self.assertEqual(r_kv4["total_bytes"], _GOLDEN_BF16_KV_TOTAL * 0.25)
         self.assertEqual(r_kv4["scale_overhead_bytes"], overhead)
+        self.assertEqual(kv_cache_total_bytes(r_kv4), _GOLDEN_BF16_KV_TOTAL * 0.25 + overhead)
 
     def test_kv8_has_kv_cache_quant_mode_key(self):
         """KV8: returned dict has 'kv_cache_quant_mode' metadata key."""

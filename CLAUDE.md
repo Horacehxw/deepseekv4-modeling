@@ -91,7 +91,7 @@ All compression ops are now implemented with exact per-step costs:
 `RuntimeConfig` fields control quantization behavior:
 - `quant_mode`: `"bf16"` (default) or `"w8a8"` — W8A8 GEMM ops use `effective_w8a8_tflops`; weight memory halved
 - `kv_cache_quant_mode`: `"bf16"` (default), `"kv8"`, or `"kv4"` — attention memory and KV cache halved/quartered
-- `weight_scale_overhead_bytes` / `kv_scale_overhead_bytes`: extra bytes added to totals for scale storage
+- `weight_scale_overhead_bytes` / `kv_scale_overhead_bytes`: extra bytes for quantization scale storage, reported separately from data-only `total` / `total_bytes` values and added explicitly by callers when needed (for example, HBM checks)
 
 The quantization policy is inline in `roofline_time()` via the required `op_kind` parameter. All 5 valid op_kinds: `"gemm"`, `"attention"`, `"vector"`, `"other"`, `"comm"`. Invalid op_kind raises `ValueError`.
 

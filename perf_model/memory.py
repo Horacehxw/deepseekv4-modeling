@@ -62,6 +62,11 @@ def kv_cache_memory(cfg: Config) -> dict:
     }
 
 
+def kv_cache_total_bytes(kv_memory: dict) -> float:
+    """Return KV cache bytes including separately reported scale overhead."""
+    return kv_memory["total_bytes"] + kv_memory.get("scale_overhead_bytes", 0.0)
+
+
 def _weight_memory_per_rank_bf16(cfg: Config) -> dict:
     H = cfg.model.hidden_size
     TP = cfg.rt.tp
@@ -141,3 +146,8 @@ def weight_memory_per_rank(cfg: Config) -> dict:
     scaled["scale_overhead_bytes"] = cfg.rt.weight_scale_overhead_bytes
     scaled["quant_mode"] = cfg.rt.quant_mode
     return scaled
+
+
+def weight_memory_total_bytes(weight_memory: dict) -> float:
+    """Return weight bytes including separately reported scale overhead."""
+    return weight_memory["total"] + weight_memory.get("scale_overhead_bytes", 0.0)

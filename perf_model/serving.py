@@ -5,7 +5,12 @@ from dataclasses import replace
 
 from .config import Config
 from .layers import decode_step, prefill_model
-from .memory import kv_cache_memory, weight_memory_per_rank
+from .memory import (
+    kv_cache_memory,
+    kv_cache_total_bytes,
+    weight_memory_per_rank,
+    weight_memory_total_bytes,
+)
 
 
 def _validate_serving_config(cfg: Config) -> None:
@@ -101,8 +106,8 @@ def _parallelism_metrics(cfg: Config) -> dict:
 def _hbm_metrics(cfg: Config) -> dict:
     wm = weight_memory_per_rank(cfg)
     kv = kv_cache_memory(cfg)
-    weight_hbm_gb = (wm["total"] + wm.get("scale_overhead_bytes", 0)) / 1e9
-    kv_hbm_gb = (kv["total_bytes"] + kv.get("scale_overhead_bytes", 0)) / 1e9
+    weight_hbm_gb = weight_memory_total_bytes(wm) / 1e9
+    kv_hbm_gb = kv_cache_total_bytes(kv) / 1e9
     hbm_total_gb = weight_hbm_gb + kv_hbm_gb
     return {
         "weight_hbm_gb": weight_hbm_gb,

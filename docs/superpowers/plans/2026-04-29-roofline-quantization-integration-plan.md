@@ -59,15 +59,17 @@ Following TDD philosophy, each criterion includes positive and negative tests fo
   - Negative Tests (expected to FAIL):
     - `weight_memory_per_rank(cfg_w8a8)["total"]` differs from `weight_memory_per_rank(cfg_bf16)["total"]` (quantization applied).
 
-- AC-7: Memory quantization with exact ratios and overhead — quantized memory functions apply exact ratios and scale overhead bytes.
+- AC-7: Memory quantization with exact ratios and overhead — quantized memory functions apply exact data ratios and expose scale overhead bytes separately.
   - Positive Tests (expected to PASS):
-    - `weight_memory_per_rank(cfg_w8a8)["total"] == bf16_total * 0.5 + cfg.rt.weight_scale_overhead_bytes` (exact float equality).
-    - `kv_cache_memory(cfg_kv8)["total_bytes"] == bf16_kv_total * 0.5 + cfg.rt.kv_scale_overhead_bytes` (exact float equality).
-    - `kv_cache_memory(cfg_kv4)["total_bytes"] == bf16_kv_total * 0.25 + cfg.rt.kv_scale_overhead_bytes` (exact float equality).
+    - `weight_memory_per_rank(cfg_w8a8)["total"] == bf16_total * 0.5` (exact float equality; data-only total).
+    - `kv_cache_memory(cfg_kv8)["total_bytes"] == bf16_kv_total * 0.5` (exact float equality; data-only total).
+    - `kv_cache_memory(cfg_kv4)["total_bytes"] == bf16_kv_total * 0.25` (exact float equality; data-only total).
+    - `weight_memory_total_bytes(weight_memory_per_rank(cfg_w8a8)) == bf16_total * 0.5 + cfg.rt.weight_scale_overhead_bytes`.
+    - `kv_cache_total_bytes(kv_cache_memory(cfg_kv8)) == bf16_kv_total * 0.5 + cfg.rt.kv_scale_overhead_bytes`.
     - Non-BF16 `weight_memory_per_rank` output contains `"quant_mode"` key with the active mode string.
     - Non-BF16 `kv_cache_memory` output contains `"kv_cache_quant_mode"` key with the active mode string.
   - Negative Tests (expected to FAIL):
-    - `kv_cache_memory(cfg_kv8)["total_bytes"] == bf16_kv_total * 0.5` without adding `kv_scale_overhead_bytes` (overhead not accounted for).
+    - `kv_cache_total_bytes(kv_cache_memory(cfg_kv8)) == bf16_kv_total * 0.5` when `kv_scale_overhead_bytes` is non-zero.
 
 - AC-8: Serving no double quantization — serving evaluation outputs match golden values from the current `quantize_phase_profile()` path; no `quantize_phase_profile()` call exists after the refactor.
   - Positive Tests (expected to PASS):
@@ -75,7 +77,7 @@ Following TDD philosophy, each criterion includes positive and negative tests fo
     - `evaluate_decode_serving()` output for a fixed KV8 config matches the golden value captured from the current path (within `1e-9` relative tolerance).
     - `evaluate_prefill_serving()` BF16 output is numerically unchanged from the current BF16 serving output.
   - Negative Tests (expected to FAIL):
-    - `grep` of `perf_model/serving.py` and `perf_model/__init__.py` for `quantize_phase_profile` returns any matches (static assertion).
+    - `perf_model.serving` or `perf_model` exposes `quantize_phase_profile`.
 
 - AC-9: `perf_model.quantization` module is fully deleted and no longer importable.
   - Positive Tests (expected to PASS):
@@ -211,8 +213,9 @@ For `serving.py`, remove the three `quantize_phase_profile()` call wrappers — 
    - Depends on: Milestone 2
 
 5. **Milestone 4 — Update `memory.py`**: Base public functions become quantization-aware; BF16 output is identical.
-   - Apply `WEIGHT_BYTE_RATIOS` ratio and `weight_scale_overhead_bytes` in `weight_memory_per_rank()`
-   - Apply `KV_BYTE_RATIOS` ratio and `kv_scale_overhead_bytes` in `kv_cache_memory()`
+   - Apply `WEIGHT_BYTE_RATIOS` ratio in `weight_memory_per_rank()` and report `weight_scale_overhead_bytes` separately as `scale_overhead_bytes`
+   - Apply `KV_BYTE_RATIOS` ratio in `kv_cache_memory()` and report `kv_scale_overhead_bytes` separately as `scale_overhead_bytes`
+   - Add shared accessors for HBM callers to include separately reported scale overhead
    - Add internal `_weight_memory_per_rank_bf16()` and `_kv_cache_memory_bf16()` helpers
    - BF16 default code path must return byte-for-byte identical output to current
    - Note: `quantized_weight_memory_per_rank()` and `quantized_kv_cache_memory()` live in `quantization.py` and are deleted in Milestone 6, not here
@@ -258,7 +261,7 @@ Each task includes exactly one routing tag:
 | task-roofline-fixtures | Update existing `test_roofline.py` fixtures that use the old `roofline_time(hw=...)` signature | AC-1 | coding | task-roofline-impl |
 | task-ops-update | Update all ~30 `ops.py` call sites: `cfg.hw` → `cfg`, add explicit `op_kind` per classification table; verify grep shows zero old-style calls in `perf_model/` | AC-10 | coding | task-roofline-impl |
 | task-other-callers | Update any other `roofline_time()` callers found in task-audit (e.g., direct calls in `test_roofline.py`) | AC-10 | coding | task-ops-update |
-| task-memory-impl | Apply `WEIGHT_BYTE_RATIOS` + overhead in `weight_memory_per_rank()`; apply `KV_BYTE_RATIOS` + overhead in `kv_cache_memory()`; add internal `_bf16` helpers; BF16 path returns exact current output | AC-6, AC-7 | coding | task-test-memory |
+| task-memory-impl | Apply `WEIGHT_BYTE_RATIOS` / `KV_BYTE_RATIOS` in public memory functions, report scale overhead separately, add shared total-with-overhead accessors and internal `_bf16` helpers; BF16 path returns exact current output | AC-6, AC-7 | coding | task-test-memory |
 | task-serving-clean | Remove three `quantize_phase_profile()` call sites from `serving.py`; remove the import | AC-8 | coding | task-ops-update, task-memory-impl |
 | task-ref-audit | Grep `perf_model/` and `test/` for any remaining `quantization` module references before deletion; confirm zero remaining importers | AC-9 | analyze | task-serving-clean |
 | task-delete-quant | Delete `perf_model/quantization.py`; delete `test/test_quantization.py`; remove 5 exports from `perf_model/__init__.py` | AC-9 | coding | task-ref-audit |
@@ -617,18 +620,24 @@ Quantized behavior:
 ```text
 weight_memory_per_rank(cfg)
   base BF16 bytes * WEIGHT_BYTE_RATIOS[cfg.rt.quant_mode]
-  total += cfg.rt.weight_scale_overhead_bytes
+  total remains data-only
+  scale_overhead_bytes = cfg.rt.weight_scale_overhead_bytes
   includes "quant_mode"
 
 kv_cache_memory(cfg)
   byte fields * KV_BYTE_RATIOS[cfg.rt.kv_cache_quant_mode]
-  total_bytes += cfg.rt.kv_scale_overhead_bytes
+  total_bytes remains data-only
+  scale_overhead_bytes = cfg.rt.kv_scale_overhead_bytes
   includes "kv_cache_quant_mode"
 ```
 
 The mode metadata keys are required for quantized modes. The default BF16,
 zero-overhead path preserves the previous public shape exactly so existing BF16
 memory tests and callers remain semantically unchanged.
+
+Callers that need physical HBM usage include the separately reported scale
+overhead via the shared memory accessors instead of manually reassembling the
+fields.
 
 Internal raw helpers may exist:
 

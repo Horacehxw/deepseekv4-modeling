@@ -8,7 +8,12 @@ from typing import List, Optional
 from .config import Config
 from .roofline import OpProfile
 from .layers import LayerProfile, PhaseProfile
-from .memory import kv_cache_memory, weight_memory_per_rank
+from .memory import (
+    kv_cache_memory,
+    kv_cache_total_bytes,
+    weight_memory_per_rank,
+    weight_memory_total_bytes,
+)
 
 
 def fmt_bytes(b: float) -> str:
@@ -267,8 +272,7 @@ def print_memory_report(cfg: Config):
     print()
 
     # Total HBM
-    total_hbm = (wm["total"] + wm.get("scale_overhead_bytes", 0)
-                 + kv["total_bytes"] + kv.get("scale_overhead_bytes", 0))
+    total_hbm = weight_memory_total_bytes(wm) + kv_cache_total_bytes(kv)
     capacity = cfg.hw.hbm_capacity_gb * 1e9
     usable_capacity = cfg.hw.usable_hbm_capacity_gb * 1e9
     print(f"  Total HBM Usage:         {fmt_bytes(total_hbm)}")
@@ -392,8 +396,7 @@ def export_memory_csv(filepath: str, cfg: Config):
             ])
 
         # Total HBM
-        total_hbm = (wm["total"] + wm.get("scale_overhead_bytes", 0)
-                 + kv["total_bytes"] + kv.get("scale_overhead_bytes", 0))
+        total_hbm = weight_memory_total_bytes(wm) + kv_cache_total_bytes(kv)
         writer.writerow(["total", "hbm_usage", f"{total_hbm:.0f}", fmt_bytes(total_hbm)])
         capacity = cfg.hw.hbm_capacity_gb * 1e9
         writer.writerow(["total", "hbm_capacity", f"{capacity:.0f}", fmt_bytes(capacity)])

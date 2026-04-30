@@ -276,18 +276,24 @@ Quantized behavior:
 ```text
 weight_memory_per_rank(cfg)
   base BF16 bytes * WEIGHT_BYTE_RATIOS[cfg.rt.quant_mode]
-  total += cfg.rt.weight_scale_overhead_bytes
+  total remains data-only
+  scale_overhead_bytes = cfg.rt.weight_scale_overhead_bytes
   includes "quant_mode"
 
 kv_cache_memory(cfg)
   byte fields * KV_BYTE_RATIOS[cfg.rt.kv_cache_quant_mode]
-  total_bytes += cfg.rt.kv_scale_overhead_bytes
+  total_bytes remains data-only
+  scale_overhead_bytes = cfg.rt.kv_scale_overhead_bytes
   includes "kv_cache_quant_mode"
 ```
 
 The mode metadata keys are required for quantized modes. The default BF16,
 zero-overhead path preserves the previous public shape exactly so existing BF16
 memory tests and callers remain semantically unchanged.
+
+Callers that need physical HBM usage include the separately reported scale
+overhead via the shared memory accessors instead of manually reassembling the
+fields.
 
 Internal raw helpers may exist:
 

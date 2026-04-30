@@ -133,8 +133,8 @@ The model supports quantization modes via `RuntimeConfig`:
 |---|---|---|
 | `quant_mode` | `bf16` (default), `w8a8` | W8A8: GEMM ops use `effective_w8a8_tflops`; weight memory halved |
 | `kv_cache_quant_mode` | `bf16` (default), `kv8`, `kv4` | KV8/KV4: attention memory and KV cache halved/quartered |
-| `weight_scale_overhead_bytes` | float (default 0) | Added to total weight memory for quantization scale storage |
-| `kv_scale_overhead_bytes` | float (default 0) | Added to total KV memory for quantization scale storage |
+| `weight_scale_overhead_bytes` | float (default 0) | Quantization scale-storage overhead for weights; reported separately from data-only `total`/`total_bytes` memory |
+| `kv_scale_overhead_bytes` | float (default 0) | Quantization scale-storage overhead for KV cache; reported separately from data-only `total`/`total_bytes` memory |
 
 Quantization policy is applied inline in `roofline_time()` via `op_kind`:
 - `"gemm"` + W8A8 → uses `effective_w8a8_tflops`, scales `mem_bytes` × 0.5

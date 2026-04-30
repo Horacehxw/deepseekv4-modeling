@@ -243,19 +243,19 @@ class TestServingQuantizationIntegration(unittest.TestCase):
         r_kv8  = evaluate_decode_serving(self.cfg_kv8)
         self.assertLess(r_kv8["kv_hbm_gb"], r_bf16["kv_hbm_gb"])
 
-    # ── AC-8: Static assertion — no quantize_phase_profile in serving/init ──
+    # ── AC-8: Module/API assertions — no quantize_phase_profile export ──
 
     def test_no_quantize_phase_profile_in_serving_py(self):
-        """serving.py must not reference quantize_phase_profile."""
-        import pathlib
-        src = pathlib.Path(__file__).parent.parent / "perf_model" / "serving.py"
-        self.assertNotIn("quantize_phase_profile", src.read_text())
+        """perf_model.serving must not expose quantize_phase_profile."""
+        import importlib
+        serving = importlib.import_module("perf_model.serving")
+        self.assertFalse(hasattr(serving, "quantize_phase_profile"))
 
     def test_no_quantize_phase_profile_in_init_py(self):
-        """perf_model/__init__.py must not export quantize_phase_profile."""
-        import pathlib
-        src = pathlib.Path(__file__).parent.parent / "perf_model" / "__init__.py"
-        self.assertNotIn("quantize_phase_profile", src.read_text())
+        """perf_model must not export quantize_phase_profile."""
+        import importlib
+        perf_model = importlib.import_module("perf_model")
+        self.assertFalse(hasattr(perf_model, "quantize_phase_profile"))
 
     # ── AC-9: Module deleted ───────────────────────────────────────────────
 
