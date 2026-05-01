@@ -8,9 +8,9 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 7212.07,
-        "tps_instance": 115393.04,
-        "qps_instance": 14.0861
+        "tps_per_gpu": 3551.43,
+        "tps_instance": 56822.95,
+        "qps_instance": 6.9364
       },
       "decode_config": {
         "tp": 2,
@@ -18,24 +18,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 924.0,
-        "tps_instance": 14783.97,
-        "qps_instance": 3.6094
+        "tps_per_gpu": 312.41,
+        "tps_instance": 4998.5,
+        "qps_instance": 1.2203
       },
       "input_len": 8192,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 0.256,
-      "pd_ratio_actual": 0.25,
+      "pd_ratio_float": 0.176,
+      "pd_ratio_actual": 0.167,
       "prefill_instances": 1,
-      "decode_instances": 4,
-      "prefill_aggregate_qps": 14.0861,
-      "decode_aggregate_qps": 14.4375,
-      "qps_imbalance": -0.351403,
-      "qps_imbalance_pct": 0.02434,
+      "decode_instances": 6,
+      "prefill_aggregate_qps": 6.9364,
+      "decode_aggregate_qps": 7.322,
+      "qps_imbalance": -0.385626,
+      "qps_imbalance_pct": 0.052667,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 80,
-      "label": "1P:4D"
+      "total_gpus_min": 112,
+      "label": "1P:6D"
     },
     "8K_4K_hit90": {
       "schema_version": 2,
@@ -45,9 +45,9 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 74052.33,
-        "tps_instance": 1184837.32,
-        "qps_instance": 144.6335
+        "tps_per_gpu": 36416.56,
+        "tps_instance": 582664.93,
+        "qps_instance": 71.1261
       },
       "decode_config": {
         "tp": 2,
@@ -55,24 +55,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 924.0,
-        "tps_instance": 14783.97,
-        "qps_instance": 3.6094
+        "tps_per_gpu": 312.41,
+        "tps_instance": 4998.5,
+        "qps_instance": 1.2203
       },
       "input_len": 8192,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.025,
-      "pd_ratio_actual": 0.027,
+      "pd_ratio_float": 0.017,
+      "pd_ratio_actual": 0.019,
       "prefill_instances": 1,
-      "decode_instances": 37,
-      "prefill_aggregate_qps": 144.6335,
-      "decode_aggregate_qps": 133.5466,
-      "qps_imbalance": 11.086885,
-      "qps_imbalance_pct": 0.076655,
+      "decode_instances": 53,
+      "prefill_aggregate_qps": 71.1261,
+      "decode_aggregate_qps": 64.6779,
+      "qps_imbalance": 6.448227,
+      "qps_imbalance_pct": 0.090659,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 608,
-      "label": "1P:37D"
+      "total_gpus_min": 864,
+      "label": "1P:53D"
     },
     "8K_4K_hit99": {
       "schema_version": 2,
@@ -82,9 +82,9 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 711356.74,
-        "tps_instance": 11381707.8,
-        "qps_instance": 1389.3686
+        "tps_per_gpu": 338789.32,
+        "tps_instance": 5420629.06,
+        "qps_instance": 661.6979
       },
       "decode_config": {
         "tp": 2,
@@ -92,24 +92,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 924.0,
-        "tps_instance": 14783.97,
-        "qps_instance": 3.6094
+        "tps_per_gpu": 312.41,
+        "tps_instance": 4998.5,
+        "qps_instance": 1.2203
       },
       "input_len": 8192,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.003,
-      "pd_ratio_actual": 0.003,
+      "pd_ratio_float": 0.002,
+      "pd_ratio_actual": 0.002,
       "prefill_instances": 1,
-      "decode_instances": 347,
-      "prefill_aggregate_qps": 1389.3686,
-      "decode_aggregate_qps": 1252.4503,
-      "qps_imbalance": 136.918298,
-      "qps_imbalance_pct": 0.098547,
+      "decode_instances": 489,
+      "prefill_aggregate_qps": 661.6979,
+      "decode_aggregate_qps": 596.7448,
+      "qps_imbalance": 64.953074,
+      "qps_imbalance_pct": 0.098161,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 5568,
-      "label": "1P:347D"
+      "total_gpus_min": 7840,
+      "label": "1P:489D"
     },
     "32K_4K": {
       "schema_version": 2,
@@ -119,9 +119,9 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 6523.63,
-        "tps_instance": 104378.04,
-        "qps_instance": 3.1854
+        "tps_per_gpu": 3262.79,
+        "tps_instance": 52204.62,
+        "qps_instance": 1.5932
       },
       "decode_config": {
         "tp": 4,
@@ -129,24 +129,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 32,
-        "tps_per_gpu": 639.69,
-        "tps_instance": 20470.16,
-        "qps_instance": 4.9976
+        "tps_per_gpu": 231.58,
+        "tps_instance": 7410.69,
+        "qps_instance": 1.8093
       },
       "input_len": 32768,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 1.569,
-      "pd_ratio_actual": 1.5,
-      "prefill_instances": 3,
-      "decode_instances": 2,
-      "prefill_aggregate_qps": 9.5561,
-      "decode_aggregate_qps": 9.9952,
-      "qps_imbalance": -0.439101,
-      "qps_imbalance_pct": 0.043931,
+      "pd_ratio_float": 1.136,
+      "pd_ratio_actual": 1.25,
+      "prefill_instances": 5,
+      "decode_instances": 4,
+      "prefill_aggregate_qps": 7.9658,
+      "decode_aggregate_qps": 7.237,
+      "qps_imbalance": 0.728793,
+      "qps_imbalance_pct": 0.09149,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 112,
-      "label": "3P:2D"
+      "total_gpus_min": 208,
+      "label": "5P:4D"
     },
     "32K_4K_hit90": {
       "schema_version": 2,
@@ -156,9 +156,9 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 73454.39,
-        "tps_instance": 1175270.27,
-        "qps_instance": 35.8664
+        "tps_per_gpu": 36141.25,
+        "tps_instance": 578260.03,
+        "qps_instance": 17.6471
       },
       "decode_config": {
         "tp": 4,
@@ -166,24 +166,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 32,
-        "tps_per_gpu": 639.69,
-        "tps_instance": 20470.16,
-        "qps_instance": 4.9976
+        "tps_per_gpu": 231.58,
+        "tps_instance": 7410.69,
+        "qps_instance": 1.8093
       },
       "input_len": 32768,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.139,
-      "pd_ratio_actual": 0.143,
+      "pd_ratio_float": 0.103,
+      "pd_ratio_actual": 0.111,
       "prefill_instances": 1,
-      "decode_instances": 7,
-      "prefill_aggregate_qps": 35.8664,
-      "decode_aggregate_qps": 34.9832,
-      "qps_imbalance": 0.883218,
-      "qps_imbalance_pct": 0.024625,
+      "decode_instances": 9,
+      "prefill_aggregate_qps": 17.6471,
+      "decode_aggregate_qps": 16.2833,
+      "qps_imbalance": 1.363845,
+      "qps_imbalance_pct": 0.077284,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 240,
-      "label": "1P:7D"
+      "total_gpus_min": 304,
+      "label": "1P:9D"
     },
     "32K_4K_hit99": {
       "schema_version": 2,
@@ -193,9 +193,9 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 738258.7,
-        "tps_instance": 11812139.15,
-        "qps_instance": 360.4779
+        "tps_per_gpu": 354277.9,
+        "tps_instance": 5668446.44,
+        "qps_instance": 172.9873
       },
       "decode_config": {
         "tp": 4,
@@ -203,24 +203,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 32,
-        "tps_per_gpu": 639.69,
-        "tps_instance": 20470.16,
-        "qps_instance": 4.9976
+        "tps_per_gpu": 231.58,
+        "tps_instance": 7410.69,
+        "qps_instance": 1.8093
       },
       "input_len": 32768,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.014,
-      "pd_ratio_actual": 0.015,
+      "pd_ratio_float": 0.01,
+      "pd_ratio_actual": 0.011,
       "prefill_instances": 1,
-      "decode_instances": 65,
-      "prefill_aggregate_qps": 360.4779,
-      "decode_aggregate_qps": 324.8439,
-      "qps_imbalance": 35.634025,
-      "qps_imbalance_pct": 0.098852,
+      "decode_instances": 87,
+      "prefill_aggregate_qps": 172.9873,
+      "decode_aggregate_qps": 157.4048,
+      "qps_imbalance": 15.582505,
+      "qps_imbalance_pct": 0.090079,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 2096,
-      "label": "1P:65D"
+      "total_gpus_min": 2800,
+      "label": "1P:87D"
     },
     "128K_4K": {
       "schema_version": 2,
@@ -230,9 +230,9 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 16,
-        "tps_per_gpu": 4639.13,
-        "tps_instance": 74226.0,
-        "qps_instance": 0.5663
+        "tps_per_gpu": 2376.59,
+        "tps_instance": 38025.4,
+        "qps_instance": 0.2901
       },
       "decode_config": {
         "tp": 4,
@@ -240,24 +240,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "tps_per_gpu": 297.54,
-        "tps_instance": 9521.13,
-        "qps_instance": 2.3245
+        "tps_per_gpu": 112.44,
+        "tps_instance": 3597.99,
+        "qps_instance": 0.8784
       },
       "input_len": 131072,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 4.105,
-      "pd_ratio_actual": 4.0,
-      "prefill_instances": 4,
+      "pd_ratio_float": 3.028,
+      "pd_ratio_actual": 3.0,
+      "prefill_instances": 3,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 2.2652,
-      "decode_aggregate_qps": 2.3245,
-      "qps_imbalance": -0.059297,
-      "qps_imbalance_pct": 0.02551,
+      "prefill_aggregate_qps": 0.8703,
+      "decode_aggregate_qps": 0.8784,
+      "qps_imbalance": -0.008083,
+      "qps_imbalance_pct": 0.009202,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 96,
-      "label": "4P:1D"
+      "total_gpus_min": 80,
+      "label": "3P:1D"
     },
     "128K_4K_hit90": {
       "schema_version": 2,
@@ -267,9 +267,9 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 16,
-        "tps_per_gpu": 70773.38,
-        "tps_instance": 1132374.01,
-        "qps_instance": 8.6393
+        "tps_per_gpu": 34886.63,
+        "tps_instance": 558186.02,
+        "qps_instance": 4.2586
       },
       "decode_config": {
         "tp": 4,
@@ -277,24 +277,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "tps_per_gpu": 297.54,
-        "tps_instance": 9521.13,
-        "qps_instance": 2.3245
+        "tps_per_gpu": 112.44,
+        "tps_instance": 3597.99,
+        "qps_instance": 0.8784
       },
       "input_len": 131072,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.269,
-      "pd_ratio_actual": 0.25,
+      "pd_ratio_float": 0.206,
+      "pd_ratio_actual": 0.2,
       "prefill_instances": 1,
-      "decode_instances": 4,
-      "prefill_aggregate_qps": 8.6393,
-      "decode_aggregate_qps": 9.298,
-      "qps_imbalance": -0.658652,
-      "qps_imbalance_pct": 0.070838,
+      "decode_instances": 5,
+      "prefill_aggregate_qps": 4.2586,
+      "decode_aggregate_qps": 4.3921,
+      "qps_imbalance": -0.133454,
+      "qps_imbalance_pct": 0.030385,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 144,
-      "label": "1P:4D"
+      "total_gpus_min": 176,
+      "label": "1P:5D"
     },
     "128K_4K_hit99": {
       "schema_version": 2,
@@ -304,9 +304,9 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 16,
-        "tps_per_gpu": 736565.24,
-        "tps_instance": 11785043.77,
-        "qps_instance": 89.9127
+        "tps_per_gpu": 353756.02,
+        "tps_instance": 5660096.28,
+        "qps_instance": 43.1831
       },
       "decode_config": {
         "tp": 4,
@@ -314,24 +314,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "tps_per_gpu": 297.54,
-        "tps_instance": 9521.13,
-        "qps_instance": 2.3245
+        "tps_per_gpu": 112.44,
+        "tps_instance": 3597.99,
+        "qps_instance": 0.8784
       },
       "input_len": 131072,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.026,
-      "pd_ratio_actual": 0.029,
+      "pd_ratio_float": 0.02,
+      "pd_ratio_actual": 0.022,
       "prefill_instances": 1,
-      "decode_instances": 35,
-      "prefill_aggregate_qps": 89.9127,
-      "decode_aggregate_qps": 81.3573,
-      "qps_imbalance": 8.555419,
-      "qps_imbalance_pct": 0.095152,
+      "decode_instances": 45,
+      "prefill_aggregate_qps": 43.1831,
+      "decode_aggregate_qps": 39.5287,
+      "qps_imbalance": 3.654427,
+      "qps_imbalance_pct": 0.084626,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 1136,
-      "label": "1P:35D"
+      "total_gpus_min": 1456,
+      "label": "1P:45D"
     },
     "256K_4K": {
       "schema_version": 2,
@@ -341,9 +341,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "tps_per_gpu": 3349.15,
-        "tps_instance": 53586.42,
-        "qps_instance": 0.2044
+        "tps_per_gpu": 1729.04,
+        "tps_instance": 27664.64,
+        "qps_instance": 0.1055
       },
       "decode_config": {
         "tp": 4,
@@ -351,24 +351,24 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 32,
-        "tps_per_gpu": 154.39,
-        "tps_instance": 4940.33,
-        "qps_instance": 1.2061
+        "tps_per_gpu": 58.98,
+        "tps_instance": 1887.44,
+        "qps_instance": 0.4608
       },
       "input_len": 262144,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 5.9,
-      "pd_ratio_actual": 6.0,
-      "prefill_instances": 6,
+      "pd_ratio_float": 4.366,
+      "pd_ratio_actual": 4.0,
+      "prefill_instances": 4,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 1.2265,
-      "decode_aggregate_qps": 1.2061,
-      "qps_imbalance": 0.020361,
-      "qps_imbalance_pct": 0.016601,
+      "prefill_aggregate_qps": 0.4221,
+      "decode_aggregate_qps": 0.4608,
+      "qps_imbalance": -0.038672,
+      "qps_imbalance_pct": 0.083923,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 128,
-      "label": "6P:1D"
+      "total_gpus_min": 96,
+      "label": "4P:1D"
     },
     "256K_4K_hit90": {
       "schema_version": 2,
@@ -378,9 +378,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "tps_per_gpu": 67029.64,
-        "tps_instance": 1072474.19,
-        "qps_instance": 4.0912
+        "tps_per_gpu": 33342.32,
+        "tps_instance": 533477.09,
+        "qps_instance": 2.0351
       },
       "decode_config": {
         "tp": 4,
@@ -388,24 +388,24 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 32,
-        "tps_per_gpu": 154.39,
-        "tps_instance": 4940.33,
-        "qps_instance": 1.2061
+        "tps_per_gpu": 58.98,
+        "tps_instance": 1887.44,
+        "qps_instance": 0.4608
       },
       "input_len": 262144,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.295,
-      "pd_ratio_actual": 0.286,
-      "prefill_instances": 2,
-      "decode_instances": 7,
-      "prefill_aggregate_qps": 8.1823,
-      "decode_aggregate_qps": 8.4429,
-      "qps_imbalance": -0.260616,
-      "qps_imbalance_pct": 0.030868,
+      "pd_ratio_float": 0.226,
+      "pd_ratio_actual": 0.25,
+      "prefill_instances": 1,
+      "decode_instances": 4,
+      "prefill_aggregate_qps": 2.0351,
+      "decode_aggregate_qps": 1.8432,
+      "qps_imbalance": 0.191851,
+      "qps_imbalance_pct": 0.094273,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 256,
-      "label": "2P:7D"
+      "total_gpus_min": 144,
+      "label": "1P:4D"
     },
     "256K_4K_hit99": {
       "schema_version": 2,
@@ -415,9 +415,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "tps_per_gpu": 732849.92,
-        "tps_instance": 11725598.65,
-        "qps_instance": 44.7296
+        "tps_per_gpu": 352106.71,
+        "tps_instance": 5633707.36,
+        "qps_instance": 21.4909
       },
       "decode_config": {
         "tp": 4,
@@ -425,24 +425,24 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 32,
-        "tps_per_gpu": 154.39,
-        "tps_instance": 4940.33,
-        "qps_instance": 1.2061
+        "tps_per_gpu": 58.98,
+        "tps_instance": 1887.44,
+        "qps_instance": 0.4608
       },
       "input_len": 262144,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.027,
-      "pd_ratio_actual": 0.029,
+      "pd_ratio_float": 0.021,
+      "pd_ratio_actual": 0.024,
       "prefill_instances": 1,
-      "decode_instances": 34,
-      "prefill_aggregate_qps": 44.7296,
-      "decode_aggregate_qps": 41.0086,
-      "qps_imbalance": 3.721022,
-      "qps_imbalance_pct": 0.083189,
+      "decode_instances": 42,
+      "prefill_aggregate_qps": 21.4909,
+      "decode_aggregate_qps": 19.3536,
+      "qps_imbalance": 2.137259,
+      "qps_imbalance_pct": 0.09945,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 1104,
-      "label": "1P:34D"
+      "total_gpus_min": 1360,
+      "label": "1P:42D"
     },
     "1M_4K": {
       "schema_version": 2,
@@ -452,9 +452,9 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 16,
-        "tps_per_gpu": 1305.55,
-        "tps_instance": 20888.86,
-        "qps_instance": 0.0209
+        "tps_per_gpu": 681.54,
+        "tps_instance": 10904.69,
+        "qps_instance": 0.0109
       },
       "decode_config": {
         "tp": 4,
@@ -462,24 +462,24 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 32,
-        "tps_per_gpu": 40.1,
-        "tps_instance": 1283.31,
-        "qps_instance": 0.3133
+        "tps_per_gpu": 15.38,
+        "tps_instance": 492.15,
+        "qps_instance": 0.1202
       },
       "input_len": 1000000,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 14.999,
-      "pd_ratio_actual": 14.0,
-      "prefill_instances": 14,
+      "pd_ratio_float": 11.019,
+      "pd_ratio_actual": 10.0,
+      "prefill_instances": 10,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 0.2924,
-      "decode_aggregate_qps": 0.3133,
-      "qps_imbalance": -0.020863,
-      "qps_imbalance_pct": 0.06659,
+      "prefill_aggregate_qps": 0.109,
+      "decode_aggregate_qps": 0.1202,
+      "qps_imbalance": -0.011108,
+      "qps_imbalance_pct": 0.092444,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 256,
-      "label": "14P:1D"
+      "total_gpus_min": 192,
+      "label": "10P:1D"
     },
     "1M_4K_hit90": {
       "schema_version": 2,
@@ -489,9 +489,9 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 16,
-        "tps_per_gpu": 51037.43,
-        "tps_instance": 816598.88,
-        "qps_instance": 0.8166
+        "tps_per_gpu": 26073.5,
+        "tps_instance": 417175.97,
+        "qps_instance": 0.4172
       },
       "decode_config": {
         "tp": 4,
@@ -499,24 +499,24 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 32,
-        "tps_per_gpu": 40.1,
-        "tps_instance": 1283.31,
-        "qps_instance": 0.3133
+        "tps_per_gpu": 15.38,
+        "tps_instance": 492.15,
+        "qps_instance": 0.1202
       },
       "input_len": 1000000,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.384,
-      "pd_ratio_actual": 0.4,
+      "pd_ratio_float": 0.288,
+      "pd_ratio_actual": 0.286,
       "prefill_instances": 2,
-      "decode_instances": 5,
-      "prefill_aggregate_qps": 1.6332,
-      "decode_aggregate_qps": 1.5665,
-      "qps_imbalance": 0.066662,
-      "qps_imbalance_pct": 0.040817,
+      "decode_instances": 7,
+      "prefill_aggregate_qps": 0.8344,
+      "decode_aggregate_qps": 0.8411,
+      "qps_imbalance": -0.006729,
+      "qps_imbalance_pct": 0.008,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 192,
-      "label": "2P:5D"
+      "total_gpus_min": 256,
+      "label": "2P:7D"
     },
     "1M_4K_hit99": {
       "schema_version": 2,
@@ -526,9 +526,9 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 16,
-        "tps_per_gpu": 711953.54,
-        "tps_instance": 11391256.69,
-        "qps_instance": 11.3913
+        "tps_per_gpu": 342408.44,
+        "tps_instance": 5478534.99,
+        "qps_instance": 5.4785
       },
       "decode_config": {
         "tp": 4,
@@ -536,24 +536,24 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 32,
-        "tps_per_gpu": 40.1,
-        "tps_instance": 1283.31,
-        "qps_instance": 0.3133
+        "tps_per_gpu": 15.38,
+        "tps_instance": 492.15,
+        "qps_instance": 0.1202
       },
       "input_len": 1000000,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.028,
-      "pd_ratio_actual": 0.03,
+      "pd_ratio_float": 0.022,
+      "pd_ratio_actual": 0.024,
       "prefill_instances": 1,
-      "decode_instances": 33,
-      "prefill_aggregate_qps": 11.3913,
-      "decode_aggregate_qps": 10.3391,
-      "qps_imbalance": 1.052118,
-      "qps_imbalance_pct": 0.092362,
+      "decode_instances": 42,
+      "prefill_aggregate_qps": 5.4785,
+      "decode_aggregate_qps": 5.0465,
+      "qps_imbalance": 0.432051,
+      "qps_imbalance_pct": 0.078862,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 1072,
-      "label": "1P:33D"
+      "total_gpus_min": 1360,
+      "label": "1P:42D"
     }
   },
   "H20": {
@@ -565,9 +565,9 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 8,
-        "tps_per_gpu": 2977.59,
-        "tps_instance": 23820.7,
-        "qps_instance": 2.9078
+        "tps_per_gpu": 2892.13,
+        "tps_instance": 23137.02,
+        "qps_instance": 2.8243
       },
       "decode_config": {
         "tp": 2,
@@ -575,21 +575,21 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 1195.74,
-        "tps_instance": 19131.91,
-        "qps_instance": 4.6709
+        "tps_per_gpu": 1053.25,
+        "tps_instance": 16851.94,
+        "qps_instance": 4.1142
       },
       "input_len": 8192,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 1.606,
+      "pd_ratio_float": 1.457,
       "pd_ratio_actual": 1.5,
       "prefill_instances": 3,
       "decode_instances": 2,
-      "prefill_aggregate_qps": 8.7234,
-      "decode_aggregate_qps": 9.3418,
-      "qps_imbalance": -0.618354,
-      "qps_imbalance_pct": 0.066192,
+      "prefill_aggregate_qps": 8.473,
+      "decode_aggregate_qps": 8.2285,
+      "qps_imbalance": 0.244546,
+      "qps_imbalance_pct": 0.028862,
       "balance_tolerance": 0.1,
       "total_gpus_min": 56,
       "label": "3P:2D"
@@ -602,9 +602,9 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 8,
-        "tps_per_gpu": 30658.57,
-        "tps_instance": 245268.56,
-        "qps_instance": 29.94
+        "tps_per_gpu": 29766.69,
+        "tps_instance": 238133.55,
+        "qps_instance": 29.069
       },
       "decode_config": {
         "tp": 2,
@@ -612,24 +612,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 1195.74,
-        "tps_instance": 19131.91,
-        "qps_instance": 4.6709
+        "tps_per_gpu": 1053.25,
+        "tps_instance": 16851.94,
+        "qps_instance": 4.1142
       },
       "input_len": 8192,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.156,
-      "pd_ratio_actual": 0.167,
+      "pd_ratio_float": 0.142,
+      "pd_ratio_actual": 0.143,
       "prefill_instances": 1,
-      "decode_instances": 6,
-      "prefill_aggregate_qps": 29.94,
-      "decode_aggregate_qps": 28.0253,
-      "qps_imbalance": 1.914749,
-      "qps_imbalance_pct": 0.063953,
+      "decode_instances": 7,
+      "prefill_aggregate_qps": 29.069,
+      "decode_aggregate_qps": 28.7997,
+      "qps_imbalance": 0.269342,
+      "qps_imbalance_pct": 0.009266,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 104,
-      "label": "1P:6D"
+      "total_gpus_min": 120,
+      "label": "1P:7D"
     },
     "8K_4K_hit99": {
       "schema_version": 2,
@@ -639,9 +639,9 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 8,
-        "tps_per_gpu": 307104.35,
-        "tps_instance": 2456834.81,
-        "qps_instance": 299.9066
+        "tps_per_gpu": 297041.44,
+        "tps_instance": 2376331.54,
+        "qps_instance": 290.0795
       },
       "decode_config": {
         "tp": 2,
@@ -649,24 +649,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 1195.74,
-        "tps_instance": 19131.91,
-        "qps_instance": 4.6709
+        "tps_per_gpu": 1053.25,
+        "tps_instance": 16851.94,
+        "qps_instance": 4.1142
       },
       "input_len": 8192,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.016,
-      "pd_ratio_actual": 0.017,
+      "pd_ratio_float": 0.014,
+      "pd_ratio_actual": 0.016,
       "prefill_instances": 1,
-      "decode_instances": 58,
-      "prefill_aggregate_qps": 299.9066,
-      "decode_aggregate_qps": 270.9109,
-      "qps_imbalance": 28.995738,
-      "qps_imbalance_pct": 0.096683,
+      "decode_instances": 64,
+      "prefill_aggregate_qps": 290.0795,
+      "decode_aggregate_qps": 263.3115,
+      "qps_imbalance": 26.768046,
+      "qps_imbalance_pct": 0.092278,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 936,
-      "label": "1P:58D"
+      "total_gpus_min": 1032,
+      "label": "1P:64D"
     },
     "32K_4K": {
       "schema_version": 2,
@@ -676,9 +676,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 8,
-        "tps_per_gpu": 2693.89,
-        "tps_instance": 21551.11,
-        "qps_instance": 0.6577
+        "tps_per_gpu": 2600.71,
+        "tps_instance": 20805.72,
+        "qps_instance": 0.6349
       },
       "decode_config": {
         "tp": 2,
@@ -686,24 +686,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 1145.34,
-        "tps_instance": 18325.49,
-        "qps_instance": 4.474
+        "tps_per_gpu": 1010.42,
+        "tps_instance": 16166.71,
+        "qps_instance": 3.947
       },
       "input_len": 32768,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 6.803,
-      "pd_ratio_actual": 7.0,
-      "prefill_instances": 7,
+      "pd_ratio_float": 6.216,
+      "pd_ratio_actual": 6.0,
+      "prefill_instances": 6,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 4.6038,
-      "decode_aggregate_qps": 4.474,
-      "qps_imbalance": 0.129817,
-      "qps_imbalance_pct": 0.028198,
+      "prefill_aggregate_qps": 3.8096,
+      "decode_aggregate_qps": 3.947,
+      "qps_imbalance": -0.137311,
+      "qps_imbalance_pct": 0.034789,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 72,
-      "label": "7P:1D"
+      "total_gpus_min": 64,
+      "label": "6P:1D"
     },
     "32K_4K_hit90": {
       "schema_version": 2,
@@ -713,9 +713,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 8,
-        "tps_per_gpu": 30413.98,
-        "tps_instance": 243311.85,
-        "qps_instance": 7.4253
+        "tps_per_gpu": 29531.4,
+        "tps_instance": 236251.2,
+        "qps_instance": 7.2098
       },
       "decode_config": {
         "tp": 2,
@@ -723,24 +723,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 1145.34,
-        "tps_instance": 18325.49,
-        "qps_instance": 4.474
+        "tps_per_gpu": 1010.42,
+        "tps_instance": 16166.71,
+        "qps_instance": 3.947
       },
       "input_len": 32768,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.603,
-      "pd_ratio_actual": 0.667,
-      "prefill_instances": 2,
-      "decode_instances": 3,
-      "prefill_aggregate_qps": 14.8506,
-      "decode_aggregate_qps": 13.422,
-      "qps_imbalance": 1.428588,
-      "qps_imbalance_pct": 0.096197,
+      "pd_ratio_float": 0.547,
+      "pd_ratio_actual": 0.5,
+      "prefill_instances": 1,
+      "decode_instances": 2,
+      "prefill_aggregate_qps": 7.2098,
+      "decode_aggregate_qps": 7.8939,
+      "qps_imbalance": -0.684089,
+      "qps_imbalance_pct": 0.08666,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 64,
-      "label": "2P:3D"
+      "total_gpus_min": 40,
+      "label": "1P:2D"
     },
     "32K_4K_hit99": {
       "schema_version": 2,
@@ -750,9 +750,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 8,
-        "tps_per_gpu": 306846.55,
-        "tps_instance": 2454772.4,
-        "qps_instance": 74.9137
+        "tps_per_gpu": 296638.9,
+        "tps_instance": 2373111.24,
+        "qps_instance": 72.4216
       },
       "decode_config": {
         "tp": 2,
@@ -760,24 +760,24 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "tps_per_gpu": 1145.34,
-        "tps_instance": 18325.49,
-        "qps_instance": 4.474
+        "tps_per_gpu": 1010.42,
+        "tps_instance": 16166.71,
+        "qps_instance": 3.947
       },
       "input_len": 32768,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.06,
-      "pd_ratio_actual": 0.062,
+      "pd_ratio_float": 0.054,
+      "pd_ratio_actual": 0.059,
       "prefill_instances": 1,
-      "decode_instances": 16,
-      "prefill_aggregate_qps": 74.9137,
-      "decode_aggregate_qps": 71.5839,
-      "qps_imbalance": 3.329769,
-      "qps_imbalance_pct": 0.044448,
+      "decode_instances": 17,
+      "prefill_aggregate_qps": 72.4216,
+      "decode_aggregate_qps": 67.0982,
+      "qps_imbalance": 5.323429,
+      "qps_imbalance_pct": 0.073506,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 264,
-      "label": "1P:16D"
+      "total_gpus_min": 280,
+      "label": "1P:17D"
     },
     "128K_4K": {
       "schema_version": 2,
@@ -787,9 +787,9 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 1841.92,
-        "tps_instance": 29470.71,
-        "qps_instance": 0.2248
+        "tps_per_gpu": 1754.04,
+        "tps_instance": 28064.71,
+        "qps_instance": 0.2141
       },
       "decode_config": {
         "tp": 2,
@@ -797,24 +797,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 714.93,
-        "tps_instance": 11438.89,
-        "qps_instance": 2.7927
+        "tps_per_gpu": 605.6,
+        "tps_instance": 9689.62,
+        "qps_instance": 2.3656
       },
       "input_len": 131072,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 12.421,
-      "pd_ratio_actual": 12.0,
-      "prefill_instances": 12,
+      "pd_ratio_float": 11.048,
+      "pd_ratio_actual": 10.0,
+      "prefill_instances": 10,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 2.6981,
-      "decode_aggregate_qps": 2.7927,
-      "qps_imbalance": -0.094574,
-      "qps_imbalance_pct": 0.033865,
+      "prefill_aggregate_qps": 2.1412,
+      "decode_aggregate_qps": 2.3656,
+      "qps_imbalance": -0.224463,
+      "qps_imbalance_pct": 0.094885,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 208,
-      "label": "12P:1D"
+      "total_gpus_min": 176,
+      "label": "10P:1D"
     },
     "128K_4K_hit90": {
       "schema_version": 2,
@@ -824,9 +824,9 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 27301.53,
-        "tps_instance": 436824.43,
-        "qps_instance": 3.3327
+        "tps_per_gpu": 26531.6,
+        "tps_instance": 424505.6,
+        "qps_instance": 3.2387
       },
       "decode_config": {
         "tp": 2,
@@ -834,24 +834,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 714.93,
-        "tps_instance": 11438.89,
-        "qps_instance": 2.7927
+        "tps_per_gpu": 605.6,
+        "tps_instance": 9689.62,
+        "qps_instance": 2.3656
       },
       "input_len": 131072,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 0.838,
-      "pd_ratio_actual": 0.8,
-      "prefill_instances": 4,
-      "decode_instances": 5,
-      "prefill_aggregate_qps": 13.3308,
-      "decode_aggregate_qps": 13.9635,
-      "qps_imbalance": -0.632665,
-      "qps_imbalance_pct": 0.045309,
+      "pd_ratio_float": 0.73,
+      "pd_ratio_actual": 0.667,
+      "prefill_instances": 2,
+      "decode_instances": 3,
+      "prefill_aggregate_qps": 6.4774,
+      "decode_aggregate_qps": 7.0969,
+      "qps_imbalance": -0.619448,
+      "qps_imbalance_pct": 0.087284,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 144,
-      "label": "4P:5D"
+      "total_gpus_min": 80,
+      "label": "2P:3D"
     },
     "128K_4K_hit99": {
       "schema_version": 2,
@@ -861,9 +861,9 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 286362.74,
-        "tps_instance": 4581803.86,
-        "qps_instance": 34.9564
+        "tps_per_gpu": 278576.02,
+        "tps_instance": 4457216.27,
+        "qps_instance": 34.0059
       },
       "decode_config": {
         "tp": 2,
@@ -871,24 +871,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "tps_per_gpu": 714.93,
-        "tps_instance": 11438.89,
-        "qps_instance": 2.7927
+        "tps_per_gpu": 605.6,
+        "tps_instance": 9689.62,
+        "qps_instance": 2.3656
       },
       "input_len": 131072,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.08,
-      "pd_ratio_actual": 0.083,
+      "pd_ratio_float": 0.07,
+      "pd_ratio_actual": 0.077,
       "prefill_instances": 1,
-      "decode_instances": 12,
-      "prefill_aggregate_qps": 34.9564,
-      "decode_aggregate_qps": 33.5124,
-      "qps_imbalance": 1.444017,
-      "qps_imbalance_pct": 0.041309,
+      "decode_instances": 13,
+      "prefill_aggregate_qps": 34.0059,
+      "decode_aggregate_qps": 30.7532,
+      "qps_imbalance": 3.252672,
+      "qps_imbalance_pct": 0.09565,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 208,
-      "label": "1P:12D"
+      "total_gpus_min": 224,
+      "label": "1P:13D"
     },
     "256K_4K": {
       "schema_version": 2,
@@ -898,9 +898,9 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 16,
-        "tps_per_gpu": 1352.84,
-        "tps_instance": 21645.37,
-        "qps_instance": 0.0826
+        "tps_per_gpu": 1274.09,
+        "tps_instance": 20385.46,
+        "qps_instance": 0.0778
       },
       "decode_config": {
         "tp": 4,
@@ -908,24 +908,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "tps_per_gpu": 427.72,
-        "tps_instance": 13686.94,
-        "qps_instance": 3.3415
+        "tps_per_gpu": 359.28,
+        "tps_instance": 11496.89,
+        "qps_instance": 2.8069
       },
       "input_len": 262144,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 40.469,
-      "pd_ratio_actual": 37.0,
-      "prefill_instances": 37,
+      "pd_ratio_float": 36.094,
+      "pd_ratio_actual": 33.0,
+      "prefill_instances": 33,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 3.0551,
-      "decode_aggregate_qps": 3.3415,
-      "qps_imbalance": -0.286429,
-      "qps_imbalance_pct": 0.085718,
+      "prefill_aggregate_qps": 2.5662,
+      "decode_aggregate_qps": 2.8069,
+      "qps_imbalance": -0.240633,
+      "qps_imbalance_pct": 0.08573,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 624,
-      "label": "37P:1D"
+      "total_gpus_min": 560,
+      "label": "33P:1D"
     },
     "256K_4K_hit90": {
       "schema_version": 2,
@@ -935,9 +935,9 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 16,
-        "tps_per_gpu": 25915.07,
-        "tps_instance": 414641.08,
-        "qps_instance": 1.5817
+        "tps_per_gpu": 25104.54,
+        "tps_instance": 401672.59,
+        "qps_instance": 1.5323
       },
       "decode_config": {
         "tp": 4,
@@ -945,21 +945,21 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "tps_per_gpu": 427.72,
-        "tps_instance": 13686.94,
-        "qps_instance": 3.3415
+        "tps_per_gpu": 359.28,
+        "tps_instance": 11496.89,
+        "qps_instance": 2.8069
       },
       "input_len": 262144,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 2.113,
+      "pd_ratio_float": 1.832,
       "pd_ratio_actual": 2.0,
       "prefill_instances": 2,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 3.1635,
-      "decode_aggregate_qps": 3.3415,
-      "qps_imbalance": -0.178078,
-      "qps_imbalance_pct": 0.053292,
+      "prefill_aggregate_qps": 3.0645,
+      "decode_aggregate_qps": 2.8069,
+      "qps_imbalance": 0.257661,
+      "qps_imbalance_pct": 0.084079,
       "balance_tolerance": 0.1,
       "total_gpus_min": 64,
       "label": "2P:1D"
@@ -972,9 +972,9 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 16,
-        "tps_per_gpu": 285055.11,
-        "tps_instance": 4560881.72,
-        "qps_instance": 17.3984
+        "tps_per_gpu": 277283.42,
+        "tps_instance": 4436534.65,
+        "qps_instance": 16.924
       },
       "decode_config": {
         "tp": 4,
@@ -982,24 +982,24 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "tps_per_gpu": 427.72,
-        "tps_instance": 13686.94,
-        "qps_instance": 3.3415
+        "tps_per_gpu": 359.28,
+        "tps_instance": 11496.89,
+        "qps_instance": 2.8069
       },
       "input_len": 262144,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.192,
-      "pd_ratio_actual": 0.2,
+      "pd_ratio_float": 0.166,
+      "pd_ratio_actual": 0.167,
       "prefill_instances": 1,
-      "decode_instances": 5,
-      "prefill_aggregate_qps": 17.3984,
-      "decode_aggregate_qps": 16.7077,
-      "qps_imbalance": 0.690689,
-      "qps_imbalance_pct": 0.039698,
+      "decode_instances": 6,
+      "prefill_aggregate_qps": 16.924,
+      "decode_aggregate_qps": 16.8411,
+      "qps_imbalance": 0.082891,
+      "qps_imbalance_pct": 0.004898,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 176,
-      "label": "1P:5D"
+      "total_gpus_min": 208,
+      "label": "1P:6D"
     },
     "1M_4K": {
       "schema_version": 2,
@@ -1009,9 +1009,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "tps_per_gpu": 542.27,
-        "tps_instance": 8676.38,
-        "qps_instance": 0.0087
+        "tps_per_gpu": 501.45,
+        "tps_instance": 8023.17,
+        "qps_instance": 0.008
       },
       "decode_config": {
         "tp": 4,
@@ -1019,24 +1019,24 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 32,
-        "tps_per_gpu": 137.12,
-        "tps_instance": 4387.69,
-        "qps_instance": 1.0712
+        "tps_per_gpu": 111.59,
+        "tps_instance": 3571.02,
+        "qps_instance": 0.8718
       },
       "input_len": 1000000,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.0,
-      "pd_ratio_float": 123.463,
-      "pd_ratio_actual": 112.0,
-      "prefill_instances": 112,
+      "pd_ratio_float": 108.664,
+      "pd_ratio_actual": 98.0,
+      "prefill_instances": 98,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 0.9718,
-      "decode_aggregate_qps": 1.0712,
-      "qps_imbalance": -0.099458,
-      "qps_imbalance_pct": 0.092846,
+      "prefill_aggregate_qps": 0.7863,
+      "decode_aggregate_qps": 0.8718,
+      "qps_imbalance": -0.08556,
+      "qps_imbalance_pct": 0.098139,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 1824,
-      "label": "112P:1D"
+      "total_gpus_min": 1600,
+      "label": "98P:1D"
     },
     "1M_4K_hit90": {
       "schema_version": 2,
@@ -1046,9 +1046,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "tps_per_gpu": 20145.8,
-        "tps_instance": 322332.73,
-        "qps_instance": 0.3223
+        "tps_per_gpu": 19260.0,
+        "tps_instance": 308159.93,
+        "qps_instance": 0.3082
       },
       "decode_config": {
         "tp": 4,
@@ -1056,21 +1056,21 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 32,
-        "tps_per_gpu": 137.12,
-        "tps_instance": 4387.69,
-        "qps_instance": 1.0712
+        "tps_per_gpu": 111.59,
+        "tps_instance": 3571.02,
+        "qps_instance": 0.8718
       },
       "input_len": 1000000,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.9,
-      "pd_ratio_float": 3.323,
+      "pd_ratio_float": 2.829,
       "pd_ratio_actual": 3.0,
       "prefill_instances": 3,
       "decode_instances": 1,
-      "prefill_aggregate_qps": 0.967,
-      "decode_aggregate_qps": 1.0712,
-      "qps_imbalance": -0.104215,
-      "qps_imbalance_pct": 0.097286,
+      "prefill_aggregate_qps": 0.9245,
+      "decode_aggregate_qps": 0.8718,
+      "qps_imbalance": 0.052649,
+      "qps_imbalance_pct": 0.05695,
       "balance_tolerance": 0.1,
       "total_gpus_min": 80,
       "label": "3P:1D"
@@ -1083,9 +1083,9 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "tps_per_gpu": 276478.97,
-        "tps_instance": 4423663.57,
-        "qps_instance": 4.4237
+        "tps_per_gpu": 268843.15,
+        "tps_instance": 4301490.34,
+        "qps_instance": 4.3015
       },
       "decode_config": {
         "tp": 4,
@@ -1093,24 +1093,24 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 32,
-        "tps_per_gpu": 137.12,
-        "tps_instance": 4387.69,
-        "qps_instance": 1.0712
+        "tps_per_gpu": 111.59,
+        "tps_instance": 3571.02,
+        "qps_instance": 0.8718
       },
       "input_len": 1000000,
       "output_len": 4096,
       "prefix_cache_hit_rate": 0.99,
-      "pd_ratio_float": 0.242,
-      "pd_ratio_actual": 0.25,
+      "pd_ratio_float": 0.203,
+      "pd_ratio_actual": 0.2,
       "prefill_instances": 1,
-      "decode_instances": 4,
-      "prefill_aggregate_qps": 4.4237,
-      "decode_aggregate_qps": 4.2849,
-      "qps_imbalance": 0.138813,
-      "qps_imbalance_pct": 0.03138,
+      "decode_instances": 5,
+      "prefill_aggregate_qps": 4.3015,
+      "decode_aggregate_qps": 4.3592,
+      "qps_imbalance": -0.057663,
+      "qps_imbalance_pct": 0.013228,
       "balance_tolerance": 0.1,
-      "total_gpus_min": 144,
-      "label": "1P:4D"
+      "total_gpus_min": 176,
+      "label": "1P:5D"
     }
   }
 }

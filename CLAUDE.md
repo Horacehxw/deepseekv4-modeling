@@ -112,11 +112,11 @@ python param_search/analyze.py    # Analyze results and generate report
 **GPU formula:** `physical_gpus = TP * DP`, constraint `(TP*DP) % EP == 0`
 **Search grid:** TP ∈ {1..64}, EP ∈ {1..256}, DP ∈ {1..8}, BS ∈ {1..512}, seq ∈ {1K..32K}
 
-Key results (Ascend 910C, 8K/4K):
-- Best prefill latency: TP=8, EP=64, DP=8, BS=8 → 325ms (64 GPUs)
-- Best decode latency: TP=4, EP=32, DP=8, BS=8 → 19.4ms/step (32 GPUs)
-- Best prefill throughput: TP=8, EP=16, DP=2, BS=512 → 1,679 tps/gpu (16 GPUs)
-- Best decode throughput: TP=8, EP=16, DP=2, BS=512 → 307 tps/gpu (16 GPUs)
+Key results (Ascend 910C, 8K/4K, no prefix cache):
+- Best prefill latency: TP=8, EP=64, DP=8, BS=8 → 715.2ms (64 GPUs)
+- Best decode latency: TP=8, EP=64, DP=8, BS=8 → 36.1ms/step (64 GPUs)
+- Best prefill throughput: TP=2, EP=16, DP=8, BS=512 → 3,644 tps/gpu (16 GPUs)
+- Best decode throughput: TP=2, EP=16, DP=8, BS=512 → 322 tps/gpu (16 GPUs)
 
 4 serving combos analyzed: 8K/4K, 32K/4K, 128K/4K, 256K/4K.
 See `report/report_en.md` for detailed analysis and `param_search/report.md` for search details.

@@ -3,45 +3,45 @@
     "8K_4K": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 13.580138296254646,
-          "time_ms": 13580.138296254645,
-          "pct": 37.36,
+          "time_s": 16.975172870318247,
+          "time_ms": 16975.172870318245,
+          "pct": 23.0,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 3.4844129811221194,
-          "time_ms": 3484.412981122119,
-          "pct": 9.59,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 11.409300023769346,
+          "time_ms": 11409.300023769345,
+          "pct": 15.46,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 1.4507584849266386,
-          "time_ms": 1450.7584849266386,
-          "pct": 3.99,
+          "time_s": 1.8374075614093621,
+          "time_ms": 1837.4075614093622,
+          "pct": 2.49,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 1.8637299650194277,
-          "time_ms": 1863.7299650194277,
-          "pct": 5.13,
+          "time_s": 3.0947633246470962,
+          "time_ms": 3094.7633246470964,
+          "pct": 4.19,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 7.1821397618222065,
-          "time_ms": 7182.139761822206,
-          "pct": 19.76,
+          "time_s": 19.152372698192604,
+          "time_ms": 19152.372698192605,
+          "pct": 25.95,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.2514840425232341,
-          "time_ms": 251.48404252323408,
-          "pct": 0.69,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.36354906642962925,
+          "time_ms": 363.54906642962925,
+          "pct": 0.49,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 1.3850048719414494,
-          "time_ms": 1385.0048719414494,
-          "pct": 3.81,
+          "time_s": 1.791863782726806,
+          "time_ms": 1791.863782726806,
+          "pct": 2.43,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -51,65 +51,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 5.411104218775506,
-          "time_ms": 5411.1042187755065,
-          "pct": 14.89,
+          "time_s": 16.64327913469391,
+          "time_ms": 16643.27913469391,
+          "pct": 22.55,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.25948760746666694,
-          "time_ms": 259.48760746666693,
-          "pct": 0.71,
+          "time_s": 0.6919669532444455,
+          "time_ms": 691.9669532444454,
+          "pct": 0.94,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 1.4797203077386287,
-          "time_ms": 1479.7203077386287,
-          "pct": 4.07,
+          "time_s": 1.8538757575918046,
+          "time_ms": 1853.8757575918046,
+          "pct": 2.51,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.003594968177777772,
-          "time_ms": 3.5949681777777722,
-          "pct": 10.38,
+          "time_s": 0.010651757563786017,
+          "time_ms": 10.651757563786017,
+          "pct": 10.43,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.001042750577777778,
-          "time_ms": 1.042750577777778,
-          "pct": 3.01,
+          "time_s": 0.00617926268312757,
+          "time_ms": 6.17926268312757,
+          "pct": 6.05,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0006262784,
-          "time_ms": 0.6262784,
-          "pct": 1.81,
+          "time_s": 0.0011659571946414495,
+          "time_ms": 1.1659571946414495,
+          "pct": 1.14,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.0011469473523809516,
-          "time_ms": 1.1469473523809517,
-          "pct": 3.31,
+          "time_s": 0.0026140064127653795,
+          "time_ms": 2.6140064127653795,
+          "pct": 2.56,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.000876731777777777,
-          "time_ms": 0.876731777777777,
-          "pct": 2.53,
+          "time_s": 0.002597723786008229,
+          "time_ms": 2.597723786008229,
+          "pct": 2.54,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.925760000000007e-05,
-          "time_ms": 0.07925760000000007,
+          "time_s": 0.0002348373333333332,
+          "time_ms": 0.23483733333333318,
           "pct": 0.23,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.024089122133333363,
-          "time_ms": 24.089122133333362,
-          "pct": 69.53,
+          "time_s": 0.07177596993580224,
+          "time_ms": 71.77596993580224,
+          "pct": 70.3,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -119,21 +119,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0027511053061224423,
-          "time_ms": 2.7511053061224424,
-          "pct": 7.94,
+          "time_s": 0.004892631711146003,
+          "time_ms": 4.892631711146003,
+          "pct": 4.79,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 6.335146666666673e-05,
-          "time_ms": 0.06335146666666673,
-          "pct": 0.18,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008858378666666652,
+          "time_ms": 0.8858378666666652,
+          "pct": 0.87,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00037420373333333333,
-          "time_ms": 0.37420373333333334,
-          "pct": 1.08,
+          "time_s": 0.0011087518024691357,
+          "time_ms": 1.1087518024691356,
+          "pct": 1.09,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -141,45 +141,45 @@
     "8K_4K_hit90": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 1.3593400150059602,
-          "time_ms": 1359.3400150059601,
-          "pct": 38.4,
+          "time_s": 1.6991750187574426,
+          "time_ms": 1699.1750187574426,
+          "pct": 23.6,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.3487812030396219,
-          "time_ms": 348.7812030396219,
-          "pct": 9.85,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 1.1422311991764227,
+          "time_ms": 1142.2311991764227,
+          "pct": 15.87,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.14521680046297875,
-          "time_ms": 145.21680046297874,
-          "pct": 4.1,
+          "time_s": 0.1842394800340425,
+          "time_ms": 184.23948003404251,
+          "pct": 2.56,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.08547374396498482,
-          "time_ms": 85.47374396498482,
-          "pct": 2.41,
+          "time_s": 0.1163245226293405,
+          "time_ms": 116.32452262934049,
+          "pct": 1.62,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.7189153621777783,
-          "time_ms": 718.9153621777783,
-          "pct": 20.31,
+          "time_s": 1.9171076324740695,
+          "time_ms": 1917.1076324740695,
+          "pct": 26.63,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.025172963240851047,
-          "time_ms": 25.172963240851047,
-          "pct": 0.71,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.03654068906666665,
+          "time_ms": 36.54068906666665,
+          "pct": 0.51,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.13863574157616984,
-          "time_ms": 138.63574157616983,
-          "pct": 3.92,
+          "time_s": 0.17936136497021346,
+          "time_ms": 179.36136497021346,
+          "pct": 2.49,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -189,65 +189,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.5443565551020395,
-          "time_ms": 544.3565551020395,
-          "pct": 15.38,
+          "time_s": 1.6686709387755063,
+          "time_ms": 1668.6709387755063,
+          "pct": 23.18,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.025974101333333367,
-          "time_ms": 25.97410133333337,
-          "pct": 0.73,
+          "time_s": 0.06926427022222237,
+          "time_ms": 69.26427022222236,
+          "pct": 0.96,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.14811653471016548,
-          "time_ms": 148.11653471016547,
-          "pct": 4.18,
+          "time_s": 0.18556861831363278,
+          "time_ms": 185.56861831363278,
+          "pct": 2.58,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.003594968177777772,
-          "time_ms": 3.5949681777777722,
-          "pct": 10.38,
+          "time_s": 0.010651757563786017,
+          "time_ms": 10.651757563786017,
+          "pct": 10.43,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.001042750577777778,
-          "time_ms": 1.042750577777778,
-          "pct": 3.01,
+          "time_s": 0.00617926268312757,
+          "time_ms": 6.17926268312757,
+          "pct": 6.05,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0006262784,
-          "time_ms": 0.6262784,
-          "pct": 1.81,
+          "time_s": 0.0011659571946414495,
+          "time_ms": 1.1659571946414495,
+          "pct": 1.14,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.0011469473523809516,
-          "time_ms": 1.1469473523809517,
-          "pct": 3.31,
+          "time_s": 0.0026140064127653795,
+          "time_ms": 2.6140064127653795,
+          "pct": 2.56,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.000876731777777777,
-          "time_ms": 0.876731777777777,
-          "pct": 2.53,
+          "time_s": 0.002597723786008229,
+          "time_ms": 2.597723786008229,
+          "pct": 2.54,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.925760000000007e-05,
-          "time_ms": 0.07925760000000007,
+          "time_s": 0.0002348373333333332,
+          "time_ms": 0.23483733333333318,
           "pct": 0.23,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.024089122133333363,
-          "time_ms": 24.089122133333362,
-          "pct": 69.53,
+          "time_s": 0.07177596993580224,
+          "time_ms": 71.77596993580224,
+          "pct": 70.3,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -257,21 +257,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0027511053061224423,
-          "time_ms": 2.7511053061224424,
-          "pct": 7.94,
+          "time_s": 0.004892631711146003,
+          "time_ms": 4.892631711146003,
+          "pct": 4.79,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 6.335146666666673e-05,
-          "time_ms": 0.06335146666666673,
-          "pct": 0.18,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008858378666666652,
+          "time_ms": 0.8858378666666652,
+          "pct": 0.87,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00037420373333333333,
-          "time_ms": 0.37420373333333334,
-          "pct": 1.08,
+          "time_s": 0.0011087518024691357,
+          "time_ms": 1.1087518024691356,
+          "pct": 1.09,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -279,45 +279,45 @@
     "8K_4K_hit99": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 0.13593400150059565,
-          "time_ms": 135.93400150059566,
-          "pct": 36.89,
+          "time_s": 0.16991750187574503,
+          "time_ms": 169.91750187574502,
+          "pct": 21.96,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.03487757417062885,
-          "time_ms": 34.877574170628854,
-          "pct": 9.46,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.11440920720653103,
+          "time_ms": 114.40920720653102,
+          "pct": 14.79,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.014520556347914907,
-          "time_ms": 14.520556347914907,
-          "pct": 3.94,
+          "time_s": 0.01851564624340426,
+          "time_ms": 18.51564624340426,
+          "pct": 2.39,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.008448732228474165,
-          "time_ms": 8.448732228474165,
-          "pct": 2.29,
+          "time_s": 0.011647034395290565,
+          "time_ms": 11.647034395290564,
+          "pct": 1.51,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.07189154137777787,
-          "time_ms": 71.89154137777787,
-          "pct": 19.51,
+          "time_s": 0.19171077700740718,
+          "time_ms": 191.7107770074072,
+          "pct": 24.78,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.0025172963240851086,
-          "time_ms": 2.5172963240851085,
-          "pct": 0.68,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.003804364800000002,
+          "time_ms": 3.8043648000000023,
+          "pct": 0.49,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.025760290133333384,
-          "time_ms": 25.760290133333385,
-          "pct": 6.99,
+          "time_s": 0.06869410702222221,
+          "time_ms": 68.69410702222221,
+          "pct": 8.88,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -327,65 +327,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.05715365551020397,
-          "time_ms": 57.15365551020397,
-          "pct": 15.51,
+          "time_s": 0.16958509387755075,
+          "time_ms": 169.58509387755075,
+          "pct": 21.92,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.002597410133333333,
-          "time_ms": 2.5974101333333333,
-          "pct": 0.7,
+          "time_s": 0.006926427022222231,
+          "time_ms": 6.926427022222231,
+          "pct": 0.9,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.014811653471016548,
-          "time_ms": 14.811653471016548,
-          "pct": 4.02,
+          "time_s": 0.018556861831363278,
+          "time_ms": 18.55686183136328,
+          "pct": 2.4,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.003594968177777772,
-          "time_ms": 3.5949681777777722,
-          "pct": 10.38,
+          "time_s": 0.010651757563786017,
+          "time_ms": 10.651757563786017,
+          "pct": 10.43,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.001042750577777778,
-          "time_ms": 1.042750577777778,
-          "pct": 3.01,
+          "time_s": 0.00617926268312757,
+          "time_ms": 6.17926268312757,
+          "pct": 6.05,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0006262784,
-          "time_ms": 0.6262784,
-          "pct": 1.81,
+          "time_s": 0.0011659571946414495,
+          "time_ms": 1.1659571946414495,
+          "pct": 1.14,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.0011469473523809516,
-          "time_ms": 1.1469473523809517,
-          "pct": 3.31,
+          "time_s": 0.0026140064127653795,
+          "time_ms": 2.6140064127653795,
+          "pct": 2.56,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.000876731777777777,
-          "time_ms": 0.876731777777777,
-          "pct": 2.53,
+          "time_s": 0.002597723786008229,
+          "time_ms": 2.597723786008229,
+          "pct": 2.54,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.925760000000007e-05,
-          "time_ms": 0.07925760000000007,
+          "time_s": 0.0002348373333333332,
+          "time_ms": 0.23483733333333318,
           "pct": 0.23,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.024089122133333363,
-          "time_ms": 24.089122133333362,
-          "pct": 69.53,
+          "time_s": 0.07177596993580224,
+          "time_ms": 71.77596993580224,
+          "pct": 70.3,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -395,21 +395,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0027511053061224423,
-          "time_ms": 2.7511053061224424,
-          "pct": 7.94,
+          "time_s": 0.004892631711146003,
+          "time_ms": 4.892631711146003,
+          "pct": 4.79,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 6.335146666666673e-05,
-          "time_ms": 0.06335146666666673,
-          "pct": 0.18,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008858378666666652,
+          "time_ms": 0.8858378666666652,
+          "pct": 0.87,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00037420373333333333,
-          "time_ms": 0.37420373333333334,
-          "pct": 1.08,
+          "time_s": 0.0011087518024691357,
+          "time_ms": 1.1087518024691356,
+          "pct": 1.09,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -417,45 +417,45 @@
     "32K_4K": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 27.16027659250929,
-          "time_ms": 27160.27659250929,
-          "pct": 33.8,
+          "time_s": 33.95034574063649,
+          "time_ms": 33950.34574063649,
+          "pct": 21.13,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 7.885781430572181,
-          "time_ms": 7885.781430572181,
-          "pct": 9.81,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 22.8183900475387,
+          "time_ms": 22818.390047538698,
+          "pct": 14.2,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 2.9015169698532772,
-          "time_ms": 2901.5169698532773,
-          "pct": 3.61,
+          "time_s": 3.6744051228187224,
+          "time_ms": 3674.4051228187222,
+          "pct": 2.29,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 10.485122015500448,
-          "time_ms": 10485.122015500448,
-          "pct": 13.05,
+          "time_s": 19.253302300427674,
+          "time_ms": 19253.302300427673,
+          "pct": 11.98,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 14.36427951791108,
-          "time_ms": 14364.27951791108,
-          "pct": 17.87,
+          "time_s": 38.30474538109632,
+          "time_ms": 38304.74538109632,
+          "pct": 23.84,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.5029680850464682,
-          "time_ms": 502.96808504646816,
-          "pct": 0.63,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.7269311374222228,
+          "time_ms": 726.9311374222228,
+          "pct": 0.45,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 2.770009743882899,
-          "time_ms": 2770.009743882899,
-          "pct": 3.45,
+          "time_s": 3.583727565453612,
+          "time_ms": 3583.727565453612,
+          "pct": 2.23,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -465,65 +465,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 10.819188437551023,
-          "time_ms": 10819.188437551024,
-          "pct": 13.46,
+          "time_s": 33.28353826938767,
+          "time_ms": 33283.53826938767,
+          "pct": 20.71,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.5189752149333339,
-          "time_ms": 518.9752149333339,
-          "pct": 0.65,
+          "time_s": 1.383933906488891,
+          "time_ms": 1383.933906488891,
+          "pct": 0.86,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 2.9594406154772575,
-          "time_ms": 2959.4406154772573,
-          "pct": 3.68,
+          "time_s": 3.707751515183609,
+          "time_ms": 3707.751515183609,
+          "pct": 2.31,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0020137301333333314,
-          "time_ms": 2.0137301333333313,
-          "pct": 8.05,
+          "time_s": 0.005966607802469129,
+          "time_ms": 5.966607802469129,
+          "pct": 8.68,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.0010951793777777775,
-          "time_ms": 1.0951793777777776,
-          "pct": 4.38,
+          "time_s": 0.006489951868312756,
+          "time_ms": 6.4899518683127555,
+          "pct": 9.44,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0006262784,
-          "time_ms": 0.6262784,
-          "pct": 2.5,
+          "time_s": 0.0011659571946414495,
+          "time_ms": 1.1659571946414495,
+          "pct": 1.7,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.0034968499809523764,
-          "time_ms": 3.4968499809523763,
-          "pct": 13.97,
+          "time_s": 0.007937705927078223,
+          "time_ms": 7.937705927078223,
+          "pct": 11.54,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.000876731777777777,
-          "time_ms": 0.876731777777777,
-          "pct": 3.5,
+          "time_s": 0.002597723786008229,
+          "time_ms": 2.597723786008229,
+          "pct": 3.78,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.925760000000007e-05,
-          "time_ms": 0.07925760000000007,
-          "pct": 0.32,
+          "time_s": 0.0002348373333333332,
+          "time_ms": 0.23483733333333318,
+          "pct": 0.34,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012044561066666681,
-          "time_ms": 12.044561066666681,
-          "pct": 48.14,
+          "time_s": 0.03610298496790113,
+          "time_ms": 36.10298496790113,
+          "pct": 52.51,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -533,21 +533,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.004539023673469391,
-          "time_ms": 4.539023673469391,
-          "pct": 18.14,
+          "time_s": 0.006821611302982716,
+          "time_ms": 6.821611302982716,
+          "pct": 9.92,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 6.335146666666673e-05,
-          "time_ms": 0.06335146666666673,
-          "pct": 0.25,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008858378666666652,
+          "time_ms": 0.8858378666666652,
+          "pct": 1.29,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018746595555555555,
-          "time_ms": 0.18746595555555554,
-          "pct": 0.75,
+          "time_s": 0.0005554546831275719,
+          "time_ms": 0.555454683127572,
+          "pct": 0.81,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -555,45 +555,45 @@
     "32K_4K_hit90": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 2.716193432423488,
-          "time_ms": 2716.193432423488,
-          "pct": 38.05,
+          "time_s": 3.3952417905293597,
+          "time_ms": 3395.2417905293596,
+          "pct": 23.4,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.6969248567847938,
-          "time_ms": 696.9248567847937,
-          "pct": 9.76,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 2.282165815724181,
+          "time_ms": 2282.165815724181,
+          "pct": 15.73,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.2901688569245958,
-          "time_ms": 290.16885692459584,
-          "pct": 4.07,
+          "time_s": 0.3677941757685106,
+          "time_ms": 367.79417576851057,
+          "pct": 2.54,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.23791284342638297,
-          "time_ms": 237.91284342638298,
-          "pct": 3.33,
+          "time_s": 0.35900932833137733,
+          "time_ms": 359.00932833137733,
+          "pct": 2.47,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 1.436515629555555,
-          "time_ms": 1436.515629555555,
-          "pct": 20.13,
+          "time_s": 3.8307083454814874,
+          "time_ms": 3830.7083454814874,
+          "pct": 26.41,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.050299878378212794,
-          "time_ms": 50.299878378212796,
-          "pct": 0.7,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.07284784545185184,
+          "time_ms": 72.84784545185184,
+          "pct": 0.5,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.27701788118604237,
-          "time_ms": 277.01788118604236,
-          "pct": 3.88,
+          "time_s": 0.35839462988255244,
+          "time_ms": 358.39462988255247,
+          "pct": 2.47,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -603,65 +603,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 1.084702860408164,
-          "time_ms": 1084.702860408164,
-          "pct": 15.2,
+          "time_s": 3.331274955102046,
+          "time_ms": 3331.274955102046,
+          "pct": 22.96,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.051900689066666734,
-          "time_ms": 51.900689066666736,
-          "pct": 0.73,
+          "time_s": 0.13840183751111088,
+          "time_ms": 138.40183751111087,
+          "pct": 0.95,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.29596212453976356,
-          "time_ms": 295.9621245397636,
-          "pct": 4.15,
+          "time_s": 0.3707977818376675,
+          "time_ms": 370.79778183766746,
+          "pct": 2.56,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0020137301333333314,
-          "time_ms": 2.0137301333333313,
-          "pct": 8.05,
+          "time_s": 0.005966607802469129,
+          "time_ms": 5.966607802469129,
+          "pct": 8.68,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.0010951793777777775,
-          "time_ms": 1.0951793777777776,
-          "pct": 4.38,
+          "time_s": 0.006489951868312756,
+          "time_ms": 6.4899518683127555,
+          "pct": 9.44,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0006262784,
-          "time_ms": 0.6262784,
-          "pct": 2.5,
+          "time_s": 0.0011659571946414495,
+          "time_ms": 1.1659571946414495,
+          "pct": 1.7,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.0034968499809523764,
-          "time_ms": 3.4968499809523763,
-          "pct": 13.97,
+          "time_s": 0.007937705927078223,
+          "time_ms": 7.937705927078223,
+          "pct": 11.54,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.000876731777777777,
-          "time_ms": 0.876731777777777,
-          "pct": 3.5,
+          "time_s": 0.002597723786008229,
+          "time_ms": 2.597723786008229,
+          "pct": 3.78,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.925760000000007e-05,
-          "time_ms": 0.07925760000000007,
-          "pct": 0.32,
+          "time_s": 0.0002348373333333332,
+          "time_ms": 0.23483733333333318,
+          "pct": 0.34,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012044561066666681,
-          "time_ms": 12.044561066666681,
-          "pct": 48.14,
+          "time_s": 0.03610298496790113,
+          "time_ms": 36.10298496790113,
+          "pct": 52.51,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -671,21 +671,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.004539023673469391,
-          "time_ms": 4.539023673469391,
-          "pct": 18.14,
+          "time_s": 0.006821611302982716,
+          "time_ms": 6.821611302982716,
+          "pct": 9.92,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 6.335146666666673e-05,
-          "time_ms": 0.06335146666666673,
-          "pct": 0.25,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008858378666666652,
+          "time_ms": 0.8858378666666652,
+          "pct": 1.29,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018746595555555555,
-          "time_ms": 0.18746595555555554,
-          "pct": 0.75,
+          "time_s": 0.0005554546831275719,
+          "time_ms": 0.555454683127572,
+          "pct": 0.81,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -693,46 +693,46 @@
     "32K_4K_hit99": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 0.2718680030011913,
-          "time_ms": 271.8680030011913,
-          "pct": 38.28,
+          "time_s": 0.33983500375149006,
+          "time_ms": 339.83500375149004,
+          "pct": 22.96,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.06975605856347993,
-          "time_ms": 69.75605856347993,
-          "pct": 9.82,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.22861326893158068,
+          "time_ms": 228.61326893158068,
+          "pct": 15.45,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.02904300382774468,
-          "time_ms": 29.04300382774468,
-          "pct": 4.09,
+          "time_s": 0.03715144288680851,
+          "time_ms": 37.15144288680851,
+          "pct": 2.51,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.016602845661244172,
-          "time_ms": 16.60284566124417,
-          "pct": 2.34,
+          "time_s": 0.02303607226799263,
+          "time_ms": 23.03607226799263,
+          "pct": 1.56,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.14378307702222212,
-          "time_ms": 143.78307702222213,
-          "pct": 20.25,
+          "time_s": 0.3834215387259266,
+          "time_ms": 383.4215387259266,
+          "pct": 25.91,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.005034592648170217,
-          "time_ms": 5.034592648170217,
-          "pct": 0.71,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0074417341629629645,
+          "time_ms": 7.441734162962964,
+          "pct": 0.5,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.027975384390808555,
-          "time_ms": 27.975384390808554,
-          "pct": 3.94,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.07326196622222216,
+          "time_ms": 73.26196622222216,
+          "pct": 4.95,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
           "time_s": 0.0,
@@ -741,65 +741,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.1112873110204082,
-          "time_ms": 111.2873110204082,
-          "pct": 15.67,
+          "time_s": 0.3361501877551015,
+          "time_ms": 336.1501877551015,
+          "pct": 22.71,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.005194820266666666,
-          "time_ms": 5.1948202666666665,
-          "pct": 0.73,
+          "time_s": 0.013852854044444462,
+          "time_ms": 13.852854044444461,
+          "pct": 0.94,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.029623306942033096,
-          "time_ms": 29.623306942033096,
-          "pct": 4.17,
+          "time_s": 0.037113723662726555,
+          "time_ms": 37.11372366272656,
+          "pct": 2.51,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0020137301333333314,
-          "time_ms": 2.0137301333333313,
-          "pct": 8.05,
+          "time_s": 0.005966607802469129,
+          "time_ms": 5.966607802469129,
+          "pct": 8.68,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.0010951793777777775,
-          "time_ms": 1.0951793777777776,
-          "pct": 4.38,
+          "time_s": 0.006489951868312756,
+          "time_ms": 6.4899518683127555,
+          "pct": 9.44,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0006262784,
-          "time_ms": 0.6262784,
-          "pct": 2.5,
+          "time_s": 0.0011659571946414495,
+          "time_ms": 1.1659571946414495,
+          "pct": 1.7,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.0034968499809523764,
-          "time_ms": 3.4968499809523763,
-          "pct": 13.97,
+          "time_s": 0.007937705927078223,
+          "time_ms": 7.937705927078223,
+          "pct": 11.54,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.000876731777777777,
-          "time_ms": 0.876731777777777,
-          "pct": 3.5,
+          "time_s": 0.002597723786008229,
+          "time_ms": 2.597723786008229,
+          "pct": 3.78,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.925760000000007e-05,
-          "time_ms": 0.07925760000000007,
-          "pct": 0.32,
+          "time_s": 0.0002348373333333332,
+          "time_ms": 0.23483733333333318,
+          "pct": 0.34,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012044561066666681,
-          "time_ms": 12.044561066666681,
-          "pct": 48.14,
+          "time_s": 0.03610298496790113,
+          "time_ms": 36.10298496790113,
+          "pct": 52.51,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -809,21 +809,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.004539023673469391,
-          "time_ms": 4.539023673469391,
-          "pct": 18.14,
+          "time_s": 0.006821611302982716,
+          "time_ms": 6.821611302982716,
+          "pct": 9.92,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 6.335146666666673e-05,
-          "time_ms": 0.06335146666666673,
-          "pct": 0.25,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008858378666666652,
+          "time_ms": 0.8858378666666652,
+          "pct": 1.29,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018746595555555555,
-          "time_ms": 0.18746595555555554,
-          "pct": 0.75,
+          "time_s": 0.0005554546831275719,
+          "time_ms": 0.555454683127572,
+          "pct": 0.81,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -831,45 +831,45 @@
     "128K_4K": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 27.16027659250929,
-          "time_ms": 27160.27659250929,
-          "pct": 24.03,
+          "time_s": 33.95034574063649,
+          "time_ms": 33950.34574063649,
+          "pct": 15.39,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 13.500308891556012,
-          "time_ms": 13500.308891556011,
-          "pct": 11.95,
+          "time_s": 30.32194328749255,
+          "time_ms": 30321.94328749255,
+          "pct": 13.74,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 2.9015169698532772,
-          "time_ms": 2901.5169698532773,
-          "pct": 2.57,
+          "time_s": 3.6744051228187224,
+          "time_ms": 3674.4051228187222,
+          "pct": 1.67,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 37.51745035734684,
-          "time_ms": 37517.45035734684,
-          "pct": 33.2,
+          "time_s": 71.66805973973204,
+          "time_ms": 71668.05973973204,
+          "pct": 32.49,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 14.36427951791108,
-          "time_ms": 14364.27951791108,
-          "pct": 12.71,
+          "time_s": 38.30474538109632,
+          "time_ms": 38304.74538109632,
+          "pct": 17.36,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.5029680850464682,
-          "time_ms": 502.96808504646816,
-          "pct": 0.45,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.7269311374222228,
+          "time_ms": 726.9311374222228,
+          "pct": 0.33,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 2.770009743882899,
-          "time_ms": 2770.009743882899,
-          "pct": 2.45,
+          "time_s": 3.583727565453612,
+          "time_ms": 3583.727565453612,
+          "pct": 1.62,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -879,65 +879,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 10.819188437551023,
-          "time_ms": 10819.188437551024,
-          "pct": 9.57,
+          "time_s": 33.28353826938767,
+          "time_ms": 33283.53826938767,
+          "pct": 15.09,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.5189752149333339,
-          "time_ms": 518.9752149333339,
-          "pct": 0.46,
+          "time_s": 1.383933906488891,
+          "time_ms": 1383.933906488891,
+          "pct": 0.63,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 2.9594406154772575,
-          "time_ms": 2959.4406154772573,
-          "pct": 2.62,
+          "time_s": 3.707751515183609,
+          "time_ms": 3707.751515183609,
+          "pct": 1.68,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.001946214399999998,
-          "time_ms": 1.946214399999998,
-          "pct": 7.22,
+          "time_s": 0.00576656118518518,
+          "time_ms": 5.7665611851851795,
+          "pct": 8.11,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.0006640981333333331,
-          "time_ms": 0.6640981333333331,
-          "pct": 2.46,
+          "time_s": 0.00393539634567901,
+          "time_ms": 3.9353963456790098,
+          "pct": 5.54,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0004937272888888888,
-          "time_ms": 0.49372728888888884,
-          "pct": 1.83,
+          "time_s": 0.0011007789300411523,
+          "time_ms": 1.1007789300411523,
+          "pct": 1.55,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.007087135216326534,
-          "time_ms": 7.087135216326534,
-          "pct": 26.31,
+          "time_s": 0.01612563347437587,
+          "time_ms": 16.125633474375867,
+          "pct": 22.68,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.0004383687555555561,
-          "time_ms": 0.4383687555555561,
-          "pct": 1.63,
+          "time_s": 0.0013197340922511157,
+          "time_ms": 1.3197340922511158,
+          "pct": 1.86,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.094044444444453e-05,
-          "time_ms": 0.07094044444444453,
-          "pct": 0.26,
+          "time_s": 0.00021019390946502037,
+          "time_ms": 0.21019390946502037,
+          "pct": 0.3,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012034116266666662,
-          "time_ms": 12.034116266666661,
-          "pct": 44.67,
+          "time_s": 0.0360793391012346,
+          "time_ms": 36.0793391012346,
+          "pct": 50.75,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -947,21 +947,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0039895118367346905,
-          "time_ms": 3.9895118367346907,
-          "pct": 14.81,
+          "time_s": 0.005130805651491361,
+          "time_ms": 5.130805651491361,
+          "pct": 7.22,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.1675733333333366e-05,
-          "time_ms": 0.031675733333333365,
-          "pct": 0.12,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008779189333333348,
+          "time_ms": 0.8779189333333348,
+          "pct": 1.23,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018566542222222222,
-          "time_ms": 0.18566542222222224,
-          "pct": 0.69,
+          "time_s": 0.000550119769547325,
+          "time_ms": 0.550119769547325,
+          "pct": 0.77,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -969,45 +969,45 @@
     "128K_4K_hit90": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 2.716193432423488,
-          "time_ms": 2716.193432423488,
-          "pct": 36.67,
+          "time_s": 3.3952417905293597,
+          "time_ms": 3395.2417905293596,
+          "pct": 22.59,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.6969250843403496,
-          "time_ms": 696.9250843403496,
-          "pct": 9.41,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 2.28216702935381,
+          "time_ms": 2282.16702935381,
+          "pct": 15.19,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.290169315981617,
-          "time_ms": 290.169315981617,
-          "pct": 3.92,
+          "time_s": 0.3678257277685106,
+          "time_ms": 367.8257277685106,
+          "pct": 2.45,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.5082966301158425,
-          "time_ms": 508.29663011584245,
-          "pct": 6.86,
+          "time_s": 0.8806777310499155,
+          "time_ms": 880.6777310499156,
+          "pct": 5.86,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 1.436515629555555,
-          "time_ms": 1436.515629555555,
-          "pct": 19.39,
+          "time_s": 3.8307083454814874,
+          "time_ms": 3830.7083454814874,
+          "pct": 25.49,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.050299878378212794,
-          "time_ms": 50.299878378212796,
-          "pct": 0.68,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.07284784545185184,
+          "time_ms": 72.84784545185184,
+          "pct": 0.48,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.27701788118604237,
-          "time_ms": 277.01788118604236,
-          "pct": 3.74,
+          "time_s": 0.35839462988255244,
+          "time_ms": 358.39462988255247,
+          "pct": 2.38,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -1017,65 +1017,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 1.084702860408164,
-          "time_ms": 1084.702860408164,
-          "pct": 14.64,
+          "time_s": 3.331274955102046,
+          "time_ms": 3331.274955102046,
+          "pct": 22.17,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.051900689066666734,
-          "time_ms": 51.900689066666736,
-          "pct": 0.7,
+          "time_s": 0.13840183751111088,
+          "time_ms": 138.40183751111087,
+          "pct": 0.92,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.29596212453976356,
-          "time_ms": 295.9621245397636,
-          "pct": 4.0,
+          "time_s": 0.3707977818376675,
+          "time_ms": 370.79778183766746,
+          "pct": 2.47,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.001946214399999998,
-          "time_ms": 1.946214399999998,
-          "pct": 7.22,
+          "time_s": 0.00576656118518518,
+          "time_ms": 5.7665611851851795,
+          "pct": 8.11,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.0006640981333333331,
-          "time_ms": 0.6640981333333331,
-          "pct": 2.46,
+          "time_s": 0.00393539634567901,
+          "time_ms": 3.9353963456790098,
+          "pct": 5.54,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0004937272888888888,
-          "time_ms": 0.49372728888888884,
-          "pct": 1.83,
+          "time_s": 0.0011007789300411523,
+          "time_ms": 1.1007789300411523,
+          "pct": 1.55,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.007087135216326534,
-          "time_ms": 7.087135216326534,
-          "pct": 26.31,
+          "time_s": 0.01612563347437587,
+          "time_ms": 16.125633474375867,
+          "pct": 22.68,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.0004383687555555561,
-          "time_ms": 0.4383687555555561,
-          "pct": 1.63,
+          "time_s": 0.0013197340922511157,
+          "time_ms": 1.3197340922511158,
+          "pct": 1.86,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.094044444444453e-05,
-          "time_ms": 0.07094044444444453,
-          "pct": 0.26,
+          "time_s": 0.00021019390946502037,
+          "time_ms": 0.21019390946502037,
+          "pct": 0.3,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012034116266666662,
-          "time_ms": 12.034116266666661,
-          "pct": 44.67,
+          "time_s": 0.0360793391012346,
+          "time_ms": 36.0793391012346,
+          "pct": 50.75,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1085,21 +1085,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0039895118367346905,
-          "time_ms": 3.9895118367346907,
-          "pct": 14.81,
+          "time_s": 0.005130805651491361,
+          "time_ms": 5.130805651491361,
+          "pct": 7.22,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.1675733333333366e-05,
-          "time_ms": 0.031675733333333365,
-          "pct": 0.12,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008779189333333348,
+          "time_ms": 0.8779189333333348,
+          "pct": 1.23,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018566542222222222,
-          "time_ms": 0.18566542222222224,
-          "pct": 0.69,
+          "time_s": 0.000550119769547325,
+          "time_ms": 0.550119769547325,
+          "pct": 0.77,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -1107,46 +1107,46 @@
     "128K_4K_hit99": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 0.27166078653549003,
-          "time_ms": 271.66078653549005,
-          "pct": 38.17,
+          "time_s": 0.3395759831693605,
+          "time_ms": 339.5759831693605,
+          "pct": 22.91,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.06970311908523878,
-          "time_ms": 69.70311908523878,
-          "pct": 9.79,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.2284403984038833,
+          "time_ms": 228.4403984038833,
+          "pct": 15.41,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.02902130378621276,
-          "time_ms": 29.02130378621276,
-          "pct": 4.08,
+          "time_s": 0.037153359128510643,
+          "time_ms": 37.153359128510644,
+          "pct": 2.51,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.01876000425071125,
-          "time_ms": 18.76000425071125,
-          "pct": 2.64,
+          "time_s": 0.026246769826852815,
+          "time_ms": 26.246769826852816,
+          "pct": 1.77,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.14367348626666662,
-          "time_ms": 143.67348626666663,
-          "pct": 20.18,
+          "time_s": 0.3831292967111114,
+          "time_ms": 383.1292967111114,
+          "pct": 25.85,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.00503075530621277,
-          "time_ms": 5.03075530621277,
-          "pct": 0.71,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.007436189392592596,
+          "time_ms": 7.4361893925925955,
+          "pct": 0.5,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.027955340440510613,
-          "time_ms": 27.955340440510614,
-          "pct": 3.93,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.07325500302222204,
+          "time_ms": 73.25500302222204,
+          "pct": 4.94,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
           "time_s": 0.0,
@@ -1155,65 +1155,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.1112047902040817,
-          "time_ms": 111.20479020408169,
-          "pct": 15.62,
+          "time_s": 0.3358962775510196,
+          "time_ms": 335.8962775510196,
+          "pct": 22.66,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.005190860799999994,
-          "time_ms": 5.190860799999993,
-          "pct": 0.73,
+          "time_s": 0.013842295466666644,
+          "time_ms": 13.842295466666643,
+          "pct": 0.93,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.029600728201985813,
-          "time_ms": 29.600728201985813,
-          "pct": 4.16,
+          "time_s": 0.03708543576359338,
+          "time_ms": 37.08543576359338,
+          "pct": 2.5,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.001946214399999998,
-          "time_ms": 1.946214399999998,
-          "pct": 7.22,
+          "time_s": 0.00576656118518518,
+          "time_ms": 5.7665611851851795,
+          "pct": 8.11,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.0006640981333333331,
-          "time_ms": 0.6640981333333331,
-          "pct": 2.46,
+          "time_s": 0.00393539634567901,
+          "time_ms": 3.9353963456790098,
+          "pct": 5.54,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0004937272888888888,
-          "time_ms": 0.49372728888888884,
-          "pct": 1.83,
+          "time_s": 0.0011007789300411523,
+          "time_ms": 1.1007789300411523,
+          "pct": 1.55,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.007087135216326534,
-          "time_ms": 7.087135216326534,
-          "pct": 26.31,
+          "time_s": 0.01612563347437587,
+          "time_ms": 16.125633474375867,
+          "pct": 22.68,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.0004383687555555561,
-          "time_ms": 0.4383687555555561,
-          "pct": 1.63,
+          "time_s": 0.0013197340922511157,
+          "time_ms": 1.3197340922511158,
+          "pct": 1.86,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 7.094044444444453e-05,
-          "time_ms": 0.07094044444444453,
-          "pct": 0.26,
+          "time_s": 0.00021019390946502037,
+          "time_ms": 0.21019390946502037,
+          "pct": 0.3,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012034116266666662,
-          "time_ms": 12.034116266666661,
-          "pct": 44.67,
+          "time_s": 0.0360793391012346,
+          "time_ms": 36.0793391012346,
+          "pct": 50.75,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1223,21 +1223,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0039895118367346905,
-          "time_ms": 3.9895118367346907,
-          "pct": 14.81,
+          "time_s": 0.005130805651491361,
+          "time_ms": 5.130805651491361,
+          "pct": 7.22,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.1675733333333366e-05,
-          "time_ms": 0.031675733333333365,
-          "pct": 0.12,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008779189333333348,
+          "time_ms": 0.8779189333333348,
+          "pct": 1.23,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018566542222222222,
-          "time_ms": 0.18566542222222224,
-          "pct": 0.69,
+          "time_s": 0.000550119769547325,
+          "time_ms": 0.550119769547325,
+          "pct": 0.77,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -1245,45 +1245,45 @@
     "256K_4K": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 27.16027659250929,
-          "time_ms": 27160.27659250929,
-          "pct": 17.35,
+          "time_s": 33.95034574063649,
+          "time_ms": 33950.34574063649,
+          "pct": 11.2,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 20.98634550620111,
-          "time_ms": 20986.345506201113,
-          "pct": 13.41,
+          "time_s": 42.91624951589088,
+          "time_ms": 42916.249515890886,
+          "pct": 14.15,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 2.9015169698532772,
-          "time_ms": 2901.5169698532773,
-          "pct": 1.85,
+          "time_s": 3.6744051228187224,
+          "time_ms": 3674.4051228187222,
+          "pct": 1.21,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 73.56055481314202,
-          "time_ms": 73560.55481314202,
-          "pct": 46.99,
+          "time_s": 141.69333173415637,
+          "time_ms": 141693.33173415638,
+          "pct": 46.73,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 14.36427951791108,
-          "time_ms": 14364.27951791108,
-          "pct": 9.18,
+          "time_s": 38.30474538109632,
+          "time_ms": 38304.74538109632,
+          "pct": 12.63,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.5029680850464682,
-          "time_ms": 502.96808504646816,
-          "pct": 0.32,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.7269311374222228,
+          "time_ms": 726.9311374222228,
+          "pct": 0.24,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 2.770009743882899,
-          "time_ms": 2770.009743882899,
-          "pct": 1.77,
+          "time_s": 3.583727565453612,
+          "time_ms": 3583.727565453612,
+          "pct": 1.18,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -1293,65 +1293,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 10.819188437551023,
-          "time_ms": 10819.188437551024,
-          "pct": 6.91,
+          "time_s": 33.28353826938767,
+          "time_ms": 33283.53826938767,
+          "pct": 10.98,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.5189752149333339,
-          "time_ms": 518.9752149333339,
-          "pct": 0.33,
+          "time_s": 1.383933906488891,
+          "time_ms": 1383.933906488891,
+          "pct": 0.46,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 2.9594406154772575,
-          "time_ms": 2959.4406154772573,
-          "pct": 1.89,
+          "time_s": 3.707751515183609,
+          "time_ms": 3707.751515183609,
+          "pct": 1.22,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0019124565333333329,
-          "time_ms": 1.912456533333333,
-          "pct": 7.37,
+          "time_s": 0.005666537876543204,
+          "time_ms": 5.666537876543203,
+          "pct": 8.35,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.00033204906666666655,
-          "time_ms": 0.33204906666666656,
-          "pct": 1.28,
+          "time_s": 0.001967698172839505,
+          "time_ms": 1.9676981728395049,
+          "pct": 2.9,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0004274517333333334,
-          "time_ms": 0.42745173333333336,
-          "pct": 1.65,
+          "time_s": 0.001088339226337449,
+          "time_ms": 1.088339226337449,
+          "pct": 1.6,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.007048538949659861,
-          "time_ms": 7.048538949659862,
-          "pct": 27.16,
+          "time_s": 0.016073912493866298,
+          "time_ms": 16.0739124938663,
+          "pct": 23.69,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.00021918724444444497,
-          "time_ms": 0.21918724444444496,
-          "pct": 0.84,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010780211202871912,
+          "time_ms": 1.0780211202871912,
+          "pct": 1.59,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
-          "time_s": 6.678186666666662e-05,
-          "time_ms": 0.06678186666666662,
-          "pct": 0.26,
+          "time_s": 0.00019787219753086437,
+          "time_ms": 0.19787219753086435,
+          "pct": 0.29,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012028893866666697,
-          "time_ms": 12.028893866666698,
-          "pct": 46.35,
+          "time_s": 0.03606751616790128,
+          "time_ms": 36.067516167901275,
+          "pct": 53.16,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1361,21 +1361,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0037147559183673545,
-          "time_ms": 3.7147559183673544,
-          "pct": 14.31,
+          "time_s": 0.004285402825745688,
+          "time_ms": 4.285402825745688,
+          "pct": 6.32,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.5837866666666683e-05,
-          "time_ms": 0.015837866666666683,
-          "pct": 0.06,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008739594666666656,
+          "time_ms": 0.8739594666666656,
+          "pct": 1.29,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018476515555555553,
-          "time_ms": 0.18476515555555553,
-          "pct": 0.71,
+          "time_s": 0.0005474523127572016,
+          "time_ms": 0.5474523127572015,
+          "pct": 0.81,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -1383,45 +1383,45 @@
     "256K_4K_hit90": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 2.716089824190634,
-          "time_ms": 2716.0898241906343,
-          "pct": 34.72,
+          "time_s": 3.3951122802382954,
+          "time_ms": 3395.112280238295,
+          "pct": 21.59,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.7505802923998108,
-          "time_ms": 750.5802923998108,
-          "pct": 9.6,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 2.282079987275146,
+          "time_ms": 2282.079987275146,
+          "pct": 14.51,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.2901582432953192,
-          "time_ms": 290.1582432953192,
-          "pct": 3.71,
+          "time_s": 0.36781140268936197,
+          "time_ms": 367.81140268936196,
+          "pct": 2.34,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.8686285523508501,
-          "time_ms": 868.6285523508501,
-          "pct": 11.11,
+          "time_s": 1.5772815871651185,
+          "time_ms": 1577.2815871651185,
+          "pct": 10.03,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 1.4364608341777791,
-          "time_ms": 1436.4608341777791,
-          "pct": 18.36,
+          "time_s": 3.830562224474069,
+          "time_ms": 3830.5622244740694,
+          "pct": 24.36,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.05029795970723402,
-          "time_ms": 50.297959707234014,
-          "pct": 0.64,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.07284507306666671,
+          "time_ms": 72.84507306666671,
+          "pct": 0.46,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.2770073144374462,
-          "time_ms": 277.0073144374462,
-          "pct": 3.54,
+          "time_s": 0.3583809590468081,
+          "time_ms": 358.38095904680813,
+          "pct": 2.28,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -1431,65 +1431,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 1.0846616000000004,
-          "time_ms": 1084.6616000000004,
-          "pct": 13.87,
+          "time_s": 3.3311479999999976,
+          "time_ms": 3331.1479999999974,
+          "pct": 21.18,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.05189870933333327,
-          "time_ms": 51.89870933333327,
-          "pct": 0.66,
+          "time_s": 0.13839655822222205,
+          "time_ms": 138.39655822222204,
+          "pct": 0.88,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.29595083516973997,
-          "time_ms": 295.95083516973995,
-          "pct": 3.78,
+          "time_s": 0.37078363788810087,
+          "time_ms": 370.7836378881009,
+          "pct": 2.36,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0019124565333333329,
-          "time_ms": 1.912456533333333,
-          "pct": 7.37,
+          "time_s": 0.005666537876543204,
+          "time_ms": 5.666537876543203,
+          "pct": 8.35,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.00033204906666666655,
-          "time_ms": 0.33204906666666656,
-          "pct": 1.28,
+          "time_s": 0.001967698172839505,
+          "time_ms": 1.9676981728395049,
+          "pct": 2.9,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0004274517333333334,
-          "time_ms": 0.42745173333333336,
-          "pct": 1.65,
+          "time_s": 0.001088339226337449,
+          "time_ms": 1.088339226337449,
+          "pct": 1.6,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.007048538949659861,
-          "time_ms": 7.048538949659862,
-          "pct": 27.16,
+          "time_s": 0.016073912493866298,
+          "time_ms": 16.0739124938663,
+          "pct": 23.69,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.00021918724444444497,
-          "time_ms": 0.21918724444444496,
-          "pct": 0.84,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010780211202871912,
+          "time_ms": 1.0780211202871912,
+          "pct": 1.59,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
-          "time_s": 6.678186666666662e-05,
-          "time_ms": 0.06678186666666662,
-          "pct": 0.26,
+          "time_s": 0.00019787219753086437,
+          "time_ms": 0.19787219753086435,
+          "pct": 0.29,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012028893866666697,
-          "time_ms": 12.028893866666698,
-          "pct": 46.35,
+          "time_s": 0.03606751616790128,
+          "time_ms": 36.067516167901275,
+          "pct": 53.16,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1499,21 +1499,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0037147559183673545,
-          "time_ms": 3.7147559183673544,
-          "pct": 14.31,
+          "time_s": 0.004285402825745688,
+          "time_ms": 4.285402825745688,
+          "pct": 6.32,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.5837866666666683e-05,
-          "time_ms": 0.015837866666666683,
-          "pct": 0.06,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008739594666666656,
+          "time_ms": 0.8739594666666656,
+          "pct": 1.29,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018476515555555553,
-          "time_ms": 0.18476515555555553,
-          "pct": 0.71,
+          "time_s": 0.0005474523127572016,
+          "time_ms": 0.5474523127572015,
+          "pct": 0.81,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -1521,46 +1521,46 @@
     "256K_4K_hit99": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 0.27166078653549003,
-          "time_ms": 271.66078653549005,
-          "pct": 37.97,
+          "time_s": 0.3395759831693605,
+          "time_ms": 339.5759831693605,
+          "pct": 22.81,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.06970311908523878,
-          "time_ms": 69.70311908523878,
-          "pct": 9.74,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.2284403984038833,
+          "time_ms": 228.4403984038833,
+          "pct": 15.34,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.029021310649191483,
-          "time_ms": 29.021310649191484,
-          "pct": 4.06,
+          "time_s": 0.03715385192851063,
+          "time_ms": 37.15385192851063,
+          "pct": 2.5,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.022368606962151986,
-          "time_ms": 22.368606962151986,
-          "pct": 3.13,
+          "time_s": 0.033188418302738776,
+          "time_ms": 33.188418302738775,
+          "pct": 2.23,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.14367348626666662,
-          "time_ms": 143.67348626666663,
-          "pct": 20.08,
+          "time_s": 0.3831292967111114,
+          "time_ms": 383.1292967111114,
+          "pct": 25.73,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.00503075530621277,
-          "time_ms": 5.03075530621277,
-          "pct": 0.7,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.007436189392592596,
+          "time_ms": 7.4361893925925955,
+          "pct": 0.5,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.027955340440510613,
-          "time_ms": 27.955340440510614,
-          "pct": 3.91,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.07325500302222204,
+          "time_ms": 73.25500302222204,
+          "pct": 4.92,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
           "time_s": 0.0,
@@ -1569,65 +1569,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.1112047902040817,
-          "time_ms": 111.20479020408169,
-          "pct": 15.54,
+          "time_s": 0.3358962775510196,
+          "time_ms": 335.8962775510196,
+          "pct": 22.56,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.005190860799999994,
-          "time_ms": 5.190860799999993,
-          "pct": 0.73,
+          "time_s": 0.013842295466666644,
+          "time_ms": 13.842295466666643,
+          "pct": 0.93,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.029600728201985813,
-          "time_ms": 29.600728201985813,
-          "pct": 4.14,
+          "time_s": 0.03708543576359338,
+          "time_ms": 37.08543576359338,
+          "pct": 2.49,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0019124565333333329,
-          "time_ms": 1.912456533333333,
-          "pct": 7.37,
+          "time_s": 0.005666537876543204,
+          "time_ms": 5.666537876543203,
+          "pct": 8.35,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 0.00033204906666666655,
-          "time_ms": 0.33204906666666656,
-          "pct": 1.28,
+          "time_s": 0.001967698172839505,
+          "time_ms": 1.9676981728395049,
+          "pct": 2.9,
           "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.0004274517333333334,
-          "time_ms": 0.42745173333333336,
-          "pct": 1.65,
+          "time_s": 0.001088339226337449,
+          "time_ms": 1.088339226337449,
+          "pct": 1.6,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.007048538949659861,
-          "time_ms": 7.048538949659862,
-          "pct": 27.16,
+          "time_s": 0.016073912493866298,
+          "time_ms": 16.0739124938663,
+          "pct": 23.69,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.00021918724444444497,
-          "time_ms": 0.21918724444444496,
-          "pct": 0.84,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010780211202871912,
+          "time_ms": 1.0780211202871912,
+          "pct": 1.59,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
-          "time_s": 6.678186666666662e-05,
-          "time_ms": 0.06678186666666662,
-          "pct": 0.26,
+          "time_s": 0.00019787219753086437,
+          "time_ms": 0.19787219753086435,
+          "pct": 0.29,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012028893866666697,
-          "time_ms": 12.028893866666698,
-          "pct": 46.35,
+          "time_s": 0.03606751616790128,
+          "time_ms": 36.067516167901275,
+          "pct": 53.16,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1637,21 +1637,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0037147559183673545,
-          "time_ms": 3.7147559183673544,
-          "pct": 14.31,
+          "time_s": 0.004285402825745688,
+          "time_ms": 4.285402825745688,
+          "pct": 6.32,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.5837866666666683e-05,
-          "time_ms": 0.015837866666666683,
-          "pct": 0.06,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008739594666666656,
+          "time_ms": 0.8739594666666656,
+          "pct": 1.29,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018476515555555553,
-          "time_ms": 0.18476515555555553,
-          "pct": 0.71,
+          "time_s": 0.0005474523127572016,
+          "time_ms": 0.5474523127572015,
+          "pct": 0.81,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -1659,45 +1659,45 @@
     "1M_4K": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 25.90205821276598,
-          "time_ms": 25902.05821276598,
-          "pct": 6.76,
+          "time_s": 32.377572765957446,
+          "time_ms": 32377.572765957444,
+          "pct": 4.41,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 60.20025615130023,
-          "time_ms": 60200.25615130023,
-          "pct": 15.72,
+          "time_s": 108.53618476438136,
+          "time_ms": 108536.18476438137,
+          "pct": 14.79,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 2.7671021988493627,
-          "time_ms": 2767.1021988493626,
-          "pct": 0.72,
+          "time_s": 3.5042038320340434,
+          "time_ms": 3504.2038320340434,
+          "pct": 0.48,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 263.6541655805473,
-          "time_ms": 263654.16558054736,
-          "pct": 68.84,
+          "time_s": 511.97262333304934,
+          "time_ms": 511972.62333304936,
+          "pct": 69.79,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 13.698844450177752,
-          "time_ms": 13698.844450177752,
-          "pct": 3.58,
+          "time_s": 36.530251867140684,
+          "time_ms": 36530.25186714069,
+          "pct": 4.98,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.47966774468085155,
-          "time_ms": 479.66774468085157,
-          "pct": 0.13,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.6932632917333337,
+          "time_ms": 693.2632917333336,
+          "pct": 0.09,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 2.6416871489361773,
-          "time_ms": 2641.6871489361774,
-          "pct": 0.69,
+          "time_s": 3.417708936170202,
+          "time_ms": 3417.708936170202,
+          "pct": 0.47,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -1707,65 +1707,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 10.3181220408163,
-          "time_ms": 10318.1220408163,
-          "pct": 2.69,
+          "time_s": 31.741795510204046,
+          "time_ms": 31741.795510204047,
+          "pct": 4.33,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.49493333333333406,
-          "time_ms": 494.9333333333341,
-          "pct": 0.13,
+          "time_s": 1.3198222222222211,
+          "time_ms": 1319.8222222222212,
+          "pct": 0.18,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 2.8223425059101657,
-          "time_ms": 2822.3425059101655,
-          "pct": 0.74,
+          "time_s": 3.535987391646966,
+          "time_ms": 3535.987391646966,
+          "pct": 0.48,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0018871381333333374,
-          "time_ms": 1.8871381333333375,
-          "pct": 7.57,
+          "time_s": 0.005591520395061734,
+          "time_ms": 5.5915203950617345,
+          "pct": 8.6,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 8.301226666666664e-05,
-          "time_ms": 0.08301226666666664,
-          "pct": 0.33,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000874531240851064,
+          "time_ms": 0.874531240851064,
+          "pct": 1.35,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0003046997333333332,
-          "time_ms": 0.3046997333333332,
-          "pct": 1.22,
+          "time_s": 0.0009028645925925916,
+          "time_ms": 0.9028645925925917,
+          "pct": 1.39,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.006812630361904754,
-          "time_ms": 6.812630361904754,
-          "pct": 27.33,
+          "time_s": 0.015412133119108343,
+          "time_ms": 15.412133119108343,
+          "pct": 23.71,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 5.4801111111111115e-05,
-          "time_ms": 0.05480111111111111,
-          "pct": 0.22,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0009145063418001931,
+          "time_ms": 0.9145063418001931,
+          "pct": 1.41,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
-          "time_s": 6.366293333333334e-05,
-          "time_ms": 0.06366293333333334,
-          "pct": 0.26,
+          "time_s": 0.00018863091358024698,
+          "time_ms": 0.18863091358024697,
+          "pct": 0.29,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012024977066666703,
-          "time_ms": 12.024977066666702,
-          "pct": 48.24,
+          "time_s": 0.03605864896790126,
+          "time_ms": 36.058648967901256,
+          "pct": 55.47,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1775,21 +1775,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0035086889795918285,
-          "time_ms": 3.5086889795918283,
-          "pct": 14.08,
+          "time_s": 0.003651350706436422,
+          "time_ms": 3.651350706436422,
+          "pct": 5.62,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.959466666666671e-06,
-          "time_ms": 0.003959466666666671,
-          "pct": 0.02,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008709898666666674,
+          "time_ms": 0.8709898666666674,
+          "pct": 1.34,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018408995555555557,
-          "time_ms": 0.18408995555555557,
-          "pct": 0.74,
+          "time_s": 0.0005454517201646089,
+          "time_ms": 0.5454517201646089,
+          "pct": 0.84,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -1797,45 +1797,45 @@
     "1M_4K_hit90": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 2.590205821276593,
-          "time_ms": 2590.2058212765933,
-          "pct": 26.44,
+          "time_s": 3.2377572765957474,
+          "time_ms": 3237.7572765957475,
+          "pct": 16.88,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 1.118072253427895,
-          "time_ms": 1118.072253427895,
-          "pct": 11.41,
+          "time_s": 2.6070732636721825,
+          "time_ms": 2607.0732636721823,
+          "pct": 13.6,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.27671021431829784,
-          "time_ms": 276.71021431829786,
-          "pct": 2.82,
+          "time_s": 0.3507890011234042,
+          "time_ms": 350.7890011234042,
+          "pct": 1.83,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 2.76346553069909,
-          "time_ms": 2763.46553069909,
-          "pct": 28.21,
+          "time_s": 5.254189338663103,
+          "time_ms": 5254.189338663103,
+          "pct": 27.4,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 1.3698844501777794,
-          "time_ms": 1369.8844501777794,
-          "pct": 13.98,
+          "time_s": 3.653025200474068,
+          "time_ms": 3653.025200474068,
+          "pct": 19.05,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.047966774468085074,
-          "time_ms": 47.96677446808508,
-          "pct": 0.49,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.06947662506666663,
+          "time_ms": 69.47662506666663,
+          "pct": 0.36,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.2641687148936164,
-          "time_ms": 264.16871489361637,
-          "pct": 2.7,
+          "time_s": 0.34177089361702195,
+          "time_ms": 341.77089361702195,
+          "pct": 1.78,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -1845,65 +1845,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 1.0345302040816329,
-          "time_ms": 1034.530204081633,
-          "pct": 10.56,
+          "time_s": 3.1768975510204216,
+          "time_ms": 3176.897551020422,
+          "pct": 16.57,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.04949333333333338,
-          "time_ms": 49.49333333333338,
-          "pct": 0.51,
+          "time_s": 0.13198222222222233,
+          "time_ms": 131.98222222222233,
+          "pct": 0.69,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.28223425059101653,
-          "time_ms": 282.2342505910165,
-          "pct": 2.88,
+          "time_s": 0.35359873916469664,
+          "time_ms": 353.59873916469667,
+          "pct": 1.84,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0018871381333333374,
-          "time_ms": 1.8871381333333375,
-          "pct": 7.57,
+          "time_s": 0.005591520395061734,
+          "time_ms": 5.5915203950617345,
+          "pct": 8.6,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 8.301226666666664e-05,
-          "time_ms": 0.08301226666666664,
-          "pct": 0.33,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000874531240851064,
+          "time_ms": 0.874531240851064,
+          "pct": 1.35,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0003046997333333332,
-          "time_ms": 0.3046997333333332,
-          "pct": 1.22,
+          "time_s": 0.0009028645925925916,
+          "time_ms": 0.9028645925925917,
+          "pct": 1.39,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.006812630361904754,
-          "time_ms": 6.812630361904754,
-          "pct": 27.33,
+          "time_s": 0.015412133119108343,
+          "time_ms": 15.412133119108343,
+          "pct": 23.71,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 5.4801111111111115e-05,
-          "time_ms": 0.05480111111111111,
-          "pct": 0.22,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0009145063418001931,
+          "time_ms": 0.9145063418001931,
+          "pct": 1.41,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
-          "time_s": 6.366293333333334e-05,
-          "time_ms": 0.06366293333333334,
-          "pct": 0.26,
+          "time_s": 0.00018863091358024698,
+          "time_ms": 0.18863091358024697,
+          "pct": 0.29,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012024977066666703,
-          "time_ms": 12.024977066666702,
-          "pct": 48.24,
+          "time_s": 0.03605864896790126,
+          "time_ms": 36.058648967901256,
+          "pct": 55.47,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1913,21 +1913,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0035086889795918285,
-          "time_ms": 3.5086889795918283,
-          "pct": 14.08,
+          "time_s": 0.003651350706436422,
+          "time_ms": 3.651350706436422,
+          "pct": 5.62,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.959466666666671e-06,
-          "time_ms": 0.003959466666666671,
-          "pct": 0.02,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008709898666666674,
+          "time_ms": 0.8709898666666674,
+          "pct": 1.34,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018408995555555557,
-          "time_ms": 0.18408995555555557,
-          "pct": 0.74,
+          "time_s": 0.0005454517201646089,
+          "time_ms": 0.5454517201646089,
+          "pct": 0.84,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -1935,45 +1935,45 @@
     "1M_4K_hit99": {
       "prefill": {
         "Attention Proj": {
-          "time_s": 0.2590205821276605,
-          "time_ms": 259.0205821276605,
-          "pct": 36.88,
+          "time_s": 0.32377572765957413,
+          "time_ms": 323.77572765957416,
+          "pct": 22.17,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.06645990157919625,
-          "time_ms": 66.45990157919624,
-          "pct": 9.46,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.21782111310323077,
+          "time_ms": 217.82111310323077,
+          "pct": 14.92,
+          "dominant_bottleneck": "MEM"
         },
         "KV Compression": {
-          "time_s": 0.027671018648510657,
-          "time_ms": 27.671018648510657,
-          "pct": 3.94,
+          "time_s": 0.03544770907234041,
+          "time_ms": 35.44770907234041,
+          "pct": 2.43,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.04070126279635258,
-          "time_ms": 40.70126279635258,
-          "pct": 5.8,
+          "time_s": 0.06900325112080825,
+          "time_ms": 69.00325112080826,
+          "pct": 4.73,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.1369884501777776,
-          "time_ms": 136.98845017777762,
-          "pct": 19.51,
+          "time_s": 0.3653025338074075,
+          "time_ms": 365.30253380740754,
+          "pct": 25.02,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
-          "time_s": 0.004796677446808509,
-          "time_ms": 4.796677446808508,
-          "pct": 0.68,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.007097958400000003,
+          "time_ms": 7.097958400000003,
+          "pct": 0.49,
+          "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.027311342933333375,
-          "time_ms": 27.311342933333375,
-          "pct": 3.89,
+          "time_s": 0.07283024782222242,
+          "time_ms": 72.83024782222242,
+          "pct": 4.99,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -1983,65 +1983,65 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.10617102040816334,
-          "time_ms": 106.17102040816334,
-          "pct": 15.12,
+          "time_s": 0.32040775510204084,
+          "time_ms": 320.4077551020408,
+          "pct": 21.94,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.00494933333333334,
-          "time_ms": 4.949333333333341,
-          "pct": 0.7,
+          "time_s": 0.013198222222222234,
+          "time_ms": 13.198222222222235,
+          "pct": 0.9,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
-          "time_s": 0.028223425059101654,
-          "time_ms": 28.223425059101654,
-          "pct": 4.02,
+          "time_s": 0.03535987391646966,
+          "time_ms": 35.35987391646966,
+          "pct": 2.42,
           "dominant_bottleneck": "CUBE"
         }
       },
       "decode": {
         "Attention Proj": {
-          "time_s": 0.0018871381333333374,
-          "time_ms": 1.8871381333333375,
-          "pct": 7.57,
+          "time_s": 0.005591520395061734,
+          "time_ms": 5.5915203950617345,
+          "pct": 8.6,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 8.301226666666664e-05,
-          "time_ms": 0.08301226666666664,
-          "pct": 0.33,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000874531240851064,
+          "time_ms": 0.874531240851064,
+          "pct": 1.35,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0003046997333333332,
-          "time_ms": 0.3046997333333332,
-          "pct": 1.22,
+          "time_s": 0.0009028645925925916,
+          "time_ms": 0.9028645925925917,
+          "pct": 1.39,
           "dominant_bottleneck": "MEM"
         },
         "Lightning Index": {
-          "time_s": 0.006812630361904754,
-          "time_ms": 6.812630361904754,
-          "pct": 27.33,
+          "time_s": 0.015412133119108343,
+          "time_ms": 15.412133119108343,
+          "pct": 23.71,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 5.4801111111111115e-05,
-          "time_ms": 0.05480111111111111,
-          "pct": 0.22,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0009145063418001931,
+          "time_ms": 0.9145063418001931,
+          "pct": 1.41,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
-          "time_s": 6.366293333333334e-05,
-          "time_ms": 0.06366293333333334,
-          "pct": 0.26,
+          "time_s": 0.00018863091358024698,
+          "time_ms": 0.18863091358024697,
+          "pct": 0.29,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.012024977066666703,
-          "time_ms": 12.024977066666702,
-          "pct": 48.24,
+          "time_s": 0.03605864896790126,
+          "time_ms": 36.058648967901256,
+          "pct": 55.47,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -2051,21 +2051,21 @@
           "dominant_bottleneck": "N/A"
         },
         "Communication": {
-          "time_s": 0.0035086889795918285,
-          "time_ms": 3.5086889795918283,
-          "pct": 14.08,
+          "time_s": 0.003651350706436422,
+          "time_ms": 3.651350706436422,
+          "pct": 5.62,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.959466666666671e-06,
-          "time_ms": 0.003959466666666671,
-          "pct": 0.02,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008709898666666674,
+          "time_ms": 0.8709898666666674,
+          "pct": 1.34,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
-          "time_s": 0.00018408995555555557,
-          "time_ms": 0.18408995555555557,
-          "pct": 0.74,
+          "time_s": 0.0005454517201646089,
+          "time_ms": 0.5454517201646089,
+          "pct": 0.84,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -2077,43 +2077,43 @@
         "Attention Proj": {
           "time_s": 16.292087835897096,
           "time_ms": 16292.087835897097,
-          "pct": 37.01,
+          "pct": 35.95,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 4.0711646758192455,
-          "time_ms": 4071.1646758192455,
-          "pct": 9.25,
+          "time_s": 5.313413528095199,
+          "time_ms": 5313.4135280952,
+          "pct": 11.72,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.9214276863723248,
-          "time_ms": 921.4276863723247,
-          "pct": 2.09,
+          "time_s": 0.9229300668279511,
+          "time_ms": 922.9300668279511,
+          "pct": 2.04,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 2.0281889135532967,
-          "time_ms": 2028.1889135532967,
-          "pct": 4.61,
+          "time_s": 2.085174573617478,
+          "time_ms": 2085.174573617478,
+          "pct": 4.6,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.8079907251399987,
           "time_ms": 807.9907251399987,
-          "pct": 1.84,
+          "pct": 1.78,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.15972635133232418,
           "time_ms": 159.72635133232419,
-          "pct": 0.36,
+          "pct": 0.35,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 3.4292237279896325,
           "time_ms": 3429.2237279896326,
-          "pct": 7.79,
+          "pct": 7.57,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -2125,7 +2125,7 @@
         "Communication": {
           "time_s": 14.375148668799985,
           "time_ms": 14375.148668799986,
-          "pct": 32.66,
+          "pct": 31.72,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -2137,7 +2137,7 @@
         "Embedding/LMHead": {
           "time_s": 1.8761915308972972,
           "time_ms": 1876.191530897297,
-          "pct": 4.26,
+          "pct": 4.14,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -2145,43 +2145,43 @@
         "Attention Proj": {
           "time_s": 0.0042115346542702685,
           "time_ms": 4.2115346542702685,
-          "pct": 15.79,
+          "pct": 13.76,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.000993936688432433,
-          "time_ms": 0.993936688432433,
-          "pct": 3.73,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.002137015021507616,
+          "time_ms": 2.137015021507616,
+          "pct": 6.98,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0004659622884324326,
-          "time_ms": 0.4659622884324326,
-          "pct": 1.75,
+          "time_s": 0.0008882072150171989,
+          "time_ms": 0.8882072150171989,
+          "pct": 2.9,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.0007586048818738728,
-          "time_ms": 0.7586048818738729,
-          "pct": 2.84,
+          "time_s": 0.0011932938491360555,
+          "time_ms": 1.1932938491360556,
+          "pct": 3.9,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.0003945293000000002,
-          "time_ms": 0.3945293000000002,
-          "pct": 1.48,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010522983719729734,
+          "time_ms": 1.0522983719729733,
+          "pct": 3.44,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 7.799138248648642e-05,
           "time_ms": 0.07799138248648642,
-          "pct": 0.29,
+          "pct": 0.25,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010840104960000015,
-          "time_ms": 10.840104960000016,
-          "pct": 40.64,
+          "time_s": 0.011265746629818194,
+          "time_ms": 11.265746629818194,
+          "pct": 36.82,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -2193,19 +2193,19 @@
         "Communication": {
           "time_s": 0.008442879288888894,
           "time_ms": 8.442879288888895,
-          "pct": 31.65,
+          "pct": 27.59,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 2.8508159999999966e-05,
-          "time_ms": 0.028508159999999966,
-          "pct": 0.11,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008731099810909101,
+          "time_ms": 0.8731099810909101,
+          "pct": 2.85,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.000458136492972973,
           "time_ms": 0.458136492972973,
-          "pct": 1.72,
+          "pct": 1.5,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -2215,43 +2215,43 @@
         "Attention Proj": {
           "time_s": 1.6307998077924297,
           "time_ms": 1630.7998077924296,
-          "pct": 38.15,
+          "pct": 37.04,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.3885170101275674,
-          "time_ms": 388.5170101275674,
-          "pct": 9.09,
+          "time_s": 0.5150974176022021,
+          "time_ms": 515.0974176022021,
+          "pct": 11.7,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.092232292185946,
-          "time_ms": 92.23229218594601,
-          "pct": 2.16,
+          "time_s": 0.0927493872385258,
+          "time_ms": 92.7493872385258,
+          "pct": 2.11,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.09059097599999998,
-          "time_ms": 90.59097599999997,
-          "pct": 2.12,
+          "time_s": 0.09158844766711167,
+          "time_ms": 91.58844766711168,
+          "pct": 2.08,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.08087798017999995,
           "time_ms": 80.87798017999995,
-          "pct": 1.89,
+          "pct": 1.84,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.015988233409729737,
           "time_ms": 15.988233409729737,
-          "pct": 0.37,
+          "pct": 0.36,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 0.3432572579286493,
           "time_ms": 343.2572579286493,
-          "pct": 8.03,
+          "pct": 7.8,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -2263,19 +2263,19 @@
         "Communication": {
           "time_s": 1.4393056480000008,
           "time_ms": 1439.305648000001,
-          "pct": 33.67,
+          "pct": 32.69,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
           "time_s": 0.005844172799999992,
           "time_ms": 5.844172799999992,
-          "pct": 0.14,
+          "pct": 0.13,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
           "time_s": 0.1878023749189189,
           "time_ms": 187.8023749189189,
-          "pct": 4.39,
+          "pct": 4.27,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -2283,43 +2283,43 @@
         "Attention Proj": {
           "time_s": 0.0042115346542702685,
           "time_ms": 4.2115346542702685,
-          "pct": 15.79,
+          "pct": 13.76,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.000993936688432433,
-          "time_ms": 0.993936688432433,
-          "pct": 3.73,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.002137015021507616,
+          "time_ms": 2.137015021507616,
+          "pct": 6.98,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0004659622884324326,
-          "time_ms": 0.4659622884324326,
-          "pct": 1.75,
+          "time_s": 0.0008882072150171989,
+          "time_ms": 0.8882072150171989,
+          "pct": 2.9,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.0007586048818738728,
-          "time_ms": 0.7586048818738729,
-          "pct": 2.84,
+          "time_s": 0.0011932938491360555,
+          "time_ms": 1.1932938491360556,
+          "pct": 3.9,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.0003945293000000002,
-          "time_ms": 0.3945293000000002,
-          "pct": 1.48,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010522983719729734,
+          "time_ms": 1.0522983719729733,
+          "pct": 3.44,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 7.799138248648642e-05,
           "time_ms": 0.07799138248648642,
-          "pct": 0.29,
+          "pct": 0.25,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010840104960000015,
-          "time_ms": 10.840104960000016,
-          "pct": 40.64,
+          "time_s": 0.011265746629818194,
+          "time_ms": 11.265746629818194,
+          "pct": 36.82,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -2331,19 +2331,19 @@
         "Communication": {
           "time_s": 0.008442879288888894,
           "time_ms": 8.442879288888895,
-          "pct": 31.65,
+          "pct": 27.59,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 2.8508159999999966e-05,
-          "time_ms": 0.028508159999999966,
-          "pct": 0.11,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008731099810909101,
+          "time_ms": 0.8731099810909101,
+          "pct": 2.85,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.000458136492972973,
           "time_ms": 0.458136492972973,
-          "pct": 1.72,
+          "pct": 1.5,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -2353,43 +2353,43 @@
         "Attention Proj": {
           "time_s": 0.16307998077924316,
           "time_ms": 163.07998077924316,
-          "pct": 38.21,
+          "pct": 36.96,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.03885163957275673,
-          "time_ms": 38.85163957275673,
-          "pct": 9.1,
+          "time_s": 0.05208561888022011,
+          "time_ms": 52.08561888022011,
+          "pct": 11.8,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.009222515518270266,
-          "time_ms": 9.222515518270265,
-          "pct": 2.16,
+          "time_s": 0.009439722264216214,
+          "time_ms": 9.439722264216215,
+          "pct": 2.14,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.007950848367567565,
-          "time_ms": 7.9508483675675645,
-          "pct": 1.86,
+          "time_s": 0.008357756676446245,
+          "time_ms": 8.357756676446245,
+          "pct": 1.89,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.008087800339999996,
           "time_ms": 8.087800339999996,
-          "pct": 1.89,
+          "pct": 1.83,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.001598823340972973,
           "time_ms": 1.598823340972973,
-          "pct": 0.37,
+          "pct": 0.36,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.034325725792864886,
-          "time_ms": 34.32572579286489,
-          "pct": 8.04,
+          "time_s": 0.034577034255410366,
+          "time_ms": 34.57703425541037,
+          "pct": 7.84,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -2401,19 +2401,19 @@
         "Communication": {
           "time_s": 0.1443175648000001,
           "time_ms": 144.3175648000001,
-          "pct": 33.81,
+          "pct": 32.71,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.0005844172799999995,
-          "time_ms": 0.5844172799999995,
-          "pct": 0.14,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000933754612363637,
+          "time_ms": 0.933754612363637,
+          "pct": 0.21,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.01878023749189189,
           "time_ms": 18.78023749189189,
-          "pct": 4.4,
+          "pct": 4.26,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -2421,43 +2421,43 @@
         "Attention Proj": {
           "time_s": 0.0042115346542702685,
           "time_ms": 4.2115346542702685,
-          "pct": 15.79,
+          "pct": 13.76,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.000993936688432433,
-          "time_ms": 0.993936688432433,
-          "pct": 3.73,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.002137015021507616,
+          "time_ms": 2.137015021507616,
+          "pct": 6.98,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0004659622884324326,
-          "time_ms": 0.4659622884324326,
-          "pct": 1.75,
+          "time_s": 0.0008882072150171989,
+          "time_ms": 0.8882072150171989,
+          "pct": 2.9,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.0007586048818738728,
-          "time_ms": 0.7586048818738729,
-          "pct": 2.84,
+          "time_s": 0.0011932938491360555,
+          "time_ms": 1.1932938491360556,
+          "pct": 3.9,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.0003945293000000002,
-          "time_ms": 0.3945293000000002,
-          "pct": 1.48,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010522983719729734,
+          "time_ms": 1.0522983719729733,
+          "pct": 3.44,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 7.799138248648642e-05,
           "time_ms": 0.07799138248648642,
-          "pct": 0.29,
+          "pct": 0.25,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010840104960000015,
-          "time_ms": 10.840104960000016,
-          "pct": 40.64,
+          "time_s": 0.011265746629818194,
+          "time_ms": 11.265746629818194,
+          "pct": 36.82,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -2469,19 +2469,19 @@
         "Communication": {
           "time_s": 0.008442879288888894,
           "time_ms": 8.442879288888895,
-          "pct": 31.65,
+          "pct": 27.59,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 2.8508159999999966e-05,
-          "time_ms": 0.028508159999999966,
-          "pct": 0.11,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008731099810909101,
+          "time_ms": 0.8731099810909101,
+          "pct": 2.85,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.000458136492972973,
           "time_ms": 0.458136492972973,
-          "pct": 1.72,
+          "pct": 1.5,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -2491,43 +2491,43 @@
         "Attention Proj": {
           "time_s": 16.292087835897096,
           "time_ms": 16292.087835897097,
-          "pct": 33.48,
+          "pct": 32.33,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 4.962660590232215,
-          "time_ms": 4962.660590232214,
-          "pct": 10.2,
+          "time_s": 6.47675079702115,
+          "time_ms": 6476.75079702115,
+          "pct": 12.85,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.9214276863723248,
-          "time_ms": 921.4276863723247,
-          "pct": 1.89,
+          "time_s": 0.9229300668279511,
+          "time_ms": 922.9300668279511,
+          "pct": 1.83,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 5.7724717540877855,
-          "time_ms": 5772.4717540877855,
-          "pct": 11.86,
+          "time_s": 6.00002177839014,
+          "time_ms": 6000.02177839014,
+          "pct": 11.91,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.8079907251399987,
           "time_ms": 807.9907251399987,
-          "pct": 1.66,
+          "pct": 1.6,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.15972635133232418,
           "time_ms": 159.72635133232419,
-          "pct": 0.33,
+          "pct": 0.32,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 3.4292237279896325,
           "time_ms": 3429.2237279896326,
-          "pct": 7.05,
+          "pct": 6.8,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -2539,7 +2539,7 @@
         "Communication": {
           "time_s": 14.375148668799985,
           "time_ms": 14375.148668799986,
-          "pct": 29.54,
+          "pct": 28.52,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -2551,7 +2551,7 @@
         "Embedding/LMHead": {
           "time_s": 1.8761915308972972,
           "time_ms": 1876.191530897297,
-          "pct": 3.86,
+          "pct": 3.72,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -2559,43 +2559,43 @@
         "Attention Proj": {
           "time_s": 0.0042115346542702685,
           "time_ms": 4.2115346542702685,
-          "pct": 15.12,
+          "pct": 13.21,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.0012115870581621618,
-          "time_ms": 1.2115870581621617,
-          "pct": 4.35,
+          "time_s": 0.0024210329094289927,
+          "time_ms": 2.421032909428993,
+          "pct": 7.59,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.0004659622884324326,
-          "time_ms": 0.4659622884324326,
-          "pct": 1.67,
+          "time_s": 0.0008882072150171989,
+          "time_ms": 0.8882072150171989,
+          "pct": 2.79,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.0017186116347387384,
-          "time_ms": 1.7186116347387383,
-          "pct": 6.17,
+          "time_s": 0.0021969802722345763,
+          "time_ms": 2.196980272234576,
+          "pct": 6.89,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.0003945293000000002,
-          "time_ms": 0.3945293000000002,
-          "pct": 1.42,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010522983719729734,
+          "time_ms": 1.0522983719729733,
+          "pct": 3.3,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 7.799138248648642e-05,
           "time_ms": 0.07799138248648642,
-          "pct": 0.28,
+          "pct": 0.24,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010840104960000015,
-          "time_ms": 10.840104960000016,
-          "pct": 38.92,
+          "time_s": 0.011265746629818194,
+          "time_ms": 11.265746629818194,
+          "pct": 35.33,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -2607,19 +2607,19 @@
         "Communication": {
           "time_s": 0.008442879288888894,
           "time_ms": 8.442879288888895,
-          "pct": 30.32,
+          "pct": 26.48,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 2.8508159999999966e-05,
-          "time_ms": 0.028508159999999966,
-          "pct": 0.1,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008731099810909101,
+          "time_ms": 0.8731099810909101,
+          "pct": 2.74,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.000458136492972973,
           "time_ms": 0.458136492972973,
-          "pct": 1.65,
+          "pct": 1.44,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -2629,43 +2629,43 @@
         "Attention Proj": {
           "time_s": 1.6293082226023816,
           "time_ms": 1629.3082226023816,
-          "pct": 37.81,
+          "pct": 36.71,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.3890316999818379,
-          "time_ms": 389.0316999818379,
-          "pct": 9.03,
+          "time_s": 0.5146269296051259,
+          "time_ms": 514.626929605126,
+          "pct": 11.59,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.09214821807740536,
-          "time_ms": 92.14821807740536,
-          "pct": 2.14,
+          "time_s": 0.09266660745843734,
+          "time_ms": 92.66660745843734,
+          "pct": 2.09,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.12792885271524318,
-          "time_ms": 127.92885271524318,
-          "pct": 2.97,
+          "time_s": 0.13061274215107865,
+          "time_ms": 130.61274215107866,
+          "pct": 2.94,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.08080400641999994,
           "time_ms": 80.80400641999994,
-          "pct": 1.87,
+          "pct": 1.82,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.015973610025513504,
           "time_ms": 15.973610025513503,
-          "pct": 0.37,
+          "pct": 0.36,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 0.3429433031195674,
           "time_ms": 342.94330311956736,
-          "pct": 7.96,
+          "pct": 7.73,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -2677,19 +2677,19 @@
         "Communication": {
           "time_s": 1.437989603199999,
           "time_ms": 1437.989603199999,
-          "pct": 33.37,
+          "pct": 32.4,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
           "time_s": 0.005838827519999995,
           "time_ms": 5.838827519999995,
-          "pct": 0.14,
+          "pct": 0.13,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
           "time_s": 0.18763060445405405,
           "time_ms": 187.63060445405404,
-          "pct": 4.35,
+          "pct": 4.23,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -2697,43 +2697,43 @@
         "Attention Proj": {
           "time_s": 0.0042115346542702685,
           "time_ms": 4.2115346542702685,
-          "pct": 15.12,
+          "pct": 13.21,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.0012115870581621618,
-          "time_ms": 1.2115870581621617,
-          "pct": 4.35,
+          "time_s": 0.0024210329094289927,
+          "time_ms": 2.421032909428993,
+          "pct": 7.59,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.0004659622884324326,
-          "time_ms": 0.4659622884324326,
-          "pct": 1.67,
+          "time_s": 0.0008882072150171989,
+          "time_ms": 0.8882072150171989,
+          "pct": 2.79,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.0017186116347387384,
-          "time_ms": 1.7186116347387383,
-          "pct": 6.17,
+          "time_s": 0.0021969802722345763,
+          "time_ms": 2.196980272234576,
+          "pct": 6.89,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.0003945293000000002,
-          "time_ms": 0.3945293000000002,
-          "pct": 1.42,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010522983719729734,
+          "time_ms": 1.0522983719729733,
+          "pct": 3.3,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 7.799138248648642e-05,
           "time_ms": 0.07799138248648642,
-          "pct": 0.28,
+          "pct": 0.24,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010840104960000015,
-          "time_ms": 10.840104960000016,
-          "pct": 38.92,
+          "time_s": 0.011265746629818194,
+          "time_ms": 11.265746629818194,
+          "pct": 35.33,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -2745,19 +2745,19 @@
         "Communication": {
           "time_s": 0.008442879288888894,
           "time_ms": 8.442879288888895,
-          "pct": 30.32,
+          "pct": 26.48,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 2.8508159999999966e-05,
-          "time_ms": 0.028508159999999966,
-          "pct": 0.1,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008731099810909101,
+          "time_ms": 0.8731099810909101,
+          "pct": 2.74,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.000458136492972973,
           "time_ms": 0.458136492972973,
-          "pct": 1.65,
+          "pct": 1.44,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -2767,43 +2767,43 @@
         "Attention Proj": {
           "time_s": 0.16307998077924316,
           "time_ms": 163.07998077924316,
-          "pct": 38.18,
+          "pct": 36.91,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.03885169077275675,
-          "time_ms": 38.85169077275675,
-          "pct": 9.1,
+          "time_s": 0.05208572128022012,
+          "time_ms": 52.08572128022012,
+          "pct": 11.79,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.009223116080432432,
-          "time_ms": 9.223116080432431,
-          "pct": 2.16,
+          "time_s": 0.00964327182057985,
+          "time_ms": 9.643271820579852,
+          "pct": 2.18,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.008308777707243241,
-          "time_ms": 8.308777707243241,
-          "pct": 1.95,
+          "time_s": 0.008752890513723076,
+          "time_ms": 8.752890513723075,
+          "pct": 1.98,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.008087800339999996,
           "time_ms": 8.087800339999996,
-          "pct": 1.89,
+          "pct": 1.83,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.001598823340972973,
           "time_ms": 1.598823340972973,
-          "pct": 0.37,
+          "pct": 0.36,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.034325725792864886,
-          "time_ms": 34.32572579286489,
-          "pct": 8.04,
+          "time_s": 0.034577034255410366,
+          "time_ms": 34.57703425541037,
+          "pct": 7.83,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -2815,19 +2815,19 @@
         "Communication": {
           "time_s": 0.1443175648000001,
           "time_ms": 144.3175648000001,
-          "pct": 33.79,
+          "pct": 32.66,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 0.0005844172799999995,
-          "time_ms": 0.5844172799999995,
-          "pct": 0.14,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000933754612363637,
+          "time_ms": 0.933754612363637,
+          "pct": 0.21,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.01878023749189189,
           "time_ms": 18.78023749189189,
-          "pct": 4.4,
+          "pct": 4.25,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -2835,43 +2835,43 @@
         "Attention Proj": {
           "time_s": 0.0042115346542702685,
           "time_ms": 4.2115346542702685,
-          "pct": 15.12,
+          "pct": 13.21,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.0012115870581621618,
-          "time_ms": 1.2115870581621617,
-          "pct": 4.35,
+          "time_s": 0.0024210329094289927,
+          "time_ms": 2.421032909428993,
+          "pct": 7.59,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.0004659622884324326,
-          "time_ms": 0.4659622884324326,
-          "pct": 1.67,
+          "time_s": 0.0008882072150171989,
+          "time_ms": 0.8882072150171989,
+          "pct": 2.79,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.0017186116347387384,
-          "time_ms": 1.7186116347387383,
-          "pct": 6.17,
+          "time_s": 0.0021969802722345763,
+          "time_ms": 2.196980272234576,
+          "pct": 6.89,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.0003945293000000002,
-          "time_ms": 0.3945293000000002,
-          "pct": 1.42,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0010522983719729734,
+          "time_ms": 1.0522983719729733,
+          "pct": 3.3,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 7.799138248648642e-05,
           "time_ms": 0.07799138248648642,
-          "pct": 0.28,
+          "pct": 0.24,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010840104960000015,
-          "time_ms": 10.840104960000016,
-          "pct": 38.92,
+          "time_s": 0.011265746629818194,
+          "time_ms": 11.265746629818194,
+          "pct": 35.33,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -2883,19 +2883,19 @@
         "Communication": {
           "time_s": 0.008442879288888894,
           "time_ms": 8.442879288888895,
-          "pct": 30.32,
+          "pct": 26.48,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 2.8508159999999966e-05,
-          "time_ms": 0.028508159999999966,
-          "pct": 0.1,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008731099810909101,
+          "time_ms": 0.8731099810909101,
+          "pct": 2.74,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.000458136492972973,
           "time_ms": 0.458136492972973,
-          "pct": 1.65,
+          "pct": 1.44,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -2905,43 +2905,43 @@
         "Attention Proj": {
           "time_s": 276.0071351022563,
           "time_ms": 276007.1351022563,
-          "pct": 24.24,
+          "pct": 23.09,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 136.45830796614567,
-          "time_ms": 136458.30796614566,
-          "pct": 11.99,
+          "time_s": 178.0689979635996,
+          "time_ms": 178068.9979635996,
+          "pct": 14.89,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 29.485685963914392,
-          "time_ms": 29485.68596391439,
-          "pct": 2.59,
+          "time_s": 29.521052138494447,
+          "time_ms": 29521.052138494448,
+          "pct": 2.47,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 350.5251643239219,
-          "time_ms": 350525.1643239219,
-          "pct": 30.79,
+          "time_s": 365.91988629063434,
+          "time_ms": 365919.88629063434,
+          "pct": 30.61,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 25.855703124500003,
           "time_ms": 25855.703124500003,
-          "pct": 2.27,
+          "pct": 2.16,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 5.111243242634374,
           "time_ms": 5111.243242634374,
-          "pct": 0.45,
+          "pct": 0.43,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 27.43378982391706,
           "time_ms": 27433.78982391706,
-          "pct": 2.41,
+          "pct": 2.29,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -2953,7 +2953,7 @@
         "Communication": {
           "time_s": 256.7331801183999,
           "time_ms": 256733.1801183999,
-          "pct": 22.55,
+          "pct": 21.47,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -2965,7 +2965,7 @@
         "Embedding/LMHead": {
           "time_s": 30.024433203476757,
           "time_ms": 30024.433203476758,
-          "pct": 2.64,
+          "pct": 2.51,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -2973,43 +2973,43 @@
         "Attention Proj": {
           "time_s": 0.0021057673271351342,
           "time_ms": 2.1057673271351343,
-          "pct": 9.42,
+          "pct": 7.86,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.0007508937755675671,
-          "time_ms": 0.7508937755675671,
-          "pct": 3.36,
+          "time_s": 0.0018198617133287475,
+          "time_ms": 1.8198617133287476,
+          "pct": 6.79,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.0002591955442162163,
-          "time_ms": 0.2591955442162163,
-          "pct": 1.16,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0006491036075085994,
+          "time_ms": 0.6491036075085994,
+          "pct": 2.42,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.003287178858474472,
-          "time_ms": 3.287178858474472,
-          "pct": 14.7,
+          "time_s": 0.004217083054007671,
+          "time_ms": 4.217083054007671,
+          "pct": 15.74,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.00019726594000000005,
-          "time_ms": 0.19726594000000006,
-          "pct": 0.88,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000956149293486487,
+          "time_ms": 0.9561492934864869,
+          "pct": 3.57,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 3.899569124324321e-05,
           "time_ms": 0.03899569124324321,
-          "pct": 0.17,
+          "pct": 0.15,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010830704640000018,
-          "time_ms": 10.830704640000018,
-          "pct": 48.43,
+          "time_s": 0.011258525474909117,
+          "time_ms": 11.258525474909117,
+          "pct": 42.01,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3021,19 +3021,19 @@
         "Communication": {
           "time_s": 0.004651439644444445,
           "time_ms": 4.651439644444445,
-          "pct": 20.8,
+          "pct": 17.36,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.4254079999999983e-05,
-          "time_ms": 0.014254079999999983,
-          "pct": 0.06,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008715549905454538,
+          "time_ms": 0.8715549905454538,
+          "pct": 3.25,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.0002290682464864865,
           "time_ms": 0.2290682464864865,
-          "pct": 1.02,
+          "pct": 0.85,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -3043,43 +3043,43 @@
         "Attention Proj": {
           "time_s": 27.602398124087408,
           "time_ms": 27602.39812408741,
-          "pct": 35.93,
+          "pct": 34.92,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 6.79658532620454,
-          "time_ms": 6796.58532620454,
-          "pct": 8.85,
+          "time_s": 8.869889070870272,
+          "time_ms": 8869.889070870271,
+          "pct": 11.22,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 2.948747643488865,
-          "time_ms": 2948.747643488865,
-          "pct": 3.84,
+          "time_s": 2.952648974960904,
+          "time_ms": 2952.648974960904,
+          "pct": 3.74,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 4.8540052411422,
-          "time_ms": 4854.0052411422,
-          "pct": 6.32,
+          "time_s": 5.005897331186799,
+          "time_ms": 5005.8973311867985,
+          "pct": 6.33,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 2.585728125460002,
           "time_ms": 2585.728125460002,
-          "pct": 3.37,
+          "pct": 3.27,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.5111555208164321,
           "time_ms": 511.1555208164321,
-          "pct": 0.67,
+          "pct": 0.65,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 2.743546424956539,
           "time_ms": 2743.546424956539,
-          "pct": 3.57,
+          "pct": 3.47,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -3091,7 +3091,7 @@
         "Communication": {
           "time_s": 25.676243977600038,
           "time_ms": 25676.24397760004,
-          "pct": 33.43,
+          "pct": 32.48,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -3103,7 +3103,7 @@
         "Embedding/LMHead": {
           "time_s": 3.002626574944865,
           "time_ms": 3002.626574944865,
-          "pct": 3.91,
+          "pct": 3.8,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -3111,43 +3111,43 @@
         "Attention Proj": {
           "time_s": 0.0021057673271351342,
           "time_ms": 2.1057673271351343,
-          "pct": 9.42,
+          "pct": 7.86,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.0007508937755675671,
-          "time_ms": 0.7508937755675671,
-          "pct": 3.36,
+          "time_s": 0.0018198617133287475,
+          "time_ms": 1.8198617133287476,
+          "pct": 6.79,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.0002591955442162163,
-          "time_ms": 0.2591955442162163,
-          "pct": 1.16,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0006491036075085994,
+          "time_ms": 0.6491036075085994,
+          "pct": 2.42,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.003287178858474472,
-          "time_ms": 3.287178858474472,
-          "pct": 14.7,
+          "time_s": 0.004217083054007671,
+          "time_ms": 4.217083054007671,
+          "pct": 15.74,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.00019726594000000005,
-          "time_ms": 0.19726594000000006,
-          "pct": 0.88,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000956149293486487,
+          "time_ms": 0.9561492934864869,
+          "pct": 3.57,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 3.899569124324321e-05,
           "time_ms": 0.03899569124324321,
-          "pct": 0.17,
+          "pct": 0.15,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010830704640000018,
-          "time_ms": 10.830704640000018,
-          "pct": 48.43,
+          "time_s": 0.011258525474909117,
+          "time_ms": 11.258525474909117,
+          "pct": 42.01,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3159,19 +3159,19 @@
         "Communication": {
           "time_s": 0.004651439644444445,
           "time_ms": 4.651439644444445,
-          "pct": 20.8,
+          "pct": 17.36,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.4254079999999983e-05,
-          "time_ms": 0.014254079999999983,
-          "pct": 0.06,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008715549905454538,
+          "time_ms": 0.8715549905454538,
+          "pct": 3.25,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.0002290682464864865,
           "time_ms": 0.2290682464864865,
-          "pct": 1.02,
+          "pct": 0.85,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -3181,43 +3181,43 @@
         "Attention Proj": {
           "time_s": 2.7606609658741625,
           "time_ms": 2760.6609658741627,
-          "pct": 37.7,
+          "pct": 36.67,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.6211544806815132,
-          "time_ms": 621.1544806815133,
-          "pct": 8.48,
+          "time_s": 0.8231466124874217,
+          "time_ms": 823.1466124874217,
+          "pct": 10.93,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.2949191952328649,
-          "time_ms": 294.9191952328649,
-          "pct": 4.03,
+          "time_s": 0.2956756088474103,
+          "time_ms": 295.6756088474103,
+          "pct": 3.93,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.1835168998728649,
-          "time_ms": 183.5168998728649,
-          "pct": 2.51,
+          "time_s": 0.18547148876633307,
+          "time_ms": 185.47148876633307,
+          "pct": 2.46,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.25861226754000016,
           "time_ms": 258.6122675400002,
-          "pct": 3.53,
+          "pct": 3.44,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.05112335121989186,
           "time_ms": 51.12335121989186,
-          "pct": 0.7,
+          "pct": 0.68,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 0.2743965031368649,
           "time_ms": 274.3965031368649,
-          "pct": 3.75,
+          "pct": 3.64,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -3229,19 +3229,19 @@
         "Communication": {
           "time_s": 2.569375139199998,
           "time_ms": 2569.375139199998,
-          "pct": 35.08,
+          "pct": 34.13,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
           "time_s": 0.009343549439999994,
           "time_ms": 9.343549439999995,
-          "pct": 0.13,
+          "pct": 0.12,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
           "time_s": 0.3003084711437838,
           "time_ms": 300.3084711437838,
-          "pct": 4.1,
+          "pct": 3.99,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -3249,43 +3249,43 @@
         "Attention Proj": {
           "time_s": 0.0021057673271351342,
           "time_ms": 2.1057673271351343,
-          "pct": 9.42,
+          "pct": 7.86,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.0007508937755675671,
-          "time_ms": 0.7508937755675671,
-          "pct": 3.36,
+          "time_s": 0.0018198617133287475,
+          "time_ms": 1.8198617133287476,
+          "pct": 6.79,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.0002591955442162163,
-          "time_ms": 0.2591955442162163,
-          "pct": 1.16,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0006491036075085994,
+          "time_ms": 0.6491036075085994,
+          "pct": 2.42,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.003287178858474472,
-          "time_ms": 3.287178858474472,
-          "pct": 14.7,
+          "time_s": 0.004217083054007671,
+          "time_ms": 4.217083054007671,
+          "pct": 15.74,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
-          "time_s": 0.00019726594000000005,
-          "time_ms": 0.19726594000000006,
-          "pct": 0.88,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000956149293486487,
+          "time_ms": 0.9561492934864869,
+          "pct": 3.57,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 3.899569124324321e-05,
           "time_ms": 0.03899569124324321,
-          "pct": 0.17,
+          "pct": 0.15,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.010830704640000018,
-          "time_ms": 10.830704640000018,
-          "pct": 48.43,
+          "time_s": 0.011258525474909117,
+          "time_ms": 11.258525474909117,
+          "pct": 42.01,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3297,19 +3297,19 @@
         "Communication": {
           "time_s": 0.004651439644444445,
           "time_ms": 4.651439644444445,
-          "pct": 20.8,
+          "pct": 17.36,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.4254079999999983e-05,
-          "time_ms": 0.014254079999999983,
-          "pct": 0.06,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008715549905454538,
+          "time_ms": 0.8715549905454538,
+          "pct": 3.25,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.0002290682464864865,
           "time_ms": 0.2290682464864865,
-          "pct": 1.02,
+          "pct": 0.85,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -3319,43 +3319,43 @@
         "Attention Proj": {
           "time_s": 276.0071351022563,
           "time_ms": 276007.1351022563,
-          "pct": 17.8,
+          "pct": 16.77,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 212.53262599605262,
-          "time_ms": 212532.6259960526,
-          "pct": 13.71,
+          "time_s": 277.34044491194777,
+          "time_ms": 277340.44491194776,
+          "pct": 16.85,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 29.485685963914392,
-          "time_ms": 29485.68596391439,
-          "pct": 1.9,
+          "time_s": 29.521052138494447,
+          "time_ms": 29521.052138494448,
+          "pct": 1.79,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 686.0718446212647,
-          "time_ms": 686071.8446212647,
-          "pct": 44.26,
+          "time_s": 717.0368351415984,
+          "time_ms": 717036.8351415985,
+          "pct": 43.56,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 25.855703124500003,
           "time_ms": 25855.703124500003,
-          "pct": 1.67,
+          "pct": 1.57,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 5.111243242634374,
           "time_ms": 5111.243242634374,
-          "pct": 0.33,
+          "pct": 0.31,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 27.43378982391706,
           "time_ms": 27433.78982391706,
-          "pct": 1.77,
+          "pct": 1.67,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -3367,7 +3367,7 @@
         "Communication": {
           "time_s": 256.7331801183999,
           "time_ms": 256733.1801183999,
-          "pct": 16.56,
+          "pct": 15.6,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -3379,7 +3379,7 @@
         "Embedding/LMHead": {
           "time_s": 30.024433203476757,
           "time_ms": 30024.433203476758,
-          "pct": 1.94,
+          "pct": 1.82,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -3387,43 +3387,43 @@
         "Attention Proj": {
           "time_s": 0.0011698707372972972,
           "time_ms": 1.1698707372972972,
-          "pct": 6.26,
+          "pct": 5.16,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.00037544688778378354,
-          "time_ms": 0.37544688778378354,
-          "pct": 2.01,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0013299308566643738,
+          "time_ms": 1.3299308566643737,
+          "pct": 5.87,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0002591955442162163,
-          "time_ms": 0.2591955442162163,
-          "pct": 1.39,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0006491036075085994,
+          "time_ms": 0.6491036075085994,
+          "pct": 2.87,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.005460971189045045,
-          "time_ms": 5.460971189045044,
-          "pct": 29.21,
+          "time_s": 0.006029105183009523,
+          "time_ms": 6.0291051830095235,
+          "pct": 26.61,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.00019726594000000005,
-          "time_ms": 0.19726594000000006,
-          "pct": 1.05,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000956149293486487,
+          "time_ms": 0.9561492934864869,
+          "pct": 4.22,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 3.899569124324321e-05,
           "time_ms": 0.03899569124324321,
-          "pct": 0.21,
+          "pct": 0.17,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.005415352320000009,
-          "time_ms": 5.415352320000009,
-          "pct": 28.96,
+          "time_s": 0.0058442627374545655,
+          "time_ms": 5.8442627374545655,
+          "pct": 25.8,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3435,19 +3435,19 @@
         "Communication": {
           "time_s": 0.005652433066666659,
           "time_ms": 5.652433066666659,
-          "pct": 30.23,
+          "pct": 24.95,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.4254079999999983e-05,
-          "time_ms": 0.014254079999999983,
-          "pct": 0.08,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008715549905454538,
+          "time_ms": 0.8715549905454538,
+          "pct": 3.85,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.00011457508324324324,
           "time_ms": 0.11457508324324324,
-          "pct": 0.61,
+          "pct": 0.51,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -3457,43 +3457,43 @@
         "Attention Proj": {
           "time_s": 27.601345240423864,
           "time_ms": 27601.345240423863,
-          "pct": 34.11,
+          "pct": 33.04,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 7.554114944138382,
-          "time_ms": 7554.114944138382,
-          "pct": 9.33,
+          "time_s": 9.858410075408983,
+          "time_ms": 9858.410075408983,
+          "pct": 11.8,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 2.9486351210551347,
-          "time_ms": 2948.6351210551347,
-          "pct": 3.64,
+          "time_s": 2.9525360921898773,
+          "time_ms": 2952.5360921898773,
+          "pct": 3.53,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 8.208544460772611,
-          "time_ms": 8208.544460772611,
-          "pct": 10.14,
+          "time_s": 8.513079065160026,
+          "time_ms": 8513.079065160025,
+          "pct": 10.19,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 2.585629493780003,
           "time_ms": 2585.629493780003,
-          "pct": 3.2,
+          "pct": 3.1,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.5111360229708104,
           "time_ms": 511.1360229708104,
-          "pct": 0.63,
+          "pct": 0.61,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 2.7434417733535166,
           "time_ms": 2743.4417733535165,
-          "pct": 3.39,
+          "pct": 3.28,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -3505,19 +3505,19 @@
         "Communication": {
           "time_s": 25.675264623999983,
           "time_ms": 25675.26462399998,
-          "pct": 31.73,
+          "pct": 30.74,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
           "time_s": 0.09341767679999992,
           "time_ms": 93.41767679999992,
-          "pct": 0.12,
+          "pct": 0.11,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
           "time_s": 3.0025120408216215,
           "time_ms": 3002.5120408216217,
-          "pct": 3.71,
+          "pct": 3.59,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -3525,43 +3525,43 @@
         "Attention Proj": {
           "time_s": 0.0011698707372972972,
           "time_ms": 1.1698707372972972,
-          "pct": 6.26,
+          "pct": 5.16,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.00037544688778378354,
-          "time_ms": 0.37544688778378354,
-          "pct": 2.01,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0013299308566643738,
+          "time_ms": 1.3299308566643737,
+          "pct": 5.87,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0002591955442162163,
-          "time_ms": 0.2591955442162163,
-          "pct": 1.39,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0006491036075085994,
+          "time_ms": 0.6491036075085994,
+          "pct": 2.87,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.005460971189045045,
-          "time_ms": 5.460971189045044,
-          "pct": 29.21,
+          "time_s": 0.006029105183009523,
+          "time_ms": 6.0291051830095235,
+          "pct": 26.61,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.00019726594000000005,
-          "time_ms": 0.19726594000000006,
-          "pct": 1.05,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000956149293486487,
+          "time_ms": 0.9561492934864869,
+          "pct": 4.22,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 3.899569124324321e-05,
           "time_ms": 0.03899569124324321,
-          "pct": 0.21,
+          "pct": 0.17,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.005415352320000009,
-          "time_ms": 5.415352320000009,
-          "pct": 28.96,
+          "time_s": 0.0058442627374545655,
+          "time_ms": 5.8442627374545655,
+          "pct": 25.8,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3573,19 +3573,19 @@
         "Communication": {
           "time_s": 0.005652433066666659,
           "time_ms": 5.652433066666659,
-          "pct": 30.23,
+          "pct": 24.95,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.4254079999999983e-05,
-          "time_ms": 0.014254079999999983,
-          "pct": 0.08,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008715549905454538,
+          "time_ms": 0.8715549905454538,
+          "pct": 3.85,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.00011457508324324324,
           "time_ms": 0.11457508324324324,
-          "pct": 0.61,
+          "pct": 0.51,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -3595,43 +3595,43 @@
         "Attention Proj": {
           "time_s": 2.7606609658741625,
           "time_ms": 2760.6609658741627,
-          "pct": 37.52,
+          "pct": 36.5,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.6211544806815132,
-          "time_ms": 621.1544806815133,
-          "pct": 8.44,
+          "time_s": 0.8231466124874217,
+          "time_ms": 823.1466124874217,
+          "pct": 10.88,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.2949192649755678,
-          "time_ms": 294.9192649755678,
-          "pct": 4.01,
+          "time_s": 0.2956760389274104,
+          "time_ms": 295.6760389274104,
+          "pct": 3.91,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.21711152861924338,
-          "time_ms": 217.1115286192434,
-          "pct": 2.95,
+          "time_s": 0.2205645750340606,
+          "time_ms": 220.5645750340606,
+          "pct": 2.92,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.25861226754000016,
           "time_ms": 258.6122675400002,
-          "pct": 3.52,
+          "pct": 3.42,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.05112335121989186,
           "time_ms": 51.12335121989186,
-          "pct": 0.69,
+          "pct": 0.68,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 0.2743965031368649,
           "time_ms": 274.3965031368649,
-          "pct": 3.73,
+          "pct": 3.63,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -3643,19 +3643,19 @@
         "Communication": {
           "time_s": 2.569375139199998,
           "time_ms": 2569.375139199998,
-          "pct": 34.92,
+          "pct": 33.97,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
           "time_s": 0.009343549439999994,
           "time_ms": 9.343549439999995,
-          "pct": 0.13,
+          "pct": 0.12,
           "dominant_bottleneck": "MEM"
         },
         "Embedding/LMHead": {
           "time_s": 0.3003084711437838,
           "time_ms": 300.3084711437838,
-          "pct": 4.08,
+          "pct": 3.97,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -3663,43 +3663,43 @@
         "Attention Proj": {
           "time_s": 0.0011698707372972972,
           "time_ms": 1.1698707372972972,
-          "pct": 6.26,
+          "pct": 5.16,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.00037544688778378354,
-          "time_ms": 0.37544688778378354,
-          "pct": 2.01,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0013299308566643738,
+          "time_ms": 1.3299308566643737,
+          "pct": 5.87,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.0002591955442162163,
-          "time_ms": 0.2591955442162163,
-          "pct": 1.39,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0006491036075085994,
+          "time_ms": 0.6491036075085994,
+          "pct": 2.87,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.005460971189045045,
-          "time_ms": 5.460971189045044,
-          "pct": 29.21,
+          "time_s": 0.006029105183009523,
+          "time_ms": 6.0291051830095235,
+          "pct": 26.61,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 0.00019726594000000005,
-          "time_ms": 0.19726594000000006,
-          "pct": 1.05,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.000956149293486487,
+          "time_ms": 0.9561492934864869,
+          "pct": 4.22,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 3.899569124324321e-05,
           "time_ms": 0.03899569124324321,
-          "pct": 0.21,
+          "pct": 0.17,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
-          "time_s": 0.005415352320000009,
-          "time_ms": 5.415352320000009,
-          "pct": 28.96,
+          "time_s": 0.0058442627374545655,
+          "time_ms": 5.8442627374545655,
+          "pct": 25.8,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3711,19 +3711,19 @@
         "Communication": {
           "time_s": 0.005652433066666659,
           "time_ms": 5.652433066666659,
-          "pct": 30.23,
+          "pct": 24.95,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 1.4254079999999983e-05,
-          "time_ms": 0.014254079999999983,
-          "pct": 0.08,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008715549905454538,
+          "time_ms": 0.8715549905454538,
+          "pct": 3.85,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 0.00011457508324324324,
           "time_ms": 0.11457508324324324,
-          "pct": 0.61,
+          "pct": 0.51,
           "dominant_bottleneck": "CUBE"
         }
       }
@@ -3733,43 +3733,43 @@
         "Attention Proj": {
           "time_s": 263.2209158918917,
           "time_ms": 263220.9158918917,
-          "pct": 7.14,
+          "pct": 6.6,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 611.0647489729731,
-          "time_ms": 611064.7489729731,
-          "pct": 16.57,
+          "time_s": 797.3958529375927,
+          "time_ms": 797395.8529375928,
+          "pct": 19.99,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 28.119741263982725,
-          "time_ms": 28119.741263982723,
-          "pct": 0.76,
+          "time_s": 28.153487377673116,
+          "time_ms": 28153.487377673115,
+          "pct": 0.71,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 2455.708028666667,
-          "time_ms": 2455708.0286666667,
-          "pct": 66.58,
+          "time_s": 2569.619056459711,
+          "time_ms": 2569619.056459711,
+          "pct": 64.43,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 24.65792000257999,
           "time_ms": 24657.920002579987,
-          "pct": 0.67,
+          "pct": 0.62,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 4.874461405405403,
           "time_ms": 4874.461405405403,
-          "pct": 0.13,
+          "pct": 0.12,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 26.162900756756752,
           "time_ms": 26162.900756756753,
-          "pct": 0.71,
+          "pct": 0.66,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -3781,7 +3781,7 @@
         "Communication": {
           "time_s": 244.83991,
           "time_ms": 244839.91,
-          "pct": 6.64,
+          "pct": 6.14,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -3793,7 +3793,7 @@
         "Embedding/LMHead": {
           "time_s": 28.63353081081081,
           "time_ms": 28633.53081081081,
-          "pct": 0.78,
+          "pct": 0.72,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -3801,43 +3801,43 @@
         "Attention Proj": {
           "time_s": 0.0008530099199999975,
           "time_ms": 0.8530099199999974,
-          "pct": 5.85,
+          "pct": 4.72,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 9.386172194594588e-05,
-          "time_ms": 0.09386172194594589,
-          "pct": 0.64,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0009624827141660933,
+          "time_ms": 0.9624827141660933,
+          "pct": 5.32,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.00013791488,
-          "time_ms": 0.13791488,
-          "pct": 0.95,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0002751326547027027,
+          "time_ms": 0.27513265470270265,
+          "pct": 1.52,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.005214120000000007,
-          "time_ms": 5.214120000000007,
-          "pct": 35.77,
+          "time_s": 0.005577078597864125,
+          "time_ms": 5.577078597864125,
+          "pct": 30.85,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 4.931841999999995e-05,
-          "time_ms": 0.04931841999999995,
-          "pct": 0.34,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008840374846216195,
+          "time_ms": 0.8840374846216195,
+          "pct": 4.89,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 2.9116159999999978e-05,
           "time_ms": 0.029116159999999978,
-          "pct": 0.2,
+          "pct": 0.16,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.005411827200000003,
-          "time_ms": 5.411827200000003,
-          "pct": 37.12,
+          "time_s": 0.005841554804363636,
+          "time_ms": 5.8415548043636365,
+          "pct": 32.31,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3849,19 +3849,19 @@
         "Communication": {
           "time_s": 0.0027031082666666623,
           "time_ms": 2.7031082666666624,
-          "pct": 18.54,
+          "pct": 14.95,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.5635199999999957e-06,
-          "time_ms": 0.003563519999999996,
-          "pct": 0.02,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008703887476363644,
+          "time_ms": 0.8703887476363644,
+          "pct": 4.81,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 8.294175999999999e-05,
           "time_ms": 0.08294175999999999,
-          "pct": 0.57,
+          "pct": 0.46,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -3871,43 +3871,43 @@
         "Attention Proj": {
           "time_s": 26.32209158918921,
           "time_ms": 26322.09158918921,
-          "pct": 26.51,
+          "pct": 25.35,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 11.292029924324337,
-          "time_ms": 11292.029924324337,
-          "pct": 11.37,
+          "time_s": 14.736117010712546,
+          "time_ms": 14736.117010712545,
+          "pct": 14.19,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 2.8119740698291897,
-          "time_ms": 2811.97406982919,
-          "pct": 2.83,
+          "time_s": 2.815717404315676,
+          "time_ms": 2815.717404315676,
+          "pct": 2.71,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 25.84288375855854,
-          "time_ms": 25842.88375855854,
-          "pct": 26.03,
+          "time_s": 26.960937339471094,
+          "time_ms": 26960.937339471093,
+          "pct": 25.96,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 2.4657920025799984,
           "time_ms": 2465.7920025799986,
-          "pct": 2.48,
+          "pct": 2.37,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.48744614054054036,
           "time_ms": 487.44614054054034,
-          "pct": 0.49,
+          "pct": 0.47,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 2.6162900756756757,
           "time_ms": 2616.290075675676,
-          "pct": 2.64,
+          "pct": 2.52,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -3919,7 +3919,7 @@
         "Communication": {
           "time_s": 24.485349999999958,
           "time_ms": 24485.34999999996,
-          "pct": 24.66,
+          "pct": 23.58,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -3931,7 +3931,7 @@
         "Embedding/LMHead": {
           "time_s": 2.863353081081081,
           "time_ms": 2863.353081081081,
-          "pct": 2.88,
+          "pct": 2.76,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -3939,43 +3939,43 @@
         "Attention Proj": {
           "time_s": 0.0008530099199999975,
           "time_ms": 0.8530099199999974,
-          "pct": 5.85,
+          "pct": 4.72,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 9.386172194594588e-05,
-          "time_ms": 0.09386172194594589,
-          "pct": 0.64,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0009624827141660933,
+          "time_ms": 0.9624827141660933,
+          "pct": 5.32,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.00013791488,
-          "time_ms": 0.13791488,
-          "pct": 0.95,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0002751326547027027,
+          "time_ms": 0.27513265470270265,
+          "pct": 1.52,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.005214120000000007,
-          "time_ms": 5.214120000000007,
-          "pct": 35.77,
+          "time_s": 0.005577078597864125,
+          "time_ms": 5.577078597864125,
+          "pct": 30.85,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 4.931841999999995e-05,
-          "time_ms": 0.04931841999999995,
-          "pct": 0.34,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008840374846216195,
+          "time_ms": 0.8840374846216195,
+          "pct": 4.89,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 2.9116159999999978e-05,
           "time_ms": 0.029116159999999978,
-          "pct": 0.2,
+          "pct": 0.16,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.005411827200000003,
-          "time_ms": 5.411827200000003,
-          "pct": 37.12,
+          "time_s": 0.005841554804363636,
+          "time_ms": 5.8415548043636365,
+          "pct": 32.31,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -3987,19 +3987,19 @@
         "Communication": {
           "time_s": 0.0027031082666666623,
           "time_ms": 2.7031082666666624,
-          "pct": 18.54,
+          "pct": 14.95,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.5635199999999957e-06,
-          "time_ms": 0.003563519999999996,
-          "pct": 0.02,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008703887476363644,
+          "time_ms": 0.8703887476363644,
+          "pct": 4.81,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 8.294175999999999e-05,
           "time_ms": 0.08294175999999999,
-          "pct": 0.57,
+          "pct": 0.46,
           "dominant_bottleneck": "MEM"
         }
       }
@@ -4009,43 +4009,43 @@
         "Attention Proj": {
           "time_s": 2.632209158918915,
           "time_ms": 2632.209158918915,
-          "pct": 36.39,
+          "pct": 35.38,
           "dominant_bottleneck": "CUBE"
         },
         "Attention Compute": {
-          "time_s": 0.631129392432432,
-          "time_ms": 631.129392432432,
-          "pct": 8.72,
+          "time_s": 0.8244179119803446,
+          "time_ms": 824.4179119803447,
+          "pct": 11.08,
           "dominant_bottleneck": "CUBE"
         },
         "KV Compression": {
-          "time_s": 0.28119737869837835,
-          "time_ms": 281.1973786983784,
-          "pct": 3.89,
+          "time_s": 0.28194057370574926,
+          "time_ms": 281.9405737057493,
+          "pct": 3.79,
           "dominant_bottleneck": "CUBE"
         },
         "Lightning Index": {
-          "time_s": 0.3871962947747744,
-          "time_ms": 387.1962947747744,
-          "pct": 5.35,
+          "time_s": 0.39862351080291014,
+          "time_ms": 398.6235108029101,
+          "pct": 5.36,
           "dominant_bottleneck": "CUBE"
         },
         "mHC": {
           "time_s": 0.24657920257999955,
           "time_ms": 246.57920257999956,
-          "pct": 3.41,
+          "pct": 3.31,
           "dominant_bottleneck": "MEM"
         },
         "MoE Gate": {
           "time_s": 0.04874461405405407,
           "time_ms": 48.744614054054075,
-          "pct": 0.67,
+          "pct": 0.66,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Routed": {
           "time_s": 0.261629007567568,
           "time_ms": 261.629007567568,
-          "pct": 3.62,
+          "pct": 3.52,
           "dominant_bottleneck": "CUBE"
         },
         "MoE Shared": {
@@ -4057,7 +4057,7 @@
         "Communication": {
           "time_s": 2.449894000000001,
           "time_ms": 2449.8940000000007,
-          "pct": 33.87,
+          "pct": 32.93,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
@@ -4069,7 +4069,7 @@
         "Embedding/LMHead": {
           "time_s": 0.2863353081081081,
           "time_ms": 286.3353081081081,
-          "pct": 3.96,
+          "pct": 3.85,
           "dominant_bottleneck": "CUBE"
         }
       },
@@ -4077,43 +4077,43 @@
         "Attention Proj": {
           "time_s": 0.0008530099199999975,
           "time_ms": 0.8530099199999974,
-          "pct": 5.85,
+          "pct": 4.72,
           "dominant_bottleneck": "MEM"
         },
         "Attention Compute": {
-          "time_s": 9.386172194594588e-05,
-          "time_ms": 0.09386172194594589,
-          "pct": 0.64,
-          "dominant_bottleneck": "CUBE"
+          "time_s": 0.0009624827141660933,
+          "time_ms": 0.9624827141660933,
+          "pct": 5.32,
+          "dominant_bottleneck": "VEC"
         },
         "KV Compression": {
-          "time_s": 0.00013791488,
-          "time_ms": 0.13791488,
-          "pct": 0.95,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0002751326547027027,
+          "time_ms": 0.27513265470270265,
+          "pct": 1.52,
+          "dominant_bottleneck": "VEC"
         },
         "Lightning Index": {
-          "time_s": 0.005214120000000007,
-          "time_ms": 5.214120000000007,
-          "pct": 35.77,
+          "time_s": 0.005577078597864125,
+          "time_ms": 5.577078597864125,
+          "pct": 30.85,
           "dominant_bottleneck": "MEM"
         },
         "mHC": {
-          "time_s": 4.931841999999995e-05,
-          "time_ms": 0.04931841999999995,
-          "pct": 0.34,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008840374846216195,
+          "time_ms": 0.8840374846216195,
+          "pct": 4.89,
+          "dominant_bottleneck": "VEC"
         },
         "MoE Gate": {
           "time_s": 2.9116159999999978e-05,
           "time_ms": 0.029116159999999978,
-          "pct": 0.2,
+          "pct": 0.16,
           "dominant_bottleneck": "MEM"
         },
         "MoE Routed": {
-          "time_s": 0.005411827200000003,
-          "time_ms": 5.411827200000003,
-          "pct": 37.12,
+          "time_s": 0.005841554804363636,
+          "time_ms": 5.8415548043636365,
+          "pct": 32.31,
           "dominant_bottleneck": "MEM"
         },
         "MoE Shared": {
@@ -4125,19 +4125,19 @@
         "Communication": {
           "time_s": 0.0027031082666666623,
           "time_ms": 2.7031082666666624,
-          "pct": 18.54,
+          "pct": 14.95,
           "dominant_bottleneck": "COMM"
         },
         "Norm": {
-          "time_s": 3.5635199999999957e-06,
-          "time_ms": 0.003563519999999996,
-          "pct": 0.02,
-          "dominant_bottleneck": "MEM"
+          "time_s": 0.0008703887476363644,
+          "time_ms": 0.8703887476363644,
+          "pct": 4.81,
+          "dominant_bottleneck": "VEC"
         },
         "Embedding/LMHead": {
           "time_s": 8.294175999999999e-05,
           "time_ms": 0.08294175999999999,
-          "pct": 0.57,
+          "pct": 0.46,
           "dominant_bottleneck": "MEM"
         }
       }

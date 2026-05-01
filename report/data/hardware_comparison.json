@@ -7,7 +7,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 325.36,
+        "metric": 715.22,
         "unit": "ms"
       },
       "H20": {
@@ -16,7 +16,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 546.89,
+        "metric": 559.78,
         "unit": "ms"
       }
     },
@@ -27,7 +27,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 7212.07,
+        "metric": 3551.43,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -36,7 +36,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 8,
-        "metric": 2977.59,
+        "metric": 2892.13,
         "unit": "tps/gpu"
       }
     },
@@ -47,7 +47,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 17.627,
+        "metric": 36.098,
         "unit": "ms"
       },
       "H20": {
@@ -56,7 +56,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 8.54,
+        "metric": 12.18,
         "unit": "ms"
       }
     },
@@ -67,7 +67,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 923.998,
+        "metric": 312.406,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -76,7 +76,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 1195.744,
+        "metric": 1053.246,
         "unit": "tps/gpu"
       }
     }
@@ -89,7 +89,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 54.28,
+        "metric": 103.33,
         "unit": "ms"
       },
       "H20": {
@@ -98,7 +98,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 64.23,
+        "metric": 68.01,
         "unit": "ms"
       }
     },
@@ -109,7 +109,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 74052.33,
+        "metric": 36416.56,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -118,7 +118,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 8,
-        "metric": 30658.57,
+        "metric": 29766.69,
         "unit": "tps/gpu"
       }
     },
@@ -129,7 +129,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 17.627,
+        "metric": 36.098,
         "unit": "ms"
       },
       "H20": {
@@ -138,7 +138,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 8.54,
+        "metric": 12.18,
         "unit": "ms"
       }
     },
@@ -149,7 +149,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 923.998,
+        "metric": 312.406,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -158,7 +158,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 1195.744,
+        "metric": 1053.246,
         "unit": "tps/gpu"
       }
     }
@@ -166,12 +166,12 @@
   "8K_4K_hit99": {
     "prefill_latency": {
       "910C": {
-        "tp": 4,
-        "ep": 32,
+        "tp": 8,
+        "ep": 64,
         "dp": 8,
         "batch_size": 8,
-        "gpus": 32,
-        "metric": 25.91,
+        "gpus": 64,
+        "metric": 50.42,
         "unit": "ms"
       },
       "H20": {
@@ -180,7 +180,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 17.33,
+        "metric": 20.6,
         "unit": "ms"
       }
     },
@@ -191,7 +191,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 711356.74,
+        "metric": 338789.32,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -200,7 +200,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 8,
-        "metric": 307104.35,
+        "metric": 297041.44,
         "unit": "tps/gpu"
       }
     },
@@ -211,7 +211,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 17.627,
+        "metric": 36.098,
         "unit": "ms"
       },
       "H20": {
@@ -220,7 +220,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 8.54,
+        "metric": 12.18,
         "unit": "ms"
       }
     },
@@ -231,7 +231,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 923.998,
+        "metric": 312.406,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -240,7 +240,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 1195.744,
+        "metric": 1053.246,
         "unit": "tps/gpu"
       }
     }
@@ -253,7 +253,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 1327.06,
+        "metric": 2984.79,
         "unit": "ms"
       },
       "H20": {
@@ -262,7 +262,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 2345.14,
+        "metric": 2404.2,
         "unit": "ms"
       }
     },
@@ -273,7 +273,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 6523.63,
+        "metric": 3262.79,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -282,7 +282,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 8,
-        "metric": 2693.89,
+        "metric": 2600.71,
         "unit": "tps/gpu"
       }
     },
@@ -293,7 +293,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 17.654,
+        "metric": 36.106,
         "unit": "ms"
       },
       "H20": {
@@ -302,7 +302,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 8.553,
+        "metric": 12.186,
         "unit": "ms"
       }
     },
@@ -313,7 +313,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 32,
-        "metric": 639.693,
+        "metric": 231.584,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -322,7 +322,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 1145.343,
+        "metric": 1010.42,
         "unit": "tps/gpu"
       }
     }
@@ -335,7 +335,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 143.22,
+        "metric": 303.32,
         "unit": "ms"
       },
       "H20": {
@@ -344,7 +344,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 222.02,
+        "metric": 228.65,
         "unit": "ms"
       }
     },
@@ -355,7 +355,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 73454.39,
+        "metric": 36141.25,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -364,7 +364,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 8,
-        "metric": 30413.98,
+        "metric": 29531.4,
         "unit": "tps/gpu"
       }
     },
@@ -375,7 +375,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 17.654,
+        "metric": 36.106,
         "unit": "ms"
       },
       "H20": {
@@ -384,7 +384,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 8.553,
+        "metric": 12.186,
         "unit": "ms"
       }
     },
@@ -395,7 +395,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 32,
-        "metric": 639.693,
+        "metric": 231.584,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -404,7 +404,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 1145.343,
+        "metric": 1010.42,
         "unit": "tps/gpu"
       }
     }
@@ -412,12 +412,12 @@
   "32K_4K_hit99": {
     "prefill_latency": {
       "910C": {
-        "tp": 4,
-        "ep": 32,
+        "tp": 8,
+        "ep": 64,
         "dp": 8,
         "batch_size": 8,
-        "gpus": 32,
-        "metric": 35.56,
+        "gpus": 64,
+        "metric": 66.32,
         "unit": "ms"
       },
       "H20": {
@@ -426,7 +426,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 32.99,
+        "metric": 36.27,
         "unit": "ms"
       }
     },
@@ -437,7 +437,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 738258.7,
+        "metric": 354277.9,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -446,7 +446,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 8,
-        "metric": 306846.55,
+        "metric": 296638.9,
         "unit": "tps/gpu"
       }
     },
@@ -457,7 +457,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 17.654,
+        "metric": 36.106,
         "unit": "ms"
       },
       "H20": {
@@ -466,7 +466,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 8.553,
+        "metric": 12.186,
         "unit": "ms"
       }
     },
@@ -477,7 +477,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 32,
-        "metric": 639.693,
+        "metric": 231.584,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -486,7 +486,7 @@
         "dp": 8,
         "batch_size": 512,
         "gpus": 16,
-        "metric": 1145.343,
+        "metric": 1010.42,
         "unit": "tps/gpu"
       }
     }
@@ -499,7 +499,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 6913.75,
+        "metric": 15828.63,
         "unit": "ms"
       },
       "H20": {
@@ -508,7 +508,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 12327.75,
+        "metric": 12812.38,
         "unit": "ms"
       }
     },
@@ -519,7 +519,7 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 16,
-        "metric": 4639.13,
+        "metric": 2376.59,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -528,7 +528,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 1841.92,
+        "metric": 1754.04,
         "unit": "tps/gpu"
       }
     },
@@ -539,7 +539,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 20.65,
+        "metric": 39.568,
         "unit": "ms"
       },
       "H20": {
@@ -548,7 +548,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 9.796,
+        "metric": 13.8,
         "unit": "ms"
       }
     },
@@ -559,7 +559,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "metric": 297.535,
+        "metric": 112.437,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -568,7 +568,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 714.931,
+        "metric": 605.601,
         "unit": "tps/gpu"
       }
     }
@@ -581,7 +581,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 513.09,
+        "metric": 1141.05,
         "unit": "ms"
       },
       "H20": {
@@ -590,7 +590,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 884.18,
+        "metric": 904.26,
         "unit": "ms"
       }
     },
@@ -601,7 +601,7 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 16,
-        "metric": 70773.38,
+        "metric": 34886.63,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -610,7 +610,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 27301.53,
+        "metric": 26531.6,
         "unit": "tps/gpu"
       }
     },
@@ -621,7 +621,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 20.65,
+        "metric": 39.568,
         "unit": "ms"
       },
       "H20": {
@@ -630,7 +630,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 9.796,
+        "metric": 13.8,
         "unit": "ms"
       }
     },
@@ -641,7 +641,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "metric": 297.535,
+        "metric": 112.437,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -650,7 +650,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 714.931,
+        "metric": 605.601,
         "unit": "tps/gpu"
       }
     }
@@ -663,7 +663,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 71.93,
+        "metric": 142.95,
         "unit": "ms"
       },
       "H20": {
@@ -672,7 +672,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 95.51,
+        "metric": 99.82,
         "unit": "ms"
       }
     },
@@ -683,7 +683,7 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 16,
-        "metric": 736565.24,
+        "metric": 353756.02,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -692,7 +692,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 286362.74,
+        "metric": 278576.02,
         "unit": "tps/gpu"
       }
     },
@@ -703,7 +703,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 20.65,
+        "metric": 39.568,
         "unit": "ms"
       },
       "H20": {
@@ -712,7 +712,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 9.796,
+        "metric": 13.8,
         "unit": "ms"
       }
     },
@@ -723,7 +723,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "metric": 297.535,
+        "metric": 112.437,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -732,7 +732,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 16,
-        "metric": 714.931,
+        "metric": 605.601,
         "unit": "tps/gpu"
       }
     }
@@ -745,7 +745,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 18254.8,
+        "metric": 42481.57,
         "unit": "ms"
       },
       "H20": {
@@ -754,7 +754,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 32580.85,
+        "metric": 34234.87,
         "unit": "ms"
       }
     },
@@ -765,7 +765,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "metric": 3349.15,
+        "metric": 1729.04,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -774,7 +774,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 16,
-        "metric": 1352.84,
+        "metric": 1274.09,
         "unit": "tps/gpu"
       }
     },
@@ -785,7 +785,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 20.786,
+        "metric": 39.961,
         "unit": "ms"
       },
       "H20": {
@@ -794,7 +794,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 9.859,
+        "metric": 13.848,
         "unit": "ms"
       }
     },
@@ -805,7 +805,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 32,
-        "metric": 154.385,
+        "metric": 58.982,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -814,7 +814,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "metric": 427.717,
+        "metric": 359.278,
         "unit": "tps/gpu"
       }
     }
@@ -827,7 +827,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 1044.35,
+        "metric": 2345.14,
         "unit": "ms"
       },
       "H20": {
@@ -836,7 +836,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 1838.14,
+        "metric": 1882.42,
         "unit": "ms"
       }
     },
@@ -847,7 +847,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "metric": 67029.64,
+        "metric": 33342.32,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -856,7 +856,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 16,
-        "metric": 25915.07,
+        "metric": 25104.54,
         "unit": "tps/gpu"
       }
     },
@@ -867,7 +867,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 20.786,
+        "metric": 39.961,
         "unit": "ms"
       },
       "H20": {
@@ -876,7 +876,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 9.859,
+        "metric": 13.848,
         "unit": "ms"
       }
     },
@@ -887,7 +887,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 32,
-        "metric": 154.385,
+        "metric": 58.982,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -896,7 +896,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "metric": 427.717,
+        "metric": 359.278,
         "unit": "tps/gpu"
       }
     }
@@ -909,7 +909,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 119.37,
+        "metric": 249.56,
         "unit": "ms"
       },
       "H20": {
@@ -918,7 +918,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 179.68,
+        "metric": 185.54,
         "unit": "ms"
       }
     },
@@ -929,7 +929,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "metric": 732849.92,
+        "metric": 352106.71,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -938,7 +938,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 16,
-        "metric": 285055.11,
+        "metric": 277283.42,
         "unit": "tps/gpu"
       }
     },
@@ -949,7 +949,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 20.786,
+        "metric": 39.961,
         "unit": "ms"
       },
       "H20": {
@@ -958,7 +958,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 9.859,
+        "metric": 13.848,
         "unit": "ms"
       }
     },
@@ -969,7 +969,7 @@
         "dp": 8,
         "batch_size": 128,
         "gpus": 32,
-        "metric": 154.385,
+        "metric": 58.982,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -978,7 +978,7 @@
         "dp": 8,
         "batch_size": 256,
         "gpus": 32,
-        "metric": 427.717,
+        "metric": 359.278,
         "unit": "tps/gpu"
       }
     }
@@ -991,7 +991,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 165062.64,
+        "metric": 395783.1,
         "unit": "ms"
       },
       "H20": {
@@ -1000,7 +1000,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 294652.95,
+        "metric": 315901.73,
         "unit": "ms"
       }
     },
@@ -1011,7 +1011,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 16,
-        "metric": 1305.55,
+        "metric": 681.54,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -1020,7 +1020,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "metric": 542.27,
+        "metric": 501.45,
         "unit": "tps/gpu"
       }
     },
@@ -1031,7 +1031,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 21.487,
+        "metric": 41.972,
         "unit": "ms"
       },
       "H20": {
@@ -1040,7 +1040,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 10.188,
+        "metric": 13.763,
         "unit": "ms"
       }
     },
@@ -1051,7 +1051,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 32,
-        "metric": 40.103,
+        "metric": 15.38,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -1060,7 +1060,7 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 32,
-        "metric": 137.115,
+        "metric": 111.594,
         "unit": "tps/gpu"
       }
     }
@@ -1073,7 +1073,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 4877.13,
+        "metric": 11102.27,
         "unit": "ms"
       },
       "H20": {
@@ -1082,7 +1082,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 8689.9,
+        "metric": 8998.39,
         "unit": "ms"
       }
     },
@@ -1093,7 +1093,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 16,
-        "metric": 51037.43,
+        "metric": 26073.5,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -1102,7 +1102,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "metric": 20145.8,
+        "metric": 19260.0,
         "unit": "tps/gpu"
       }
     },
@@ -1113,7 +1113,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 21.487,
+        "metric": 41.972,
         "unit": "ms"
       },
       "H20": {
@@ -1122,7 +1122,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 10.188,
+        "metric": 13.763,
         "unit": "ms"
       }
     },
@@ -1133,7 +1133,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 32,
-        "metric": 40.103,
+        "metric": 15.38,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -1142,7 +1142,7 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 32,
-        "metric": 137.115,
+        "metric": 111.594,
         "unit": "tps/gpu"
       }
     }
@@ -1155,7 +1155,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 393.76,
+        "metric": 870.22,
         "unit": "ms"
       },
       "H20": {
@@ -1164,7 +1164,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 669.67,
+        "metric": 685.1,
         "unit": "ms"
       }
     },
@@ -1175,7 +1175,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 16,
-        "metric": 711953.54,
+        "metric": 342408.44,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -1184,7 +1184,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 16,
-        "metric": 276478.97,
+        "metric": 268843.15,
         "unit": "tps/gpu"
       }
     },
@@ -1195,7 +1195,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 64,
-        "metric": 21.487,
+        "metric": 41.972,
         "unit": "ms"
       },
       "H20": {
@@ -1204,7 +1204,7 @@
         "dp": 8,
         "batch_size": 8,
         "gpus": 32,
-        "metric": 10.188,
+        "metric": 13.763,
         "unit": "ms"
       }
     },
@@ -1215,7 +1215,7 @@
         "dp": 8,
         "batch_size": 32,
         "gpus": 32,
-        "metric": 40.103,
+        "metric": 15.38,
         "unit": "tps/gpu"
       },
       "H20": {
@@ -1224,7 +1224,7 @@
         "dp": 8,
         "batch_size": 64,
         "gpus": 32,
-        "metric": 137.115,
+        "metric": 111.594,
         "unit": "tps/gpu"
       }
     }

@@ -14,7 +14,7 @@ Current code does not yet accept these keys, so loading the updated `device_910C
 
 - Add hardware config fields:
   - `prefill_utilization`, default `1.0`
-  - `decode_utilization`, default `0.6`
+  - `decode_utilization`, default `0.8`
   - `vec_static_latency_us`, default `10.0`
 - Interpret prefill/decode utilization as an additional effective utilization multiplier for all non-communication operator compute and HBM components in that phase.
 - Add `vec_static_latency_us` to `vec_time_s` only when `vec_ops > 0`.

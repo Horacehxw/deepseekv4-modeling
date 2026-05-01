@@ -114,14 +114,14 @@ The search evaluates 4 independent scenarios:
 **GPU formula:** `physical_gpus = TP * DP`, constraint `(TP*DP) % EP == 0`
 **Constraints:** GPU count ∈ [8, 64], memory must fit within usable HBM from the hardware config
 
-**Key results (Ascend 910C):**
+**Key results (Ascend 910C, 8K/4K, no prefix cache):**
 
 | Scenario | Best Config | Key Metric | GPUs |
 |:---|:---|---:|---:|
-| Prefill Latency | TP=8, EP=64, DP=8, BS=8 | 325 ms | 64 |
-| Decode Latency | TP=4, EP=32, DP=8, BS=8 | 19.4 ms/step | 32 |
-| Prefill Throughput | TP=8, EP=16, DP=2, BS=512 | 1,679 tok/s/GPU | 16 |
-| Decode Throughput | TP=8, EP=16, DP=2, BS=512 | 307 tok/s/GPU | 16 |
+| Prefill Latency | TP=8, EP=64, DP=8, BS=8 | 715.2 ms | 64 |
+| Decode Latency | TP=8, EP=64, DP=8, BS=8 | 36.1 ms/step | 64 |
+| Prefill Throughput | TP=2, EP=16, DP=8, BS=512 | 3,644 tok/s/GPU | 16 |
+| Decode Throughput | TP=2, EP=16, DP=8, BS=512 | 322 tok/s/GPU | 16 |
 
 See [`param_search/report.md`](param_search/report.md) for detailed search analysis and [`report/report_en.md`](report/report_en.md) for the comprehensive 8-section analysis (V4 vs V3 comparison, bottleneck analysis, 4 serving combos: 8K/32K/128K/256K, mHC optimization, KV cache scaling, deployment recommendations).
 

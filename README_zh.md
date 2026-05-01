@@ -113,14 +113,14 @@ python param_search/analyze.py    # 分析结果并生成报告
 **GPU 公式：** `physical_gpus = TP * DP`，约束 `(TP*DP) % EP == 0`
 **约束条件：** GPU 数量 ∈ [8, 64]，显存必须小于等于硬件配置中的可用 HBM
 
-**关键结果（昇腾 910C，8K/4K）：**
+**关键结果（昇腾 910C，8K/4K，无前缀缓存）：**
 
 | 场景 | 最优配置 | 关键指标 | GPU 数 |
 |:---|:---|---:|---:|
-| Prefill 延迟 | TP=8, EP=64, DP=8, BS=8 | 325 ms | 64 |
-| Decode 延迟 | TP=4, EP=32, DP=8, BS=8 | 19.4 ms/步 | 32 |
-| Prefill 吞吐 | TP=8, EP=16, DP=2, BS=512 | 1,679 tok/s/GPU | 16 |
-| Decode 吞吐 | TP=8, EP=16, DP=2, BS=512 | 307 tok/s/GPU | 16 |
+| Prefill 延迟 | TP=8, EP=64, DP=8, BS=8 | 715.2 ms | 64 |
+| Decode 延迟 | TP=8, EP=64, DP=8, BS=8 | 36.1 ms/步 | 64 |
+| Prefill 吞吐 | TP=2, EP=16, DP=8, BS=512 | 3,644 tok/s/GPU | 16 |
+| Decode 吞吐 | TP=2, EP=16, DP=8, BS=512 | 322 tok/s/GPU | 16 |
 
 详细搜索分析请参见 [`param_search/report.md`](param_search/report.md)；综合 8 章分析报告（V4 vs V3 对比、瓶颈分析、4 个服务场景：8K/32K/128K/256K、mHC 优化、KV Cache 缩放、部署建议）请参见 [`report/report_en.md`](report/report_en.md)。
 
